@@ -1,0 +1,13 @@
+﻿<partial name="_ValidationScriptsPartial" />
+
+<h2>Verify OTP</h2>
+<div asp-validation-summary="All" class="alert-danger"></div>
+
+<form method="post">
+    <div class="form-group">
+        <label for="otp">Enter OTP</label>
+        <input type="text" id="otp" name="otp" class="form-control" required />
+    </div>
+    <button type="submit" class="btn btn-dark" asp-controller="Account" asp-action="VerifyOtp">Verify OTP</button>
+    <a class="btn btn-danger" asp-action="Login">Back to Login</a>
+</form>

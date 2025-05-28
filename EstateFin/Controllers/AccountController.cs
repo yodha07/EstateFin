@@ -189,7 +189,6 @@ namespace EstateFin.Controllers
                 SendEmailAsync(email, fullname + ", Welcome to EstateFin", "You have successfully registered with EstateFin using Google.").Wait();
             }
 
-            // Set session
             HttpContext.Session.SetString("UserRole", existingUser.Role!);
             HttpContext.Session.SetString("UserName", existingUser.FirstName!);
 
@@ -229,6 +228,109 @@ namespace EstateFin.Controllers
                 Console.WriteLine("Failed to send email.");
             }
         }
+
+        [HttpGet]
+        public IActionResult ForgotPassword()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        public IActionResult ForgotPassword(string email)
+        {
+            if (string.IsNullOrEmpty(email))
+            {
+                ModelState.AddModelError("", "Email can't be empty.");
+                return View();
+            }
+
+            var user = db.Users.FirstOrDefault(u => u.Email == email);
+
+            if (user == null)
+            {
+                ModelState.AddModelError("", "Email not found.");
+                return View();
+            }
+
+            if (user.isGoogleUser)
+            {
+                ModelState.AddModelError("", "Google users cannot reset password. Please use Google login.");
+                return View();
+            }
+
+            int otp = repo.GenerateOtp();
+            string subject = "Your OTP for EstateFin";
+            string body = $"Your OTP is: {otp}";
+
+            if (repo.SendEmailAsync(email, subject, body).Result)
+            {
+                TempData["otp"] = otp;
+                TempData["email"] = email;
+                return RedirectToAction("VerifyOtp");
+            }
+
+            ModelState.AddModelError("", "Failed to send OTP. Please try again.");
+            return View();
+        }
+
+        [HttpGet]
+        public IActionResult VerifyOtp()
+        {
+            TempData.Keep("otp");
+            TempData.Keep("email");
+            return View();
+        }
+
+        [HttpPost]
+        public IActionResult VerifyOtp(string otp)
+        {
+            var actualOtp = TempData["otp"]?.ToString();
+            var email = TempData["email"]?.ToString();
+
+            if (string.IsNullOrEmpty(email) || string.IsNullOrEmpty(actualOtp) || string.IsNullOrEmpty(otp))
+            {
+                ModelState.AddModelError("", "Missing OTP or email.");
+                TempData.Keep(); 
+                return View();
+            }
+
+            if (otp == actualOtp)
+            {
+
+                var user = db.Users.FirstOrDefault(u => u.Email == email);
+
+                if (user == null)
+                {
+                    ModelState.AddModelError("", "User not found.");
+                    return View();
+                }
+
+                HttpContext.Session.SetString("UserName", user.FirstName ?? "User");
+                HttpContext.Session.SetString("UserRole", user.Role ?? "User");
+
+               
+                switch (user.Role)
+                {
+                    case "Admin":
+                        return RedirectToAction("AdminDashboard", "Admin");
+                    case "Agent":
+                        return RedirectToAction("AgentDashboard", "Agent");
+                    case "Buyer":
+                    case "Tenant":
+                    case "Seller":
+                        return RedirectToAction("List", "Account");
+                    default:
+                        return RedirectToAction("Login", "Account");
+                }
+            }
+            else
+            {
+                ModelState.AddModelError("", "Invalid OTP. Please try again.");
+                TempData.Keep(); 
+                return View();
+            }
+        }
+
 
     }
 }

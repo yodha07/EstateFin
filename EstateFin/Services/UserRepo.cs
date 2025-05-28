@@ -63,5 +63,11 @@ namespace EstateFin.Services
                 return false;
             }
         }
+
+        public int GenerateOtp()
+        {
+            Random random = new Random();
+            return random.Next(100000, 999999); 
+        }
     }
 }
