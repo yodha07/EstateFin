@@ -12,12 +12,14 @@ namespace EstateFin.Controllers
     public class AccountController : Controller
     {
         private readonly IUserRepo repo;
+        private readonly MailSettings mail;
         private readonly ApplicationDbContext db;
 
-        public AccountController(IUserRepo repo, ApplicationDbContext db)
+        public AccountController(IUserRepo repo, ApplicationDbContext db, MailSettings mail)
         {
             this.repo = repo;
             this.db = db;
+            this.mail = mail;
         }
 
         [HttpGet]
@@ -39,6 +41,7 @@ namespace EstateFin.Controllers
                 }
 
                 repo.Register(user);
+                SendEmailAsync(user.Email, user.FirstName + ", Welcome to EstateFin", "You have successfully registered with EstateFin.").Wait();
                 TempData["msg"] = "Registration Successful. Please login to continue.";
                 return RedirectToAction("Login");
             }
@@ -183,6 +186,7 @@ namespace EstateFin.Controllers
 
                 repo.Register(newUser);
                 existingUser = newUser;
+                SendEmailAsync(email, fullname + ", Welcome to EstateFin", "You have successfully registered with EstateFin using Google.").Wait();
             }
 
             // Set session
@@ -213,5 +217,18 @@ namespace EstateFin.Controllers
             HttpContext.Session.Clear();
             return RedirectToAction("Login");
         }
+
+        public async Task SendEmailAsync(string toEmail, string subject, string body)
+        {
+            if (await repo.SendEmailAsync(toEmail, subject, body))
+            {
+                Console.WriteLine("Email sent successfully.");
+            }
+            else
+            {
+                Console.WriteLine("Failed to send email.");
+            }
+        }
+
     }
 }
