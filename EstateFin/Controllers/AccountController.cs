@@ -35,12 +35,12 @@ namespace EstateFin.Controllers
                 if (userExists)
                 {
                     ModelState.AddModelError("", "Email already registered.");
-                    return View(user); 
+                    return View(user);
                 }
 
-                repo.Register(user); 
-                TempData["msg"] = "Registration Successful. Please login to continue."; 
-                return RedirectToAction("Login"); 
+                repo.Register(user);
+                TempData["msg"] = "Registration Successful. Please login to continue.";
+                return RedirectToAction("Login");
             }
             return View(user);
         }
@@ -75,7 +75,7 @@ namespace EstateFin.Controllers
         public IActionResult Login(string email, string password)
         {
             var user = repo.Login(email, password);
-            if(user!= null)
+            if (user != null)
             {
                 HttpContext.Session.SetString("UserRole", user.Role!);
                 HttpContext.Session.SetString("UserName", user.FirstName!);
@@ -168,7 +168,7 @@ namespace EstateFin.Controllers
             }
 
             // Check if user exists
-            var existingUser = await repo.LoginWithGoogle(email); 
+            var existingUser = await repo.LoginWithGoogle(email);
             if (existingUser == null)
             {
                 var newUser = new User
@@ -176,13 +176,13 @@ namespace EstateFin.Controllers
                     FirstName = firstName,
                     LastName = lastName,
                     Email = email!,
-                    Role = "Buyer", 
+                    Role = "Buyer",
                     isGoogleUser = true,
                     CreatedAt = DateTime.Now
                 };
 
-                repo.Register(newUser); 
-                existingUser = newUser; 
+                repo.Register(newUser);
+                existingUser = newUser;
             }
 
             // Set session
@@ -191,8 +191,6 @@ namespace EstateFin.Controllers
 
             return RedirectToAction("List", "Account");
         }
-
-
 
         public IActionResult Index()
         {
@@ -208,6 +206,12 @@ namespace EstateFin.Controllers
             }
             var data = db.Users.ToList();
             return View(data);
+        }
+
+        public IActionResult Logout()
+        {
+            HttpContext.Session.Clear();
+            return RedirectToAction("Login");
         }
     }
 }
