@@ -3,8 +3,5 @@
 
 // Write your JavaScript code.
 
-
-//"GoogleKeys": {
-//    "ClientId": "390619856453-mh7g5fj0vm4v60mvihrf52ldk6q5qucb.apps.googleusercontent.com",
-//    "ClientSecret": "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"
-//  },
+//"390619856453-mh7g5fj0vm4v60mvihrf52ldk6q5qucb.apps.googleusercontent.com"
+//"GOCSPX - oFfIT0m_xqBMU1uNf - sJVWAImPJ_"
