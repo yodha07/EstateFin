@@ -1,0 +1,35 @@
+﻿@{
+    ViewData["Title"] = "Login";
+}
+@model User
+
+<h2>Login</h2>
+
+<partial name="Notification" />
+
+<form asp-action="Login" method="post">
+    <div>
+        <label asp-for="Email">Email</label>
+        <input type="email" asp-for="Email" class="form-control" />
+        <span asp-validation-for="Email" class="text-danger"></span>
+    </div>
+
+    <div>
+        <label asp-for="PasswordHash">Password</label>
+        <input type="password" name="password" class="form-control" />
+        <span asp-validation-for="PasswordHash" class="text-danger"></span>
+    </div>
+
+    <div>
+        <button type="submit" class="btn btn-dark">Login</button>
+        <a class="btn btn-danger" asp-action="Register">Register</a>
+    </div>
+
+    <div>
+        <a asp-controller="Account" asp-action="GoogleLogin" class="btn btn-primary">Sign in with Google</a>
+    </div>
+
+    <div class="text-danger">
+        @Html.ValidationSummary()
+    </div>
+</form>

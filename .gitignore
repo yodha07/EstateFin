@@ -1,0 +1,17 @@
+## Ignore Visual Studio files ##
+*.user
+*.suo
+*.userosscache
+*.sln.docstates
+
+## Ignore build results ##
+bin/
+obj/
+out/
+
+## Others ##
+.vs/
+*.log
+*.db
+*.DS_Store
+.env
