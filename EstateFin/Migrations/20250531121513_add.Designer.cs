@@ -4,6 +4,7 @@ using EstateFin.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace EstateFin.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250531121513_add")]
+    partial class add
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -141,30 +144,9 @@ namespace EstateFin.Migrations
                     b.Property<string>("images")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("userid")
-                        .HasColumnType("int");
-
                     b.HasKey("PropertyId");
 
-                    b.HasIndex("userid");
-
                     b.ToTable("Properties");
-                });
-
-            modelBuilder.Entity("EstateFin.Models.properties", b =>
-                {
-                    b.HasOne("EstateFin.Models.User", "User")
-                        .WithMany("Properties")
-                        .HasForeignKey("userid")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("User");
-                });
-
-            modelBuilder.Entity("EstateFin.Models.User", b =>
-                {
-                    b.Navigation("Properties");
                 });
 #pragma warning restore 612, 618
         }
