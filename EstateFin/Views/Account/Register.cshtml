@@ -3,59 +3,83 @@
 @{
     ViewData["Title"] = "Register";
 }
+<style>
+    body, html {
+        height: 100%;
+        margin: 0;
+        padding: 0;
+        background: linear-gradient(225deg, rgba(255, 94, 164, 1) 0%, rgba(22, 125, 242, 1) 100%);
+    }
 
-<h2>Register</h2>
+    #register-container {
+        width: 25%;
+        justify-content: center;
+        margin: 0 auto;
+        border-radius: 12px;
+        background: rgba(255, 255, 255, 0.9);
+    }
+</style>
 
-<div asp-validation-summary="All" class="alert-danger"></div>
 
-<form asp-action="Register" class="form-control" method="post">
-    <div>
-        <label asp-for="FirstName"></label>
-        <input asp-for="FirstName" class="form-control" />
-        <span asp-validation-for="FirstName" class="text-danger"></span>
-    </div>
+<h2 class="text-center">Register</h2>
 
-    <div>
-        <label asp-for="LastName"></label>
-        <input asp-for="LastName" class="form-control" />
-        <span asp-validation-for="LastName" class="text-danger"></span>
-    </div>
+<div id="register-container" class="border shadow-lg p-3">
+    
+    <div asp-validation-summary="All" class="alert-danger"></div>
+    
+    <form asp-action="Register" class="form-control" method="post">
+        <div>
+            <label asp-for="FirstName"></label>
+            <input asp-for="FirstName" class="form-control" />
+            <span asp-validation-for="FirstName" class="text-danger"></span>
+        </div>
 
-    <div>
-        <label asp-for="Email"></label>
-        <input asp-for="Email" type="email" class="form-control" />
-        <span asp-validation-for="Email" class="text-danger"></span>
-    </div>
+        <div>
+            <label asp-for="LastName"></label>
+            <input asp-for="LastName" class="form-control" />
+            <span asp-validation-for="LastName" class="text-danger"></span>
+        </div>
 
-    <div>
-        <label asp-for="PasswordHash">Password</label>
-        <input asp-for="PasswordHash" type="password" class="form-control" />
-        <span asp-validation-for="PasswordHash" class="text-danger"></span>
-    </div>
+        <div>
+            <label asp-for="Email"></label>
+            <input asp-for="Email" type="email" class="form-control" />
+            <span asp-validation-for="Email" class="text-danger"></span>
+        </div>
 
-    <div>
-        <label asp-for="PhoneNumber"></label>
-        <input asp-for="PhoneNumber" class="form-control" />
-        <span asp-validation-for="PhoneNumber" class="text-danger"></span>
-    </div>
+        <div>
+            <label asp-for="PasswordHash">Password</label>
+            <input asp-for="PasswordHash" type="password" class="form-control" />
+            <span asp-validation-for="PasswordHash" class="text-danger"></span>
+        </div>
 
-    <div>
-        <label asp-for="Role"></label>
-        <select asp-for="Role" class="form-control">
-            <option value="">-- Select Role --</option>
-            <option>Admin</option>
-            <option>Agent</option>
-            <option>Buyer</option>
-            <option>Seller</option>
-            <option>Tenant</option>
-        </select>
-        <span asp-validation-for="Role" class="text-danger"></span>
-    </div>
+        <div>
+            <label asp-for="PhoneNumber"></label>
+            <input asp-for="PhoneNumber" class="form-control" />
+            <span asp-validation-for="PhoneNumber" class="text-danger"></span>
+        </div>
 
-    <button type="submit" class="btn btn-dark">Register</button>
+        <div>
+            <label asp-for="Role"></label>
+            <select asp-for="Role" class="form-control">
+                <option value="">-- Select Role --</option>
+                <option>Admin</option>
+                <option>Agent</option>
+                <option>Buyer</option>
+                <option>Seller</option>
+                <option>Tenant</option>
+            </select>
+            <span asp-validation-for="Role" class="text-danger"></span>
+        </div>
 
-    <a class="btn btn-danger" asp-action="Login">Login</a>
-</form>
+        <div class="d-flex gap-2 mt-3">
+            <button type="submit" class="btn btn-dark">Register</button>
+            <a class="btn btn-danger" asp-action="Login">Login</a>
+        </div>
+        
+    </form>
+
+</div>
+
 
 @section Scripts {
     <partial name="_ValidationScriptsPartial" />
