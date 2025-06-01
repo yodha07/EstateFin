@@ -88,7 +88,7 @@ namespace EstateFin.Controllers
                 switch (user.Role)
                 {
                     case "Admin":
-                        return RedirectToAction("List", "Account");
+                        return RedirectToAction("AdminDashboard", "Account");
                     case "Agent":
                         return RedirectToAction("List", "Account");
                     case "Buyer":
@@ -314,7 +314,7 @@ namespace EstateFin.Controllers
                 switch (user.Role)
                 {
                     case "Admin":
-                        return RedirectToAction("AdminDashboard", "Admin");
+                        return RedirectToAction("AdminDashboard", "Account");
                     case "Agent":
                         return RedirectToAction("AgentDashboard", "Agent");
                     case "Buyer":
