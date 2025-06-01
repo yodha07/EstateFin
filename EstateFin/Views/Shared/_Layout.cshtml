@@ -1,51 +1,99 @@
-﻿<!DOCTYPE html>
+﻿@{
+    var role = Context.Session.GetString("UserRole");
+    var currentController = ViewContext.RouteData.Values["controller"]?.ToString();
+    var currentAction = ViewContext.RouteData.Values["action"]?.ToString();
+    var noSidebar = currentController == "Account" &&
+                   (currentAction == "Login" || currentAction == "Register" || currentAction == "ForgotPassword");
+}
+
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>@ViewData["Title"] - EstateFin</title>
+
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/EstateFin.styles.css" asp-append-version="true" />
     <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css" />
 
+    <style>
+        body {
+        min-height: 100vh;
+        display: flex;
+        flex-direction: row;
+        margin: 0;
+        font-family: Roboto;
+        }
+        .sidebar {
+        width: 220px;
+        background-color: #343a40;
+        color: white;
+        position: fixed;
+        height: 100vh;
+        padding-top: 20px;
+        }
+        .sidebar a {
+        color: white;
+        padding: 10px 20px;
+        display: block;
+        text-decoration: none;
+        }
+        .sidebar a:hover {
+        background-color: #495057;
+        }
+        .main-content {
+        margin-left: 220px;
+        padding: 20px;
+        flex-grow: 1;
+        transition: margin-left 0.3s ease;
+        }
+        .navbar {
+        margin-left: 220px;
+            transition: margin-left 0.3s ease;
+        }
+
+        .no-sidebar .main-content,
+        .no-sidebar .navbar {
+            margin-left: 0 !important;
+        }
+
+    </style>
 </head>
-<body>
-    <header>
-        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
-            <div class="container-fluid">
-                <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">EstateFin</a>
-                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
-                        aria-expanded="false" aria-label="Toggle navigation">
-                    <span class="navbar-toggler-icon"></span>
-                </button>
-                <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
-                    <ul class="navbar-nav flex-grow-1">
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
-                        </li>
-                        <li>
-                            <a class="nav-link btn btn-danger" asp-area="" asp-controller="Account" asp-action="Logout">Logout</a>
-                        </li>
-                    </ul>
-                </div>
-            </div>
-        </nav>
-    </header>
-    <div class="container">
-        <main role="main" class="pb-3">
+<body class="@(noSidebar ? "no-sidebar" : "")">
+
+    @if (!(currentController == "Account" && (currentAction == "Login") || (currentAction == "Register") || (currentAction == "ForgotPassword")))
+    {
+    <!-- Sidebar -->
+    <div class="sidebar">
+        <h4 class="text-center mb-4">EstateFin</h4>
+        <a asp-controller="Home" asp-action="Index">🏠 Home</a>
+        <a asp-controller="Account" asp-action="List">📋 Dashboard</a>
+        <a asp-controller="properties" asp-action="property_user">🏘 Properties</a>
+        <a asp-controller="Booking" asp-action="MyBookings">📅 My Bookings</a>
+        <a asp-controller="Review" asp-action="MyReviews">⭐ My Reviews</a>
+        @if (!string.IsNullOrEmpty(role))
+        {
+            <a asp-controller="Account" asp-action="Logout" class="text-danger mt-4">🚪 Logout</a>
+        }
+    </div>
+    }
+
+    <!-- Main Content -->
+    <div class="main-content d-flex flex-column min-vh-100">
+
+        <main role="main" class="flex-grow-1">
             @RenderBody()
         </main>
+
+        <footer class="border-top pt-3 text-dark">
+            <div class="container-fluid">
+                &copy; 2025 - EstateFin
+            </div>
+        </footer>
     </div>
 
-    <footer class="border-top footer text-muted">
-        <div class="container">
-            &copy; 2025 - EstateFin - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
-        </div>
-    </footer>
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>

@@ -1,0 +1,22 @@
+﻿@model Property_Type
+<form method="post">
+	<input type="hidden" asp-for="MyPropertyId" />
+	<div class="form-group">
+		<label for="exampleFormControlInput1">Property Type</label>
+		<input type="text" class="form-control" asp-for="PropertyType" id="exampleFormControlInput1" placeholder="Enter Property Type">
+		<span asp-validation-for="PropertyType" class="text-danger"></span>
+
+	</div>
+	<div class="form-group">
+		<label for="exampleFormControlSelect1">Status</label>
+		<select class="form-control" asp-for="status" id="exampleFormControlSelect1">
+			<option value="">select-status</option>
+			<option>Active</option>
+			<option>InActive</option>
+
+		</select>
+		<span asp-validation-for="status" class="text-danger"></span>
+
+	</div>
+	<button type="submit" class="btn btn-primary">Submit</button>
+</form>

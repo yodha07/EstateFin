@@ -82,6 +82,8 @@ namespace EstateFin.Controllers
             {
                 HttpContext.Session.SetString("UserRole", user.Role!);
                 HttpContext.Session.SetString("UserName", user.FirstName!);
+                HttpContext.Session.SetString("Login", user.UserID.ToString()!);
+
 
                 switch (user.Role)
                 {

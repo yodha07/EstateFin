@@ -1,0 +1,26 @@
+﻿@model List<Property_Type>
+<table class="table">
+	<thead>
+		<tr>
+			<th scope="col">Property_Type</th>
+			<th scope="col">Status</th>
+			<th scope="col">CreatedBy</th>
+			<th scope="col">CreatedAt</th>
+			<th scope="col">Actions</th>
+		</tr>
+	</thead>
+	<tbody>
+		@foreach (var i in Model)
+		{
+			<tr>
+				<th scope="row">@i.PropertyType</th>
+				<td>@i.status</td>
+				<td>@i.createdby</td>
+				<td>@i.createdat</td>
+				<td><a asp-controller="properties" asp-action="delete_property_type" asp-route-id="@i.MyPropertyId" class="btn btn-primary">Delete</a></td>
+				<td><a asp-controller="properties" asp-action="edit_property_type" asp-route-id="@i.MyPropertyId" class="btn btn-primary">Edit</a></td>
+
+			</tr>
+		}
+	</tbody>
+</table>
