@@ -1,0 +1,21 @@
+﻿@model Review
+ @* action="/Review/Submit" *@
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}
+
+<form method="post">
+    @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+
+    <input type="hidden" asp-for="PropertyId"/>
+
+    <label>Rating</label>
+    <input type="text" class="form-control" asp-for="Rating" placeholder="Enter Your Rating" />
+    <span asp-validation-for="Rating" class="text-danger"></span>
+
+    <label>Comment</label>
+    <textarea asp-for="Comment" class="form-control" placeholder="Enter Your Valuable Review"></textarea><br />
+    <span asp-validation-for="Comment" class="text-danger"></span>
+
+    <button type="submit" class="btn btn-outline-success">Submit Review</button>
+</form>

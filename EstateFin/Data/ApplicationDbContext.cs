@@ -12,6 +12,8 @@ namespace EstateFin.Data
         }
 
         public DbSet<User> Users { get; set; }
+
+        public DbSet<Review> Reviews { get; set; }
         //public DbSet<Booking> Bookings { get; set; }
         //public DbSet<Property> Properties { get; set; }
         //public DbSet<Appointment> Appointments { get; set; }
