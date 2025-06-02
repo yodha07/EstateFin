@@ -79,14 +79,14 @@ namespace EstateFin.Controllers
             prop.properties.images = string.Join(",", mpath);
             prop.properties.CreatedAt = DateTime.Now;
             HttpContext.Session.SetInt32("PropertyID", prop.properties.PropertyId);
-            
-            //foreach (var modelError in ModelState)
-            //{
-            //    foreach (var error in modelError.Value.Errors)
-            //    {
-            //        Console.WriteLine($"Field: {modelError.Key} — Error: {error.ErrorMessage}");
-            //    }
-            //}
+
+            foreach (var modelError in ModelState)
+            {
+                foreach (var error in modelError.Value.Errors)
+                {
+                    Console.WriteLine($"Field: {modelError.Key} — Error: {error.ErrorMessage}");
+                }
+            }
 
             if (ModelState.IsValid)
             {

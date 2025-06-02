@@ -14,7 +14,7 @@ namespace EstateFin.Models
         public string City { get; set; }
         public string State { get; set; }
         public string ZipCode { get; set; }
-        public string PropertyType { get; set; }
+        public string? PropertyType { get; set; }
         public string Status { get; set; }
         public int OwnerId { get; set; }
         public string? images { get; set; }
@@ -25,7 +25,7 @@ namespace EstateFin.Models
 
         public User? User { get; set; }
 
-        public List<Review> Reviews { get; set; }
+        public List<Review>? Reviews { get; set; } = new List<Review>();
 
 
     }

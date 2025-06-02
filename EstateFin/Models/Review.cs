@@ -21,8 +21,8 @@ namespace EstateFin.Models
             public string Comment { get; set; }
             public DateTime DatePosted { get; set; }
 
-            public User User { get; set; }
-            public Property Property { get; set; }
+            public User? User { get; set; }
+            public Property? Property { get; set; }
 
       
     }

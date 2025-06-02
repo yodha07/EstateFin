@@ -72,6 +72,7 @@ namespace EstateFin.Data
                 .HasForeignKey(r => r.UserID)
                 .OnDelete(DeleteBehavior.Restrict); 
 
+
             modelBuilder.Entity<Review>()
                 .HasOne(r => r.Property)
                 .WithMany(p => p.Reviews)

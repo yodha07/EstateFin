@@ -33,6 +33,7 @@ namespace EstateFin.Models
         public List<Transaction>? Transactions { get; set; } = new List<Transaction>();
         public List<Property>? Properties { get; set; }
 
-        public List<Review> Reviews { get; set; }
+        public List<Review>? Reviews { get; set; } = new List<Review>();
+
     }
 }

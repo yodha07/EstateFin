@@ -30,31 +30,58 @@ namespace EstateFin.Controllers
             return View();
         }
 
-        public IActionResult Submit(int propertyId)
+        //public IActionResult Submit(int propertyId)
+        //{
+        //    //ViewBag.PropertyId = propertyId;
+        //    var model = new Review
+        //    {
+        //        PropertyId = 1
+        //    };
+        //    return View(model);
+        //}
+
+        //[HttpPost]
+        //public IActionResult Submit(Review review)
+        //{
+        //    if (ModelState.IsValid)
+        //    {
+        //        review.UserID = 1;  //hard coded
+        //        review.DatePosted = DateTime.Now;
+        //        db.Reviews.Add(review);
+        //        db.SaveChanges();
+        //        return RedirectToAction("ViewPropertyReviews", new { id = review.PropertyId });
+        //    }
+
+        //    return View(review);
+
+        //}
+
+
+        // GET action - optional; agar sirf form dikhana hai, toh propertyId set karna zaroori nahi
+        public IActionResult Submit()
         {
-            //ViewBag.PropertyId = propertyId;
-            var model = new Review
-            {
-                PropertyId = propertyId
-            };
-            return View(model);
+            return View();
         }
 
         [HttpPost]
         public IActionResult Submit(Review review)
         {
+            review.UserID = 1;         // hardcoded user
+            review.PropertyId = 1;     // hardcoded property
+            review.DatePosted = DateTime.Now;
+
             if (ModelState.IsValid)
             {
-                //review.UserId = 1;  //hard coded
-                review.DatePosted = DateTime.Now;
                 db.Reviews.Add(review);
                 db.SaveChanges();
+
                 return RedirectToAction("ViewPropertyReviews", new { id = review.PropertyId });
             }
 
             return View(review);
-
         }
+
+
 
         public IActionResult ViewPropertyReviews(int id)
         {
