@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace EstateFin.Models
 {
-    public class properties
+    public class Property
     {
         [Key]
         public int PropertyId { get; set; }

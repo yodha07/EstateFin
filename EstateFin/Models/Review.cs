@@ -9,11 +9,10 @@ namespace EstateFin.Models
             [Key]
             public int Id { get; set; }
 
-            [ForeignKey("User")]
-            public int UserId { get; set; }
+            //[ForeignKey("User")]
+            public int UserID { get; set; }
 
-            [ForeignKey("properties")]
-
+            //[ForeignKey("properties")]
             public int PropertyId { get; set; }
 
             [Required]
@@ -23,7 +22,9 @@ namespace EstateFin.Models
             public DateTime DatePosted { get; set; }
 
             public User User { get; set; }
-            public properties properties { get; set; }
+            public Property Property { get; set; }
 
+      
     }
 }
+

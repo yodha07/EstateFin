@@ -19,7 +19,7 @@ namespace EstateFin.Data
                 .HasOne(b => b.User)
                 .WithMany()
                 .HasForeignKey(b => b.UserID)
-                .OnDelete(DeleteBehavior.Restrict);  
+                .OnDelete(DeleteBehavior.Restrict);
 
             modelBuilder.Entity<Booking>()
                 .HasOne(b => b.Property)
@@ -27,11 +27,11 @@ namespace EstateFin.Data
                 .HasForeignKey(b => b.PropertyId)
                 .OnDelete(DeleteBehavior.Restrict);
 
-        //    modelBuilder.Entity<Appointment>()
-        //.HasOne(a => a.User)
-        //.WithMany()
-        //.HasForeignKey(a => a.UserId)
-        //.OnDelete(DeleteBehavior.Cascade);
+            //    modelBuilder.Entity<Appointment>()
+            //.HasOne(a => a.User)
+            //.WithMany()
+            //.HasForeignKey(a => a.UserId)
+            //.OnDelete(DeleteBehavior.Cascade);
 
             //modelBuilder.Entity<Appointment>()
             //    .HasOne(a => a.Property)
@@ -59,17 +59,28 @@ namespace EstateFin.Data
             //    .HasForeignKey(l => l.TenantId)
             //    .OnDelete(DeleteBehavior.Cascade);
 
-            modelBuilder.Entity<Review>()
-                .HasOne(r => r.User)
-                .WithMany()
-                .HasForeignKey(r => r.UserId)
-                .OnDelete(DeleteBehavior.Cascade);
 
             //modelBuilder.Entity<Review>()
             //    .HasOne(r => r.PropertyId)
             //    .WithMany()
             //    .HasForeignKey(r => r.PropertyId)
             //    .OnDelete(DeleteBehavior.Cascade);
+
+            modelBuilder.Entity<Review>()
+                .HasOne(r => r.User)
+                .WithMany(u => u.Reviews)
+                .HasForeignKey(r => r.UserID)
+                .OnDelete(DeleteBehavior.Restrict); 
+
+            modelBuilder.Entity<Review>()
+                .HasOne(r => r.Property)
+                .WithMany(p => p.Reviews)
+                .HasForeignKey(r => r.PropertyId)
+                .OnDelete(DeleteBehavior.Cascade);
+
+
+
+
         }
 
 
@@ -78,12 +89,12 @@ namespace EstateFin.Data
 
         public DbSet<Review> Reviews { get; set; }
 
-        public DbSet<properties> Properties { get; set; }
+        public DbSet<Models.Property> Properties { get; set; }
         public DbSet<Property_Type> Property_Types { get; set; }
 
 
         public DbSet<Booking> Bookings { get; set; }
-        
+
         public DbSet<Transaction> Transactions { get; set; }
 
         //public DbSet<Property> Properties { get; set; }
