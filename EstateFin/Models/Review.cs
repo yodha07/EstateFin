@@ -13,6 +13,7 @@ namespace EstateFin.Models
             public int UserId { get; set; }
 
             [ForeignKey("properties")]
+
             public int PropertyId { get; set; }
 
             [Required]

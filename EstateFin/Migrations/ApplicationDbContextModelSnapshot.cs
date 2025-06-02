@@ -22,6 +22,44 @@ namespace EstateFin.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
+            modelBuilder.Entity("EstateFin.Models.Booking", b =>
+                {
+                    b.Property<int>("BookingId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("BookingId"));
+
+                    b.Property<decimal>("Amount")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<DateTime>("BookingDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("PropertyId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("Status")
+                        .HasColumnType("int");
+
+                    b.Property<int>("UserID")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("UserID1")
+                        .HasColumnType("int");
+
+                    b.HasKey("BookingId");
+
+                    b.HasIndex("PropertyId");
+
+                    b.HasIndex("UserID");
+
+                    b.HasIndex("UserID1");
+
+                    b.ToTable("Bookings");
+                });
+
+
             modelBuilder.Entity("EstateFin.Models.Property_Type", b =>
                 {
                     b.Property<int>("MyPropertyId")
@@ -80,6 +118,48 @@ namespace EstateFin.Migrations
                     b.HasIndex("UserId");
 
                     b.ToTable("Reviews");
+
+                });
+
+            modelBuilder.Entity("EstateFin.Models.Transaction", b =>
+                {
+                    b.Property<int>("TransactionId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("TransactionId"));
+
+                    b.Property<decimal>("Amount")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<int>("BookingId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("PaymentId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("PaymentMethod")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("PaymentStatus")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("TransactionDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int?>("UserID")
+                        .HasColumnType("int");
+
+                    b.HasKey("TransactionId");
+
+                    b.HasIndex("BookingId");
+
+                    b.HasIndex("UserID");
+
+                    b.ToTable("Transactions");
+
                 });
 
             modelBuilder.Entity("EstateFin.Models.User", b =>
@@ -184,6 +264,7 @@ namespace EstateFin.Migrations
                     b.ToTable("Properties");
                 });
 
+
             modelBuilder.Entity("EstateFin.Models.Review", b =>
                 {
                     b.HasOne("EstateFin.Models.properties", "properties")
@@ -208,11 +289,42 @@ namespace EstateFin.Migrations
                     b.HasOne("EstateFin.Models.User", "User")
                         .WithMany("Properties")
                         .HasForeignKey("userid")
+
+            modelBuilder.Entity("EstateFin.Models.Booking", b =>
+                {
+                    b.HasOne("EstateFin.Models.properties", "Property")
+                        .WithMany()
+                        .HasForeignKey("PropertyId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("EstateFin.Models.User", "User")
+                        .WithMany()
+                        .HasForeignKey("UserID")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("EstateFin.Models.User", null)
+                        .WithMany("Bookings")
+                        .HasForeignKey("UserID1");
+
+                    b.Navigation("Property");
+
+                    b.Navigation("User");
+                });
+
+            modelBuilder.Entity("EstateFin.Models.Review", b =>
+                {
+                    b.HasOne("EstateFin.Models.User", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId")
+
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.Navigation("User");
                 });
+
 
             modelBuilder.Entity("EstateFin.Models.User", b =>
                 {
@@ -224,6 +336,41 @@ namespace EstateFin.Migrations
             modelBuilder.Entity("EstateFin.Models.properties", b =>
                 {
                     b.Navigation("Reviews");
+
+            modelBuilder.Entity("EstateFin.Models.Transaction", b =>
+                {
+                    b.HasOne("EstateFin.Models.Booking", "Booking")
+                        .WithMany()
+                        .HasForeignKey("BookingId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("EstateFin.Models.User", null)
+                        .WithMany("Transactions")
+                        .HasForeignKey("UserID");
+
+                    b.Navigation("Booking");
+                });
+
+            modelBuilder.Entity("EstateFin.Models.properties", b =>
+                {
+                    b.HasOne("EstateFin.Models.User", "User")
+                        .WithMany("Properties")
+                        .HasForeignKey("userid")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("User");
+                });
+
+            modelBuilder.Entity("EstateFin.Models.User", b =>
+                {
+                    b.Navigation("Bookings");
+
+                    b.Navigation("Properties");
+
+                    b.Navigation("Transactions");
+
                 });
 #pragma warning restore 612, 618
         }
