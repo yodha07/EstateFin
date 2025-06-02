@@ -26,6 +26,7 @@ namespace EstateFin.Controllers
             //db.Reviews.Add(review);
             //db.SaveChanges();
             //return Content("Inserted!");
+
             return View();
         }
 
@@ -44,7 +45,7 @@ namespace EstateFin.Controllers
         {
             if (ModelState.IsValid)
             {
-                review.UserId = 1;  //hard coded
+                //review.UserId = 1;  //hard coded
                 review.DatePosted = DateTime.Now;
                 db.Reviews.Add(review);
                 db.SaveChanges();

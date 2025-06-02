@@ -22,6 +22,32 @@ namespace EstateFin.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
+            modelBuilder.Entity("EstateFin.Models.Property_Type", b =>
+                {
+                    b.Property<int>("MyPropertyId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("MyPropertyId"));
+
+                    b.Property<string>("PropertyType")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime?>("createdat")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("createdby")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("status")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("MyPropertyId");
+
+                    b.ToTable("Property_Types");
+                });
 
             modelBuilder.Entity("EstateFin.Models.Review", b =>
                 {
@@ -49,36 +75,11 @@ namespace EstateFin.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("PropertyId");
+
                     b.HasIndex("UserId");
 
                     b.ToTable("Reviews");
-
-            modelBuilder.Entity("EstateFin.Models.Property_type", b =>
-                {
-                    b.Property<int>("MyPropertyId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("MyPropertyId"));
-
-                    b.Property<string>("PropertyType")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTime?>("createdat")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("createdby")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("status")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("MyPropertyId");
-
-                    b.ToTable("Property_Types");
-
                 });
 
             modelBuilder.Entity("EstateFin.Models.User", b =>
@@ -120,13 +121,6 @@ namespace EstateFin.Migrations
 
                     b.ToTable("Users");
                 });
-
-
-            modelBuilder.Entity("EstateFin.Models.Review", b =>
-                {
-                    b.HasOne("EstateFin.Models.User", "User")
-                        .WithMany()
-                        .HasForeignKey("UserId")
 
             modelBuilder.Entity("EstateFin.Models.properties", b =>
                 {
@@ -190,24 +184,47 @@ namespace EstateFin.Migrations
                     b.ToTable("Properties");
                 });
 
+            modelBuilder.Entity("EstateFin.Models.Review", b =>
+                {
+                    b.HasOne("EstateFin.Models.properties", "properties")
+                        .WithMany("Reviews")
+                        .HasForeignKey("PropertyId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("EstateFin.Models.User", "User")
+                        .WithMany("Reviews")
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("User");
+
+                    b.Navigation("properties");
+                });
+
             modelBuilder.Entity("EstateFin.Models.properties", b =>
                 {
                     b.HasOne("EstateFin.Models.User", "User")
                         .WithMany("Properties")
                         .HasForeignKey("userid")
-
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.Navigation("User");
                 });
 
-
             modelBuilder.Entity("EstateFin.Models.User", b =>
                 {
                     b.Navigation("Properties");
+
+                    b.Navigation("Reviews");
                 });
 
+            modelBuilder.Entity("EstateFin.Models.properties", b =>
+                {
+                    b.Navigation("Reviews");
+                });
 #pragma warning restore 612, 618
         }
     }

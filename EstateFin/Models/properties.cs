@@ -25,5 +25,8 @@ namespace EstateFin.Models
 
         public User? User { get; set; }
 
+        public List<Review> Reviews { get; set; }
+
+
     }
 }

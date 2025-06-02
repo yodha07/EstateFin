@@ -4,9 +4,9 @@
     <partial name="_ValidationScriptsPartial" />
 }
 
-<form method="post">
+<form method="post" action="/Review/Submit">
     @Html.ValidationSummary(true, "", new { @class = "text-danger" })
-
+    <h1 class="text-center">Review</h1>
     <input type="hidden" asp-for="PropertyId"/>
 
     <label>Rating</label>

@@ -78,6 +78,8 @@ namespace EstateFin.Controllers
             }
             prop.properties.images = string.Join(",", mpath);
             prop.properties.CreatedAt = DateTime.Now;
+            HttpContext.Session.SetInt32("PropertyID", prop.properties.PropertyId);
+            
             //foreach (var modelError in ModelState)
             //{
             //    foreach (var error in modelError.Value.Errors)
@@ -96,7 +98,6 @@ namespace EstateFin.Controllers
                 db.SaveChanges();
                 TempData["msg"] = "data added";
                 return RedirectToAction("Index");
-
 
 
             }

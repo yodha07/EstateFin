@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace EstateFin.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20250531121513_add")]
-    partial class add
+    [Migration("20250601174317_updateReview")]
+    partial class updateReview
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -25,7 +25,7 @@ namespace EstateFin.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
-            modelBuilder.Entity("EstateFin.Models.Property_type", b =>
+            modelBuilder.Entity("EstateFin.Models.Property_Type", b =>
                 {
                     b.Property<int>("MyPropertyId")
                         .ValueGeneratedOnAdd()
@@ -50,6 +50,39 @@ namespace EstateFin.Migrations
                     b.HasKey("MyPropertyId");
 
                     b.ToTable("Property_Types");
+                });
+
+            modelBuilder.Entity("EstateFin.Models.Review", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Comment")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("DatePosted")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("PropertyId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("Rating")
+                        .HasColumnType("int");
+
+                    b.Property<int>("UserId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("PropertyId");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("Reviews");
                 });
 
             modelBuilder.Entity("EstateFin.Models.User", b =>
@@ -144,9 +177,56 @@ namespace EstateFin.Migrations
                     b.Property<string>("images")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<int>("userid")
+                        .HasColumnType("int");
+
                     b.HasKey("PropertyId");
 
+                    b.HasIndex("userid");
+
                     b.ToTable("Properties");
+                });
+
+            modelBuilder.Entity("EstateFin.Models.Review", b =>
+                {
+                    b.HasOne("EstateFin.Models.properties", "properties")
+                        .WithMany("Reviews")
+                        .HasForeignKey("PropertyId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("EstateFin.Models.User", "User")
+                        .WithMany("Reviews")
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("User");
+
+                    b.Navigation("properties");
+                });
+
+            modelBuilder.Entity("EstateFin.Models.properties", b =>
+                {
+                    b.HasOne("EstateFin.Models.User", "User")
+                        .WithMany("Properties")
+                        .HasForeignKey("userid")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("User");
+                });
+
+            modelBuilder.Entity("EstateFin.Models.User", b =>
+                {
+                    b.Navigation("Properties");
+
+                    b.Navigation("Reviews");
+                });
+
+            modelBuilder.Entity("EstateFin.Models.properties", b =>
+                {
+                    b.Navigation("Reviews");
                 });
 #pragma warning restore 612, 618
         }

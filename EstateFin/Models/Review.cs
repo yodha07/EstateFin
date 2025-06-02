@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace EstateFin.Models
 {
@@ -8,7 +9,10 @@ namespace EstateFin.Models
             [Key]
             public int Id { get; set; }
 
+            [ForeignKey("User")]
             public int UserId { get; set; }
+
+            [ForeignKey("properties")]
             public int PropertyId { get; set; }
 
             [Required]
@@ -17,9 +21,8 @@ namespace EstateFin.Models
             public string Comment { get; set; }
             public DateTime DatePosted { get; set; }
 
-            // Navigation properties (optional)
-            public virtual User User { get; set; }
-        //public virtual Property Property { get; set; }
+            public User User { get; set; }
+            public properties properties { get; set; }
 
     }
 }
