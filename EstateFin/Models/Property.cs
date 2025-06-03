@@ -21,11 +21,11 @@ namespace EstateFin.Models
         public DateTime? CreatedAt { get; set; }
 
         [ForeignKey("User")]
-        public int userid {  get; set; }
+        public int UserID {  get; set; }
 
         public User? User { get; set; }
 
-
+        public List<Appointment>? Appointments { get; set; }
         //public Booking? Booking { get; set; }
 
         public List<Review>? Reviews { get; set; } = new List<Review>();

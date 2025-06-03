@@ -27,6 +27,26 @@ namespace EstateFin.Data
                 .HasForeignKey(b => b.PropertyId)
                 .OnDelete(DeleteBehavior.Restrict);
 
+            //      modelBuilder.Entity<Property>()
+            //.HasOne(p => p.User)
+            //.WithMany(u => u.Properties)
+            //.HasForeignKey(p => p.UserID)
+            //.OnDelete(DeleteBehavior.Restrict);
+
+            // User ↔ Appointment (one-to-one)
+            modelBuilder.Entity<User>()
+                .HasOne(u => u.Appointment)
+                .WithOne(a => a.User)
+                .HasForeignKey<Appointment>(a => a.UserID)
+                .OnDelete(DeleteBehavior.Cascade); // or Restrict
+
+            // Property → Appointment (one-to-many is okay)
+            modelBuilder.Entity<Appointment>()
+                .HasOne(a => a.Property)
+                .WithMany(p => p.Appointments)
+                .HasForeignKey(a => a.PropertyId)
+                .OnDelete(DeleteBehavior.Restrict);
+
             //    modelBuilder.Entity<Appointment>()
             //.HasOne(a => a.User)
             //.WithMany()
@@ -115,6 +135,10 @@ namespace EstateFin.Data
 
 
         public DbSet<Rent> Rents { get; set; }
+        public DbSet<Appointment> appointment { get; set; }
+        public DbSet<Slot> slot { get; set; }
+
+
 
 
 
@@ -122,7 +146,7 @@ namespace EstateFin.Data
         //{
         //    base.OnModelCreating(modelBuilder);
 
-            
+
         //}
 
 

@@ -41,6 +41,7 @@
                     <form asp-action="property_user" asp-controller="Properties" method="post">
                         <input type="hidden" name="id" value="@e.PropertyId" />
                         <button type="submit" class="btn btn-success">Book</button>
+                        <a asp-action="Add_Appointment" asp-controller="Appointment" asp-route-id="@e.PropertyId" >Appointment</a>
                     </form>
 
 

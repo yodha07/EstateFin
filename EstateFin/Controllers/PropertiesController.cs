@@ -72,7 +72,7 @@ namespace EstateFin.Controllers
         [HttpPost]
         public IActionResult add_properties(Bind prop)
         {
-            prop.properties.userid = int.Parse(HttpContext.Session.GetString("Login"));
+            prop.properties.UserID = int.Parse(HttpContext.Session.GetString("Login"));
 
             var mpath = repo.propertyfile(prop);
             prop.properties.images = string.Join(",", mpath);

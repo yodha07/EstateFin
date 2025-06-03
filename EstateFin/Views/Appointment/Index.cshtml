@@ -1,0 +1,34 @@
+﻿@model List<Appointment>
+<table class="table">
+    <thead>
+        <tr>
+            <th scope="col">sr no</th>
+
+            <th scope="col">name</th>
+            <th scope="col">Property</th>
+            <th scope="col">Appointment Date</th>
+            <th scope="col">Slot</th>
+            <th scope="col">Status</th>
+
+        </tr>
+    </thead>
+    <tbody>
+        @foreach(var e in Model)
+        {
+
+            <tr>
+                <th scope="row">@e.AppointmentId</th>
+                <td>@e.User.Email</td>
+                <td>@e.Property.Title</td>
+                <td>@e.AppointmentDate</td>
+                <td>@e.slot</td>
+                <td>@e.Status</td>
+                
+
+
+            </tr>
+            
+        }
+      
+    </tbody>
+</table>

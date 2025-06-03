@@ -12,13 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace EstateFin.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-<<<<<<<< HEAD:EstateFin/Migrations/20250602174856_EF.Designer.cs
-    [Migration("20250602174856_EF")]
-    partial class EF
-========
-    [Migration("20250603085425_newh")]
-    partial class newh
->>>>>>>> b4d54039b5dc641040232bda19628a1e7134282b:EstateFin/Migrations/20250603085425_newh.Designer.cs
+    [Migration("20250603224709_adds")]
+    partial class adds
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -29,6 +24,40 @@ namespace EstateFin.Migrations
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
+
+            modelBuilder.Entity("EstateFin.Models.Appointment", b =>
+                {
+                    b.Property<int>("AppointmentId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("AppointmentId"));
+
+                    b.Property<DateTime?>("AppointmentDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("PropertyId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Status")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("UserID")
+                        .HasColumnType("int");
+
+                    b.Property<string>("slot")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("AppointmentId");
+
+                    b.HasIndex("PropertyId");
+
+                    b.HasIndex("UserID")
+                        .IsUnique();
+
+                    b.ToTable("appointment");
+                });
 
             modelBuilder.Entity("EstateFin.Models.Booking", b =>
                 {
@@ -98,6 +127,9 @@ namespace EstateFin.Migrations
                     b.Property<int>("PropertyId")
                         .HasColumnType("int");
 
+                    b.Property<int?>("PropertyId1")
+                        .HasColumnType("int");
+
                     b.Property<decimal?>("RentAmount")
                         .HasColumnType("decimal(18,2)");
 
@@ -112,6 +144,10 @@ namespace EstateFin.Migrations
                     b.HasIndex("BookingId");
 
                     b.HasIndex("PropertyId");
+
+                    b.HasIndex("PropertyId1")
+                        .IsUnique()
+                        .HasFilter("[PropertyId1] IS NOT NULL");
 
                     b.HasIndex("TenantId");
 
@@ -162,6 +198,9 @@ namespace EstateFin.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<int>("UserID")
+                        .HasColumnType("int");
+
                     b.Property<string>("ZipCode")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -169,12 +208,9 @@ namespace EstateFin.Migrations
                     b.Property<string>("images")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("userid")
-                        .HasColumnType("int");
-
                     b.HasKey("PropertyId");
 
-                    b.HasIndex("userid");
+                    b.HasIndex("UserID");
 
                     b.ToTable("Properties");
                 });
@@ -204,6 +240,39 @@ namespace EstateFin.Migrations
                     b.HasKey("MyPropertyId");
 
                     b.ToTable("Property_Types");
+                });
+
+            modelBuilder.Entity("EstateFin.Models.Rent", b =>
+                {
+                    b.Property<int>("RentId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("RentId"));
+
+                    b.Property<decimal?>("Amount")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<DateTime>("DueDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<bool>("IsPaid")
+                        .HasColumnType("bit");
+
+                    b.Property<int>("LeaseId")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime?>("PaidDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("RentStatus")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("RentId");
+
+                    b.HasIndex("LeaseId");
+
+                    b.ToTable("Rents");
                 });
 
             modelBuilder.Entity("EstateFin.Models.Review", b =>
@@ -237,6 +306,27 @@ namespace EstateFin.Migrations
                     b.HasIndex("UserID");
 
                     b.ToTable("Reviews");
+                });
+
+            modelBuilder.Entity("EstateFin.Models.Slot", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Slot_type")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Status")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("slot");
                 });
 
             modelBuilder.Entity("EstateFin.Models.Transaction", b =>
@@ -319,6 +409,25 @@ namespace EstateFin.Migrations
                     b.ToTable("Users");
                 });
 
+            modelBuilder.Entity("EstateFin.Models.Appointment", b =>
+                {
+                    b.HasOne("EstateFin.Models.Property", "Property")
+                        .WithMany("Appointments")
+                        .HasForeignKey("PropertyId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("EstateFin.Models.User", "User")
+                        .WithOne("Appointment")
+                        .HasForeignKey("EstateFin.Models.Appointment", "UserID")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Property");
+
+                    b.Navigation("User");
+                });
+
             modelBuilder.Entity("EstateFin.Models.Booking", b =>
                 {
                     b.HasOne("EstateFin.Models.Property", "Property")
@@ -360,6 +469,10 @@ namespace EstateFin.Migrations
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
+                    b.HasOne("EstateFin.Models.Property", null)
+                        .WithOne("lease")
+                        .HasForeignKey("EstateFin.Models.LeaseAgreement", "PropertyId1");
+
                     b.HasOne("EstateFin.Models.User", "Tenant")
                         .WithMany()
                         .HasForeignKey("TenantId")
@@ -377,11 +490,22 @@ namespace EstateFin.Migrations
                 {
                     b.HasOne("EstateFin.Models.User", "User")
                         .WithMany("Properties")
-                        .HasForeignKey("userid")
+                        .HasForeignKey("UserID")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.Navigation("User");
+                });
+
+            modelBuilder.Entity("EstateFin.Models.Rent", b =>
+                {
+                    b.HasOne("EstateFin.Models.LeaseAgreement", "LeaseAgreement")
+                        .WithMany()
+                        .HasForeignKey("LeaseId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("LeaseAgreement");
                 });
 
             modelBuilder.Entity("EstateFin.Models.Review", b =>
@@ -420,11 +544,17 @@ namespace EstateFin.Migrations
 
             modelBuilder.Entity("EstateFin.Models.Property", b =>
                 {
+                    b.Navigation("Appointments");
+
                     b.Navigation("Reviews");
+
+                    b.Navigation("lease");
                 });
 
             modelBuilder.Entity("EstateFin.Models.User", b =>
                 {
+                    b.Navigation("Appointment");
+
                     b.Navigation("Booking");
 
                     b.Navigation("Bookings");

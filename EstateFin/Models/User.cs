@@ -39,6 +39,8 @@ namespace EstateFin.Models
 
         public List<Review>? Reviews { get; set; } = new List<Review>();
 
+        public Appointment? Appointment { get; set; }
+
 
     }
 }

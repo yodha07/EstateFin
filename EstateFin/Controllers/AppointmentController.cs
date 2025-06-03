@@ -1,0 +1,119 @@
+﻿using System.Reflection.Metadata.Ecma335;
+using EstateFin.Data;
+using EstateFin.Models;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.EntityFrameworkCore;
+using static System.Runtime.InteropServices.JavaScript.JSType;
+
+namespace EstateFin.Controllers
+{
+    public class AppointmentController : Controller
+    {
+        ApplicationDbContext db;
+        public AppointmentController(ApplicationDbContext db) { this.db = db; }
+        
+
+        public IActionResult Index()
+        {
+            int user = int.Parse(HttpContext.Session.GetString("Login"));
+
+            var e =  db.appointment.Where(x=> x.UserID.Equals(user)).Include(x=> x.Property).Include(x=> x.User).ToList();
+            return View(e);
+        }
+
+        public IActionResult agent()
+        {
+            int user = int.Parse(HttpContext.Session.GetString("Login"));
+
+            var e = db.appointment.Where(x => x.UserID.Equals(user)&& x.Status.Equals("pending")).Include(x => x.Property).Include(x => x.User).ToList();
+            return View(e);
+        }
+
+        public IActionResult confirm(int id)
+        {
+            var user = db.appointment.Find(id);
+            user.Status = "confirmed";
+            db.SaveChanges();
+
+            return RedirectToAction("index");
+        }
+        public IActionResult reject(int id)
+        {
+
+            var user = db.appointment.Find(id);
+            db.appointment.Remove(user);
+            db.SaveChanges();
+            return RedirectToAction("index");
+        }
+
+        public IActionResult Add_Appointment()
+        {
+            var list = db.slot.Where(x => x.Status.Equals("Active")).ToList();
+
+            ViewBag.slot = new SelectList(list, "Id", "Slot_type");
+
+            return View();
+        }
+
+        [HttpPost]
+        public IActionResult Add_Appointment(int id , Appointment app)
+        {
+            int user = int.Parse(HttpContext.Session.GetString("Login"));
+
+            var e = db.Users.Where(x => x.UserID.Equals(user)).ToList();
+            app.UserID = user;
+            app.Status = "pending";
+            app.PropertyId = id;
+            //foreach (var modelError in ModelState)
+            //{
+            //    foreach (var error in modelError.Value.Errors)
+            //    {
+            //        Console.WriteLine($"Field: {modelError.Key} — Error: {error.ErrorMessage}");
+            //    }
+            //}
+            //var app = new Appointment()
+            //{
+            //    UserID = user,
+            //};
+            //app.UserID = user;
+            //app.Status = "pending";
+            //app.PropertyId = id;
+            if (ModelState.IsValid) 
+            {
+                if (db.appointment.Any(a => a.AppointmentDate == app.AppointmentDate && a.slot == app.slot && a.PropertyId == app.PropertyId))
+                {
+                    ViewBag.msg = "Slot is already Booked";
+                    return View();   
+                }
+                else
+                {
+                    db.appointment.Add(app);
+                    db.SaveChanges();
+                    return RedirectToAction("index");
+                }
+            }
+            else
+            {
+                return View();   
+            }
+        }
+        public IActionResult slot_add()
+        {
+
+            return View();
+        }
+        [HttpPost]
+        public IActionResult slot_add(Slot slots)
+        {
+            if (ModelState.IsValid)
+            {
+                db.slot.Add(slots);
+                db.SaveChanges();
+                
+            }
+            return View();
+        }
+
+    }
+}
