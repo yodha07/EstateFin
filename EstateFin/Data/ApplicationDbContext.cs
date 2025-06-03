@@ -14,6 +14,26 @@ namespace EstateFin.Data
         public DbSet<User> Users { get; set; }
         public DbSet<properties> Properties { get; set; }
         public DbSet<Property_Type> Property_Types { get; set; }
+        public DbSet<Booking> Bookings { get; set; }
+        public DbSet<Transaction> Transactions { get; set; }
+
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            base.OnModelCreating(modelBuilder);
+
+            modelBuilder.Entity<Booking>()
+                .HasOne(b => b.User)
+                .WithMany()
+                .HasForeignKey(b => b.UserID)
+                .OnDelete(DeleteBehavior.Restrict);  // Disable cascading delete
+
+            modelBuilder.Entity<Booking>()
+                .HasOne(b => b.Property)
+                .WithMany()
+                .HasForeignKey(b => b.PropertyId)
+                .OnDelete(DeleteBehavior.Restrict);  // Disable cascading delete
+        }
+
 
         //public DbSet<Booking> Bookings { get; set; }
         //public DbSet<Property> Properties { get; set; }

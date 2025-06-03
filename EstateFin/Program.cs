@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication.Google;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
+using Rotativa.AspNetCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -30,7 +31,12 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("dbconn")));
 
 builder.Services.AddScoped<IUserRepo, UserRepo>();
+builder.Services.AddScoped<PropertyRepo, PropertyService>();
 
+builder.Services.AddScoped<IBookingRepository, BookingService>();
+builder.Services.AddScoped<ITransactionRepository, TransactionService>();
+
+builder.Services.AddControllersWithViews().AddSessionStateTempDataProvider();
 builder.Services.AddSession();
 
 var app = builder.Build();
@@ -44,6 +50,8 @@ if (!app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 app.UseStaticFiles();
+
+
 
 app.UseRouting();
 

@@ -25,5 +25,7 @@ namespace EstateFin.Models
 
         public User? User { get; set; }
 
+        //public Booking? Booking { get; set; }
+
     }
 }

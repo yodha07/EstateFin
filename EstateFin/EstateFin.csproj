@@ -14,6 +14,8 @@
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
+    <PackageReference Include="Razorpay" Version="3.1.4" />
+    <PackageReference Include="Rotativa.AspNetCore" Version="1.4.0" />
   </ItemGroup>
 
   <ItemGroup>
@@ -24,6 +26,7 @@
 
   <ItemGroup>
     <Folder Include="wwwroot\Content\Images\" />
+    <Folder Include="wwwroot\Rotativa\" />
   </ItemGroup>
 
 </Project>

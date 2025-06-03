@@ -1,47 +1,52 @@
 ﻿@model List<properties>
 
 <div class="row row-cols-1 row-cols-md-3 g-4">
-	@foreach (var e in Model)
-	{
-		var carouselId = "carousel_" + e.PropertyId;
+    @foreach (var e in Model)
+    {
+        var carouselId = "carousel_" + e.PropertyId;
 
-		<div class="col">
-			<div class="card h-100 shadow-sm border-0">
-				<div id="@carouselId" class="carousel slide" data-bs-ride="carousel">
-					<div class="carousel-inner">
+        <div class="col">
+            <div class="card h-100 shadow-sm border-0">
+                <div id="@carouselId" class="carousel slide" data-bs-ride="carousel">
+                    <div class="carousel-inner">
+                        @{
+                            int index = 0;
+                        }
+                        @foreach (var i in e.images.Split(","))
+                        {
+                            var isActive = index == 0 ? "active" : "";
+                            <div class="carousel-item @isActive">
+                                <img src="@i" class="d-block w-100" style="height: 250px; object-fit: cover;" />
+                            </div>
+                            index++;
+                        }
+                    </div>
+                    <button class="carousel-control-prev" type="button" data-bs-target="#@carouselId" data-bs-slide="prev">
+                        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                        <span class="visually-hidden">Previous</span>
+                    </button>
+                    <button class="carousel-control-next" type="button" data-bs-target="#@carouselId" data-bs-slide="next">
+                        <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                        <span class="visually-hidden">Next</span>
+                    </button>
+                </div>
 
-						@{
-							int index = 0;
-						}
-						@foreach (var i in e.images.Split(","))
-						{
-							var isActive = index == 0 ? "active" : "";
-							<div class="carousel-item @isActive">
-								<img src="@i" class="d-block w-100" style="height: 250px; object-fit: cover; border-top-left-radius: 0.5rem; border-top-right-radius: 0.5rem;" />
-							</div>
-							index++;
-						}
+                <div class="card-body">
+                    <h5 class="card-title">@e.Title</h5>
+                    <p class="card-text">@e.Description</p>
+                    <p class="card-text"><small class="text-muted">@e.Address, @e.City, @e.State, @e.ZipCode</small></p>
+                    <h5>Status: <span class="text-body fw-bold">@e.Status</span></h5>
+                    <p class="card-text text-primary fw-bold">₹@e.Price</p>
 
-					</div>
-					<button class="carousel-control-prev" type="button" data-bs-target="#@carouselId" data-bs-slide="prev">
-						<span class="carousel-control-prev-icon" aria-hidden="true"></span>
-						<span class="visually-hidden">Previous</span>
-					</button>
-					<button class="carousel-control-next" type="button" data-bs-target="#@carouselId" data-bs-slide="next">
-						<span class="carousel-control-next-icon" aria-hidden="true"></span>
-						<span class="visually-hidden">Next</span>
-					</button>
-				</div>
+                    <form asp-action="property_user" asp-controller="Properties" method="post">
+                        <input type="hidden" name="id" value="@e.PropertyId" />
+                        <button type="submit" class="btn btn-success">Book</button>
+                    </form>
 
-				<div class="card-body">
-					<h5 class="card-title">@e.Title</h5>
-					<p class="card-text">@e.Description</p>
-					<p class="card-text"><small class="text-muted">@e.Address,@e.City,@e.State,@e.ZipCode</small></p>
-					<h5> Status <p class="card-text text-body fw-bold">@e.Status</p> </h5>
-					<p class="card-text text-primary fw-bold">₹@e.Price</p>
-					<a href="#" class="btn btn-success w-100">Buy</a>
-				</div>
-			</div>
-		</div>
-	}
+
+
+                </div>
+            </div>
+        </div>
+    }
 </div>
