@@ -88,7 +88,17 @@ namespace EstateFin.Data
                 .HasConversion<string>();
 
 
+            modelBuilder.Entity<Booking>()
+                .HasOne(b => b.User)
+                .WithMany()
+                .HasForeignKey(b => b.UserID)
+                .OnDelete(DeleteBehavior.Restrict);  // Disable cascading delete
 
+            modelBuilder.Entity<Booking>()
+                .HasOne(b => b.Property)
+                .WithMany()
+                .HasForeignKey(b => b.PropertyId)
+                .OnDelete(DeleteBehavior.Restrict);  // Disable cascading delete
 
         }
 
@@ -100,13 +110,26 @@ namespace EstateFin.Data
 
         public DbSet<Models.Property> Properties { get; set; }
         public DbSet<Property_Type> Property_Types { get; set; }
-
-
         public DbSet<Booking> Bookings { get; set; }
-
         public DbSet<Transaction> Transactions { get; set; }
 
+
         public DbSet<Rent> Rents { get; set; }
+
+
+
+        //protected override void OnModelCreating(ModelBuilder modelBuilder)
+        //{
+        //    base.OnModelCreating(modelBuilder);
+
+            
+        //}
+
+
+
+        //public DbSet<Booking> Bookings { get; set; }
+
+        //public DbSet<Transaction> Transactions { get; set; }
 
 
         //public DbSet<Property> Properties { get; set; }

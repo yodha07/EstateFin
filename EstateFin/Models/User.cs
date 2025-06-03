@@ -26,10 +26,19 @@ namespace EstateFin.Models
 
         public virtual ICollection<Booking> Bookings { get; set; } = new List<Booking>();
         
+        //public virtual ICollection<Property> Properties { get; set; } = new List<Property>();
+        //public virtual ICollection<Appointment> Appointments { get; set; } = new List<Appointment>();
+        //public virtual ICollection<LeaseAgreement> LeaseAgreements { get; set; } = new List<LeaseAgreement>();
+        //public virtual ICollection<Review> Reviews { get; set; } = new List<Review>();
+
+
+        public List<Booking>? Booking { get; set; }
+
         public List<Transaction>? Transactions { get; set; } = new List<Transaction>();
         public List<Property>? Properties { get; set; }
 
         public List<Review>? Reviews { get; set; } = new List<Review>();
+
 
     }
 }

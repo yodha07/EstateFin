@@ -25,8 +25,15 @@ namespace EstateFin.Models
 
         public User? User { get; set; }
 
+
+        //public Booking? Booking { get; set; }
+
         public List<Review>? Reviews { get; set; } = new List<Review>();
+
         public LeaseAgreement? lease { get; set; }
+
+
+//:EstateFin/Models/Property.cs
 
     }
 }
