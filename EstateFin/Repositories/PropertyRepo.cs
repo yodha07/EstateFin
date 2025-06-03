@@ -4,7 +4,7 @@ namespace EstateFin.Repositories
 {
     public interface PropertyRepo
     {
-        List<properties> GetProperties();
+        List<Property> GetProperties();
         List<Property_Type> dropdown();
 
         List<string> propertyfile(Bind prop);

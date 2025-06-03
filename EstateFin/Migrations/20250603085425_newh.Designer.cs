@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace EstateFin.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20250602095110_hgk")]
-    partial class hgk
+    [Migration("20250603085425_newh")]
+    partial class newh
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -51,6 +51,9 @@ namespace EstateFin.Migrations
                     b.Property<int?>("UserID1")
                         .HasColumnType("int");
 
+                    b.Property<int?>("UserID2")
+                        .HasColumnType("int");
+
                     b.HasKey("BookingId");
 
                     b.HasIndex("PropertyId");
@@ -58,6 +61,8 @@ namespace EstateFin.Migrations
                     b.HasIndex("UserID");
 
                     b.HasIndex("UserID1");
+
+                    b.HasIndex("UserID2");
 
                     b.ToTable("Bookings");
                 });
@@ -92,7 +97,6 @@ namespace EstateFin.Migrations
                         .HasColumnType("decimal(18,2)");
 
                     b.Property<string>("PropertyType")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("State")
@@ -279,8 +283,12 @@ namespace EstateFin.Migrations
                         .IsRequired();
 
                     b.HasOne("EstateFin.Models.User", null)
-                        .WithMany("Bookings")
+                        .WithMany("Booking")
                         .HasForeignKey("UserID1");
+
+                    b.HasOne("EstateFin.Models.User", null)
+                        .WithMany("Bookings")
+                        .HasForeignKey("UserID2");
 
                     b.Navigation("Property");
 
@@ -339,6 +347,8 @@ namespace EstateFin.Migrations
 
             modelBuilder.Entity("EstateFin.Models.User", b =>
                 {
+                    b.Navigation("Booking");
+
                     b.Navigation("Bookings");
 
                     b.Navigation("Properties");

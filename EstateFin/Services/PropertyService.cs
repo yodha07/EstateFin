@@ -11,7 +11,7 @@ namespace EstateFin.Services
         private readonly IWebHostEnvironment env;
 
         public PropertyService(ApplicationDbContext db, IWebHostEnvironment env) { this.db = db; this.env = env; }
-        public List<properties> GetProperties()
+        public List<Property> GetProperties()
         {
             var list = db.Properties.ToList();
             return list;

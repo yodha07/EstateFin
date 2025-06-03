@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace EstateFin.Migrations
 {
     /// <inheritdoc />
-    public partial class hgk : Migration
+    public partial class newh : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -61,7 +61,7 @@ namespace EstateFin.Migrations
                     City = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     State = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     ZipCode = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    PropertyType = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    PropertyType = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Status = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     OwnerId = table.Column<int>(type: "int", nullable: false),
                     images = table.Column<string>(type: "nvarchar(max)", nullable: true),
@@ -90,7 +90,8 @@ namespace EstateFin.Migrations
                     BookingDate = table.Column<DateTime>(type: "datetime2", nullable: false),
                     Status = table.Column<int>(type: "int", nullable: false),
                     Amount = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
-                    UserID1 = table.Column<int>(type: "int", nullable: true)
+                    UserID1 = table.Column<int>(type: "int", nullable: true),
+                    UserID2 = table.Column<int>(type: "int", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -110,6 +111,11 @@ namespace EstateFin.Migrations
                     table.ForeignKey(
                         name: "FK_Bookings_Users_UserID1",
                         column: x => x.UserID1,
+                        principalTable: "Users",
+                        principalColumn: "UserID");
+                    table.ForeignKey(
+                        name: "FK_Bookings_Users_UserID2",
+                        column: x => x.UserID2,
                         principalTable: "Users",
                         principalColumn: "UserID");
                 });
@@ -187,6 +193,11 @@ namespace EstateFin.Migrations
                 name: "IX_Bookings_UserID1",
                 table: "Bookings",
                 column: "UserID1");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Bookings_UserID2",
+                table: "Bookings",
+                column: "UserID2");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Properties_userid",

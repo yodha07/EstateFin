@@ -23,7 +23,6 @@ namespace EstateFin.Migrations
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
             modelBuilder.Entity("EstateFin.Models.Booking", b =>
-
                 {
                     b.Property<int>("BookingId")
                         .ValueGeneratedOnAdd()
@@ -49,87 +48,7 @@ namespace EstateFin.Migrations
                     b.Property<int?>("UserID1")
                         .HasColumnType("int");
 
-                    b.HasKey("BookingId");
-
-                    b.HasIndex("PropertyId");
-
-                    b.HasIndex("UserID");
-
-                    b.HasIndex("UserID1");
-
-                    b.ToTable("Bookings");
-                });
-
-            modelBuilder.Entity("EstateFin.Models.Property_Type", b =>
-
-                {
-                    b.Property<int>("BookingId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("BookingId"));
-
-                    b.Property<decimal>("Amount")
-                        .HasColumnType("decimal(18,2)");
-
-                    b.Property<DateTime>("BookingDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<int>("PropertyId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("Status")
-                        .HasColumnType("int");
-
-
-                    b.HasKey("MyPropertyId");
-
-                    b.ToTable("Property_Types");
-                });
-
-            modelBuilder.Entity("EstateFin.Models.Transaction", b =>
-                {
-                    b.Property<int>("TransactionId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("TransactionId"));
-
-                    b.Property<decimal>("Amount")
-                        .HasColumnType("decimal(18,2)");
-
-                    b.Property<int>("BookingId")
-                        .HasColumnType("int");
-
-                    b.Property<string>("PaymentId")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("PaymentMethod")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("PaymentStatus")
-                        .HasColumnType("int");
-
-                    b.Property<DateTime>("TransactionDate")
-                        .HasColumnType("datetime2");
-
-                    b.HasKey("TransactionId");
-
-                    b.HasIndex("BookingId");
-
-                    b.ToTable("Transactions");
-                });
-
-            modelBuilder.Entity("EstateFin.Models.User", b =>
-                {
-
-
-                    b.Property<int>("UserID")
-                        .HasColumnType("int");
-
-                    b.Property<int?>("UserID1")
+                    b.Property<int?>("UserID2")
                         .HasColumnType("int");
 
                     b.HasKey("BookingId");
@@ -139,6 +58,8 @@ namespace EstateFin.Migrations
                     b.HasIndex("UserID");
 
                     b.HasIndex("UserID1");
+
+                    b.HasIndex("UserID2");
 
                     b.ToTable("Bookings");
                 });
@@ -173,7 +94,6 @@ namespace EstateFin.Migrations
                         .HasColumnType("decimal(18,2)");
 
                     b.Property<string>("PropertyType")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("State")
@@ -204,11 +124,6 @@ namespace EstateFin.Migrations
 
                     b.ToTable("Properties");
                 });
-
-
-            modelBuilder.Entity("EstateFin.Models.Booking", b =>
-                {
-                    b.HasOne("EstateFin.Models.properties", "Property")
 
             modelBuilder.Entity("EstateFin.Models.Property_Type", b =>
                 {
@@ -353,7 +268,6 @@ namespace EstateFin.Migrations
             modelBuilder.Entity("EstateFin.Models.Booking", b =>
                 {
                     b.HasOne("EstateFin.Models.Property", "Property")
-
                         .WithMany()
                         .HasForeignKey("PropertyId")
                         .OnDelete(DeleteBehavior.Restrict)
@@ -366,34 +280,19 @@ namespace EstateFin.Migrations
                         .IsRequired();
 
                     b.HasOne("EstateFin.Models.User", null)
-
                         .WithMany("Booking")
-
-                        .WithMany("Bookings")
-
                         .HasForeignKey("UserID1");
+
+                    b.HasOne("EstateFin.Models.User", null)
+                        .WithMany("Bookings")
+                        .HasForeignKey("UserID2");
 
                     b.Navigation("Property");
 
                     b.Navigation("User");
                 });
 
-
-            modelBuilder.Entity("EstateFin.Models.Transaction", b =>
-                {
-                    b.HasOne("EstateFin.Models.Booking", "Booking")
-                        .WithMany()
-                        .HasForeignKey("BookingId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Booking");
-                });
-
-            modelBuilder.Entity("EstateFin.Models.properties", b =>
-
             modelBuilder.Entity("EstateFin.Models.Property", b =>
-
                 {
                     b.HasOne("EstateFin.Models.User", "User")
                         .WithMany("Properties")
@@ -445,11 +344,9 @@ namespace EstateFin.Migrations
 
             modelBuilder.Entity("EstateFin.Models.User", b =>
                 {
-
                     b.Navigation("Booking");
 
                     b.Navigation("Bookings");
-
 
                     b.Navigation("Properties");
 

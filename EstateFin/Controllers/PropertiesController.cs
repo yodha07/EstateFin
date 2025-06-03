@@ -89,10 +89,6 @@ namespace EstateFin.Controllers
 
             if (ModelState.IsValid)
             {
-
-
-
-
                 repo.add_property(prop);
                 TempData["msg"] = "data added";
                 return RedirectToAction("Index");
