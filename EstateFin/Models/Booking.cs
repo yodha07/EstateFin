@@ -1,6 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations.Schema;
 using System.ComponentModel.DataAnnotations;
 using EstateFin.Models.Enum.StatusEnums;
+
 namespace EstateFin.Models
 {
     public class Booking
@@ -20,7 +21,12 @@ namespace EstateFin.Models
 
         public decimal Amount { get; set; }
 
-        public properties Property { get; set; } // Navigation property
+
+        
         public User User { get; set; }           // Navigation property
+
+        public Property Property { get; set; } 
+
+             
     }
 }

@@ -88,7 +88,7 @@ namespace EstateFin.Controllers
                 switch (user.Role)
                 {
                     case "Admin":
-                        return RedirectToAction("List", "Account");
+                        return RedirectToAction("AdminDashboard", "Account");
                     case "Agent":
                         return RedirectToAction("List", "Account");
                     case "Buyer":
@@ -314,7 +314,7 @@ namespace EstateFin.Controllers
                 switch (user.Role)
                 {
                     case "Admin":
-                        return RedirectToAction("AdminDashboard", "Admin");
+                        return RedirectToAction("AdminDashboard", "Account");
                     case "Agent":
                         return RedirectToAction("AgentDashboard", "Agent");
                     case "Buyer":
@@ -332,6 +332,18 @@ namespace EstateFin.Controllers
                 return View();
             }
         }
+
+        public IActionResult AdminDashboard()
+        {
+            ViewBag.ActiveUsers = db.Users.Count(u => u.Role != "Admin");
+            ViewBag.TotalProperties = db.Properties.Count();
+            ViewBag.TotalBookings = db.Bookings.Count();
+            ViewBag.TotalTransactions = db.Transactions.Sum(t => t.Amount);
+            ViewBag.AgentCount = db.Users.Count(u => u.Role == "Agent");
+
+            return View();
+        }
+
 
 
     }

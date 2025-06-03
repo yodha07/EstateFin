@@ -1,0 +1,10 @@
+﻿@model List<Review>
+
+@foreach (var review in Model)
+{
+    <div>
+        <strong>Rating:</strong> @review.Rating<br />
+        <strong>Comment:</strong> @review.Comment<br />
+        <em>Posted on:</em> @review.DatePosted.ToShortDateString()
+    </div>
+}

@@ -1,0 +1,64 @@
+﻿@{
+    ViewData["Title"] = "Admin Dashboard";
+}
+
+<style>
+    .dashboard-card {
+        background-color: #ffffff;
+        border-radius: 10px;
+        padding: 20px;
+        box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        text-align: center;
+        transition: 0.3s;
+    }
+
+        .dashboard-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .dashboard-card h3 {
+            font-size: 1.5rem;
+            color: #333;
+        }
+
+        .dashboard-card p {
+            font-size: 2rem;
+            font-weight: bold;
+            color: #167df2;
+        }
+</style>
+
+<h2 class="mb-4">📊 Admin Dashboard</h2>
+
+<div class="row g-4">
+    <div class="col-md-4">
+        <div class="dashboard-card">
+            <h3>Active Users</h3>
+            <p>@ViewBag.ActiveUsers</p>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="dashboard-card">
+            <h3>Total Properties</h3>
+            <p>@ViewBag.TotalProperties</p>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="dashboard-card">
+            <h3>Total Bookings</h3>
+            <p>@ViewBag.TotalBookings</p>
+        </div>
+    </div>
+    <div class="col-md-6">
+        <div class="dashboard-card">
+            <h3>Total Transactions</h3>
+            <p>₹@ViewBag.TotalTransactions</p>
+        </div>
+    </div>
+    <div class="col-md-6">
+        <div class="dashboard-card">
+            <h3>Registered Agents</h3>
+            <p>@ViewBag.AgentCount</p>
+        </div>
+    </div>
+</div>

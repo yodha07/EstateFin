@@ -1,0 +1,25 @@
+﻿@model Review
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}
+
+<form asp-action="Submit" asp-controller="Review" method="post">
+    @Html.AntiForgeryToken()
+
+    @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+    <h1 class="text-center">Review</h1>
+
+    <!-- Persist the PropertyId -->
+    @* <input type="hidden" asp-for="PropertyId" /> *@
+
+    <label>Rating</label>
+    <input type="number" asp-for="Rating" class="form-control" placeholder="Enter Your Rating" />
+    <span asp-validation-for="Rating" class="text-danger"></span>
+
+    <label>Comment</label>
+    <textarea asp-for="Comment" class="form-control" placeholder="Enter Your Valuable Review"></textarea><br />
+    <span asp-validation-for="Comment" class="text-danger"></span>
+
+    <button type="submit" class="btn btn-outline-success">Submit Review</button>
+</form>

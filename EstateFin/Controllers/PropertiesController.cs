@@ -77,13 +77,15 @@ namespace EstateFin.Controllers
             var mpath = repo.propertyfile(prop);
             prop.properties.images = string.Join(",", mpath);
             prop.properties.CreatedAt = DateTime.Now;
-            //foreach (var modelError in ModelState)
-            //{
-            //    foreach (var error in modelError.Value.Errors)
-            //    {
-            //        Console.WriteLine($"Field: {modelError.Key} — Error: {error.ErrorMessage}");
-            //    }
-            //}
+            HttpContext.Session.SetInt32("PropertyID", prop.properties.PropertyId);
+
+            foreach (var modelError in ModelState)
+            {
+                foreach (var error in modelError.Value.Errors)
+                {
+                    Console.WriteLine($"Field: {modelError.Key} — Error: {error.ErrorMessage}");
+                }
+            }
 
             if (ModelState.IsValid)
             {
@@ -94,7 +96,6 @@ namespace EstateFin.Controllers
                 repo.add_property(prop);
                 TempData["msg"] = "data added";
                 return RedirectToAction("Index");
-
 
 
             }
