@@ -26,7 +26,7 @@ namespace EstateFin.Models
         public User? User { get; set; }
 
         public List<Review>? Reviews { get; set; } = new List<Review>();
-
+        public LeaseAgreement? lease { get; set; }
 
     }
 }

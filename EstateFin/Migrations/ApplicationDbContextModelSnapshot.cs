@@ -59,6 +59,52 @@ namespace EstateFin.Migrations
                     b.ToTable("Bookings");
                 });
 
+            modelBuilder.Entity("EstateFin.Models.LeaseAgreement", b =>
+                {
+                    b.Property<int>("LeaseId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("LeaseId"));
+
+                    b.Property<int>("BookingId")
+                        .HasColumnType("int");
+
+                    b.Property<bool>("IsDepositPaid")
+                        .HasColumnType("bit");
+
+                    b.Property<DateTime>("LeaseEndDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime>("LeaseStartDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("LeaseStatus")
+                        .HasColumnType("int");
+
+                    b.Property<int>("PropertyId")
+                        .HasColumnType("int");
+
+                    b.Property<decimal?>("RentAmount")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<decimal?>("SecurityDeposit")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<int>("TenantId")
+                        .HasColumnType("int");
+
+                    b.HasKey("LeaseId");
+
+                    b.HasIndex("BookingId");
+
+                    b.HasIndex("PropertyId");
+
+                    b.HasIndex("TenantId");
+
+                    b.ToTable("LeaseAgreements");
+                });
+
             modelBuilder.Entity("EstateFin.Models.Property", b =>
                 {
                     b.Property<int>("PropertyId")
@@ -89,7 +135,6 @@ namespace EstateFin.Migrations
                         .HasColumnType("decimal(18,2)");
 
                     b.Property<string>("PropertyType")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("State")
@@ -282,6 +327,33 @@ namespace EstateFin.Migrations
                     b.Navigation("Property");
 
                     b.Navigation("User");
+                });
+
+            modelBuilder.Entity("EstateFin.Models.LeaseAgreement", b =>
+                {
+                    b.HasOne("EstateFin.Models.Booking", "Booking")
+                        .WithMany()
+                        .HasForeignKey("BookingId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("EstateFin.Models.Property", "Property")
+                        .WithMany()
+                        .HasForeignKey("PropertyId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("EstateFin.Models.User", "Tenant")
+                        .WithMany()
+                        .HasForeignKey("TenantId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("Booking");
+
+                    b.Navigation("Property");
+
+                    b.Navigation("Tenant");
                 });
 
             modelBuilder.Entity("EstateFin.Models.Property", b =>

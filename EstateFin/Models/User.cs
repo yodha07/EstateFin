@@ -25,11 +25,7 @@ namespace EstateFin.Models
         public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
 
         public virtual ICollection<Booking> Bookings { get; set; } = new List<Booking>();
-        //public virtual ICollection<Property> Properties { get; set; } = new List<Property>();
-        //public virtual ICollection<Appointment> Appointments { get; set; } = new List<Appointment>();
-        //public virtual ICollection<LeaseAgreement> LeaseAgreements { get; set; } = new List<LeaseAgreement>();
-        //public virtual ICollection<Review> Reviews { get; set; } = new List<Review>();
-
+        
         public List<Transaction>? Transactions { get; set; } = new List<Transaction>();
         public List<Property>? Properties { get; set; }
 
@@ -37,3 +33,7 @@ namespace EstateFin.Models
 
     }
 }
+//public virtual ICollection<Property> Properties { get; set; } = new List<Property>();
+//public virtual ICollection<Appointment> Appointments { get; set; } = new List<Appointment>();
+//public virtual ICollection<LeaseAgreement> LeaseAgreements { get; set; } = new List<LeaseAgreement>();
+//public virtual ICollection<Review> Reviews { get; set; } = new List<Review>();

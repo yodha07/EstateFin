@@ -40,25 +40,29 @@ namespace EstateFin.Data
             //    .OnDelete(DeleteBehavior.Cascade);
 
             // Transaction: Booking ↔ Transactions
-            modelBuilder.Entity<Transaction>()
-                .HasOne(t => t.Booking)
+            //modelBuilder.Entity<Transaction>()
+            //    .HasOne(t => t.Booking)
+            //    .WithMany()
+            //    .HasForeignKey(t => t.BookingId)
+            //    .OnDelete(DeleteBehavior.Cascade);
+
+            modelBuilder.Entity<LeaseAgreement>()
+                 .HasOne(l => l.Booking)
+                 .WithMany()
+                 .HasForeignKey(l => l.BookingId)
+                 .OnDelete(DeleteBehavior.Cascade); // ✅ Allow cascade from Booking
+
+            modelBuilder.Entity<LeaseAgreement>()
+                .HasOne(l => l.Property)
                 .WithMany()
-                .HasForeignKey(t => t.BookingId)
-                .OnDelete(DeleteBehavior.Cascade);
+                .HasForeignKey(l => l.PropertyId)
+                .OnDelete(DeleteBehavior.Restrict); // ❌ Prevent multiple cascade paths
 
-            // Lease: Property ↔ Leases
-            //modelBuilder.Entity<Lease>()
-            //    .HasOne(l => l.Property)
-            //    .WithMany()
-            //    .HasForeignKey(l => l.PropertyId)
-            //    .OnDelete(DeleteBehavior.Cascade);
-
-            //modelBuilder.Entity<Lease>()
-            //    .HasOne(l => l.Tenant)
-            //    .WithMany()
-            //    .HasForeignKey(l => l.TenantId)
-            //    .OnDelete(DeleteBehavior.Cascade);
-
+            modelBuilder.Entity<LeaseAgreement>()
+                .HasOne(l => l.Tenant)
+                .WithMany()
+                .HasForeignKey(l => l.TenantId)
+                .OnDelete(DeleteBehavior.Restrict); // ❌ Prevent multiple cascade paths
 
             //modelBuilder.Entity<Review>()
             //    .HasOne(r => r.PropertyId)
@@ -79,6 +83,10 @@ namespace EstateFin.Data
                 .HasForeignKey(r => r.PropertyId)
                 .OnDelete(DeleteBehavior.Cascade);
 
+            modelBuilder.Entity<Rent>()
+                .Property(r => r.RentStatus)
+                .HasConversion<string>();
+
 
 
 
@@ -98,9 +106,12 @@ namespace EstateFin.Data
 
         public DbSet<Transaction> Transactions { get; set; }
 
+        public DbSet<Rent> Rents { get; set; }
+
+
         //public DbSet<Property> Properties { get; set; }
-        //public DbSet<Appointment> Appointments { get; set; }
-        //public DbSet<LeaseAgreement> LeaseAgreements { get; set; }
+        //public DbSet<Appointments> Appointments { get; set; }
+        public DbSet<LeaseAgreement> LeaseAgreements { get; set; }
         //public DbSet<Review> Reviews { get; set; }
     }
 }

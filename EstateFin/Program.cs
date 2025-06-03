@@ -1,7 +1,9 @@
 ﻿using EstateFin.Data;
+using EstateFin.ILeaseRepo;
 using EstateFin.Models;
 using EstateFin.Repositories;
 using EstateFin.Services;
+using EstatePro.Services;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication.Google;
 using Microsoft.EntityFrameworkCore;
@@ -30,6 +32,11 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("dbconn")));
 
 builder.Services.AddScoped<IUserRepo, UserRepo>();
+
+builder.Services.AddScoped<ILeaseRepo, LeaseServices>();
+builder.Services.AddScoped<ILeaseTenantRepo,LeaseTenantService>();
+
+
 
 builder.Services.AddSession();
 

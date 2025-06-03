@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace EstateFin.Migrations
 {
     /// <inheritdoc />
-    public partial class hgk : Migration
+    public partial class EF : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -61,7 +61,7 @@ namespace EstateFin.Migrations
                     City = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     State = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     ZipCode = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    PropertyType = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    PropertyType = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Status = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     OwnerId = table.Column<int>(type: "int", nullable: false),
                     images = table.Column<string>(type: "nvarchar(max)", nullable: true),
@@ -144,6 +144,45 @@ namespace EstateFin.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "LeaseAgreements",
+                columns: table => new
+                {
+                    LeaseId = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    PropertyId = table.Column<int>(type: "int", nullable: false),
+                    TenantId = table.Column<int>(type: "int", nullable: false),
+                    BookingId = table.Column<int>(type: "int", nullable: false),
+                    LeaseStartDate = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    LeaseEndDate = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    RentAmount = table.Column<decimal>(type: "decimal(18,2)", nullable: true),
+                    SecurityDeposit = table.Column<decimal>(type: "decimal(18,2)", nullable: true),
+                    IsDepositPaid = table.Column<bool>(type: "bit", nullable: false),
+                    LeaseStatus = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_LeaseAgreements", x => x.LeaseId);
+                    table.ForeignKey(
+                        name: "FK_LeaseAgreements_Bookings_BookingId",
+                        column: x => x.BookingId,
+                        principalTable: "Bookings",
+                        principalColumn: "BookingId",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_LeaseAgreements_Properties_PropertyId",
+                        column: x => x.PropertyId,
+                        principalTable: "Properties",
+                        principalColumn: "PropertyId",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_LeaseAgreements_Users_TenantId",
+                        column: x => x.TenantId,
+                        principalTable: "Users",
+                        principalColumn: "UserID",
+                        onDelete: ReferentialAction.Restrict);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Transactions",
                 columns: table => new
                 {
@@ -189,6 +228,21 @@ namespace EstateFin.Migrations
                 column: "UserID1");
 
             migrationBuilder.CreateIndex(
+                name: "IX_LeaseAgreements_BookingId",
+                table: "LeaseAgreements",
+                column: "BookingId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_LeaseAgreements_PropertyId",
+                table: "LeaseAgreements",
+                column: "PropertyId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_LeaseAgreements_TenantId",
+                table: "LeaseAgreements",
+                column: "TenantId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Properties_userid",
                 table: "Properties",
                 column: "userid");
@@ -217,6 +271,9 @@ namespace EstateFin.Migrations
         /// <inheritdoc />
         protected override void Down(MigrationBuilder migrationBuilder)
         {
+            migrationBuilder.DropTable(
+                name: "LeaseAgreements");
+
             migrationBuilder.DropTable(
                 name: "Property_Types");
 
