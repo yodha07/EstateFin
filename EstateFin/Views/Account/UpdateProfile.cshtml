@@ -30,7 +30,8 @@
     <form asp-action="UpdateProfile" method="post" class="form-control" enctype="multipart/form-data">
       
         <input type="hidden" asp-for="UserID" />
-
+        <input type="hidden" asp-for="Email" />
+        <input type="hidden" asp-for="PasswordHash" />
         <div>
             <label>Profile Picture</label>
             <input type="file" name="ProfileImage" class="form-control" />
