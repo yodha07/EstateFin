@@ -60,12 +60,12 @@
         }
         .navbar {
         margin-left: 220px;
-            transition: margin-left 0.3s ease;
+        transition: margin-left 0.3s ease;
         }
 
         .no-sidebar .main-content,
         .no-sidebar .navbar {
-            margin-left: 0 !important;
+        margin-left: 0 !important;
         }
 
     </style>
@@ -74,20 +74,40 @@
 
     @if (!(currentController == "Account" && (currentAction == "Login") || (currentAction == "Register") || (currentAction == "ForgotPassword")))
     {
-    <!-- Sidebar -->
-    <div class="sidebar">
-        <h4 class="text-center mb-4">EstateFin</h4>
-        <a asp-controller="Home" asp-action="Index">🏠 Home</a>
-        <a asp-controller="Account" asp-action="List">📋 Dashboard</a>
-        <a asp-controller="properties" asp-action="property_user">🏘 Properties</a>
-        <a asp-controller="Booking" asp-action="MyBookings">📅 My Bookings</a>
-        <a asp-controller="Review" asp-action="MyReviews">⭐ My Reviews</a>
-        @if (!string.IsNullOrEmpty(role))
+        @if(role == "Buyer"){
+            <!-- Sidebar -->
+            <div class="sidebar">
+                <h4 class="text-center mb-4">EstateFin</h4>
+                <a asp-controller="Home" asp-action="Index">🏠 Home</a>
+                <a asp-controller="Account" asp-action="List">📋 Dashboard</a>
+                <a asp-controller="properties" asp-action="property_user">🏘 Properties</a>
+                <a asp-controller="Booking" asp-action="MyBookings">📅 My Bookings</a>
+                <a asp-controller="Review" asp-action="MyReviews">⭐ My Reviews</a>
+                @if (!string.IsNullOrEmpty(role))
+                {
+                    <a asp-controller="Account" asp-action="Logout" class="text-danger mt-4">🚪 Logout</a>
+                }
+            </div>
+        }else if (role == "Admin")
         {
-            <a asp-controller="Account" asp-action="Logout" class="text-danger mt-4">🚪 Logout</a>
+            <!-- Sidebar -->
+            <div class="sidebar">
+                <h4 class="text-center mb-4">EstateFin</h4>
+                <a asp-controller="Home" asp-action="Index">🏠 Home</a>
+                <a asp-controller="Account" asp-action="AdminDashboard">📋 Dashboard</a>
+                <a asp-controller="properties" asp-action="property_type">🏘 Properties</a>
+                <a asp-controller="properties" asp-action="index">🏘 Properties</a>
+                <a asp-controller="Booking" asp-action="MyBookings">📅 My Bookings</a>
+                <a asp-controller="Review" asp-action="MyReviews">⭐ My Reviews</a>
+                @if (!string.IsNullOrEmpty(role))
+                {
+                    <a asp-controller="Account" asp-action="Logout" class="text-danger mt-4">🚪 Logout</a>
+                }
+            </div>
         }
-    </div>
+        }
     }
+    
 
     <!-- Main Content -->
     <div class="main-content d-flex flex-column min-vh-100">

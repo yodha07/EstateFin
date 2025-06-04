@@ -245,6 +245,8 @@ namespace EstateFin.Controllers
                     LastName = lastName,
                     Email = email!,
                     Role = "Buyer",
+                    PasswordHash = "default123",
+                    PhoneNumber = "0000000000",
                     isGoogleUser = true,
                     CreatedAt = DateTime.Now
                 };

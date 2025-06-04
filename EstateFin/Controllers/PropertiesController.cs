@@ -3,6 +3,7 @@ using EstateFin.Models;
 using EstateFin.Models.Enum.StatusEnums;
 using EstateFin.Repositories;
 using EstateFin.Services;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore.Metadata.Internal;
@@ -102,10 +103,6 @@ namespace EstateFin.Controllers
 
 
         }
-
-
-
-
 
         public IActionResult Delete_Properties(int id)
         {
@@ -249,6 +246,7 @@ namespace EstateFin.Controllers
             return View(data);
         }
 
+        [Authorize(Roles = "Admin, Buyer, Tenant")]
         [HttpPost]
         public IActionResult property_user(int id)
         {

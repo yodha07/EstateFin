@@ -80,8 +80,8 @@ namespace EstateFin.Controllers
         public IActionResult DownloadReceipt()
         {
            string id = TempData["razorpay_order"].ToString();
-            var list = db.Transactions.Where(x=> x.PaymentId.Equals(id)).ToList();
-          return View(list); // Renders Receipt.cshtml with model
+           var list = db.Transactions.Where(x=> x.PaymentId.Equals(id)).ToList();
+           return View(list); 
         }
 
     }
