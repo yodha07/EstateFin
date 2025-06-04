@@ -30,6 +30,7 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("dbconn")));
 
 builder.Services.AddScoped<IUserRepo, UserRepo>();
+builder.Services.AddScoped<ReviewRepo, ReviewService>();
 
 builder.Services.AddSession();
 

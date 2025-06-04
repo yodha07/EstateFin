@@ -1,10 +1,18 @@
 ﻿@model List<Review>
 
-@foreach (var review in Model)
-{
-    <div>
-        <strong>Rating:</strong> @review.Rating<br />
-        <strong>Comment:</strong> @review.Comment<br />
-        <em>Posted on:</em> @review.DatePosted.ToShortDateString()
-    </div>
-}
+<div class="container mt-4">
+    <h3 class="mb-4">User Reviews</h3>
+    
+    @foreach (var review in Model)
+    {
+        <div class="card mb-3 shadow-sm border-0">
+            <div class="card-body">
+                <h5 class="card-title text-warning">⭐ Rating: @review.Rating</h5>
+                <p class="card-text"><strong>Comment:</strong> @review.Comment</p>
+                <p class="card-text text-muted">
+                    <small><em>Posted on: @review.DatePosted.ToShortDateString()</em></small>
+                </p>
+            </div>
+        </div>
+    }
+</div>
