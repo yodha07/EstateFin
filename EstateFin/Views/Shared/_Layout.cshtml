@@ -74,12 +74,12 @@
 
     @if (!(currentController == "Account" && (currentAction == "Login") || (currentAction == "Register") || (currentAction == "ForgotPassword")))
     {
-        @if(role == "Buyer"){
+        @if (role == "Buyer" || role == "Tenant")
+        {
             <!-- Sidebar -->
             <div class="sidebar">
                 <h4 class="text-center mb-4">EstateFin</h4>
                 <a asp-controller="Home" asp-action="Index">🏠 Home</a>
-                <a asp-controller="Account" asp-action="List">📋 Dashboard</a>
                 <a asp-controller="properties" asp-action="property_user">🏘 Properties</a>
                 <a asp-controller="Booking" asp-action="MyBookings">📅 My Bookings</a>
                 <a asp-controller="Review" asp-action="MyReviews">⭐ My Reviews</a>
@@ -88,24 +88,120 @@
                     <a asp-controller="Account" asp-action="Logout" class="text-danger mt-4">🚪 Logout</a>
                 }
             </div>
-        }else if (role == "Admin")
+        }
+        else if (role == "Admin" )
         {
             <!-- Sidebar -->
             <div class="sidebar">
                 <h4 class="text-center mb-4">EstateFin</h4>
                 <a asp-controller="Home" asp-action="Index">🏠 Home</a>
                 <a asp-controller="Account" asp-action="AdminDashboard">📋 Dashboard</a>
-                <a asp-controller="properties" asp-action="property_type">🏘 Properties</a>
-                <a asp-controller="properties" asp-action="index">🏘 Properties</a>
-                <a asp-controller="Booking" asp-action="MyBookings">📅 My Bookings</a>
-                <a asp-controller="Review" asp-action="MyReviews">⭐ My Reviews</a>
+
+                <div class="dropdown px-3 py-1">
+                    <a class="dropdown-toggle text-white d-block" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                        🏘 Properties
+                    </a>
+                    <ul class="dropdown-menu">
+                        <li><a class="dropdown-item text-dark" asp-controller="properties" asp-action="property_type">Add Property Type</a></li>
+                        <li><a class="dropdown-item text-dark" asp-controller="properties" asp-action="add_properties">Add Properties</a></li>
+                        <li><a class="dropdown-item text-dark" asp-controller="properties" asp-action="property_user">View Properties</a></li>
+                    </ul>
+                </div>
+
                 @if (!string.IsNullOrEmpty(role))
                 {
-                    <a asp-controller="Account" asp-action="Logout" class="text-danger mt-4">🚪 Logout</a>
+                    <a asp-controller="Account" asp-action="Logout" class="text-danger mt-4 px-3 py-2 d-block">🚪 Logout</a>
                 }
             </div>
+
+        }else if(role == "Agent")
+        {
+            <div class="sidebar">
+                <h4 class="text-center mb-4">EstateFin</h4>
+
+                <a asp-controller="Home" asp-action="Index">🏠 Home</a>
+                <a asp-controller="Account" asp-action="AdminDashboard">📋 Dashboard</a>
+
+                <!-- 🏘 Properties Dropdown -->
+                <div class="dropdown px-3 py-1">
+                    <a class="dropdown-toggle text-white d-block" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                        🏘 Properties
+                    </a>
+                    <ul class="dropdown-menu">
+                        <li><a class="dropdown-item text-dark" asp-controller="properties" asp-action="property_type">Add Property Type</a></li>
+                        <li><a class="dropdown-item text-dark" asp-controller="properties" asp-action="add_properties">Add Properties</a></li>
+                        <li><a class="dropdown-item text-dark" asp-controller="properties" asp-action="property_user">View Properties</a></li>
+                    </ul>
+                </div>
+
+                <!-- 📅 Appointments Dropdown -->
+                <div class="dropdown px-3 py-1">
+                    <a class="dropdown-toggle text-white d-block" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                        📅 Appointments
+                    </a>
+                    <ul class="dropdown-menu">
+                        <li><a class="dropdown-item text-dark" asp-controller="Appointment" asp-action="agent">View Appointments</a></li>
+                        <li><a class="dropdown-item text-dark" asp-controller="Appointment" asp-action="slot_add">Add Slot</a></li>
+                    </ul>
+                </div>
+
+                <!-- 📦 Bookings -->
+                <a asp-controller="Booking" asp-action="Index">📦 Bookings</a>
+
+                <!-- 💳 Transactions -->
+                <a asp-controller="Transactions" asp-action="Index">💳 Transactions</a>
+
+                <!-- 🚪 Logout -->
+                @if (!string.IsNullOrEmpty(role))
+                {
+                    <a asp-controller="Account" asp-action="Logout" class="text-danger mt-4 px-3 py-2 d-block">🚪 Logout</a>
+                }
+            </div>
+
+        }else if(role == "Seller")
+        {
+            <div class="sidebar">
+                <h4 class="text-center mb-4">EstateFin</h4>
+
+                <a asp-controller="Home" asp-action="Index">🏠 Home</a>
+
+                <!-- 🏘 Properties Dropdown -->
+                <div class="dropdown px-3 py-1">
+                    <a class="dropdown-toggle text-white d-block" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                        🏘 Properties
+                    </a>
+                    <ul class="dropdown-menu">
+                        <li><a class="dropdown-item text-dark" asp-controller="properties" asp-action="add_properties">Add Properties</a></li>
+                        <li><a class="dropdown-item text-dark" asp-controller="properties" asp-action="property_user">View Properties</a></li>
+                    </ul>
+                </div>
+
+                <!-- 📅 Appointments Dropdown -->
+                <div class="dropdown px-3 py-1">
+                    <a class="dropdown-toggle text-white d-block" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                        📅 Appointments
+                    </a>
+                    <ul class="dropdown-menu">
+                        <li><a class="dropdown-item text-dark" asp-controller="Appointment" asp-action="agent">View Appointment</a></li>
+                        <li><a class="dropdown-item text-dark" asp-controller="Appointment" asp-action="slot_add">Add Slot</a></li>
+                    </ul>
+                </div>
+
+                <!-- 📦 My Bookings -->
+                <a asp-controller="Booking" asp-action="MyBookings">📦 My Bookings</a>
+
+                <!-- ⭐ My Reviews -->
+                <a asp-controller="Review" asp-action="MyReviews">⭐ My Reviews</a>
+
+                <!-- 🚪 Logout -->
+                @if (!string.IsNullOrEmpty(role))
+                {
+                    <a asp-controller="Account" asp-action="Logout" class="text-danger mt-4 px-3 py-2 d-block">🚪 Logout</a>
+                }
+            </div>
+
         }
-        }
+
     }
     
 
