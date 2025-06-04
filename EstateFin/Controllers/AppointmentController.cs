@@ -1,4 +1,5 @@
-﻿using System.Reflection.Metadata.Ecma335;
+﻿using System.Collections.Generic;
+using System.Reflection.Metadata.Ecma335;
 using EstateFin.Data;
 using EstateFin.Models;
 using Microsoft.AspNetCore.Mvc;
@@ -17,8 +18,10 @@ namespace EstateFin.Controllers
         public IActionResult Index()
         {
             int user = int.Parse(HttpContext.Session.GetString("Login"));
+            //int propertyid = int.Parse(HttpContext.Session.GetString("propId"));
 
-            var e =  db.appointment.Where(x=> x.UserID.Equals(user)).Include(x=> x.Property).Include(x=> x.User).ToList();
+
+            var e =  db.appointment.Where(x=> x.UserID.Equals(user) ).Include(x=> x.Property).Include(x=> x.User).ToList();
             return View(e);
         }
 
@@ -51,7 +54,7 @@ namespace EstateFin.Controllers
         {
             var list = db.slot.Where(x => x.Status.Equals("Active")).ToList();
 
-            ViewBag.slot = new SelectList(list, "Id", "Slot_type");
+            ViewBag.slot = new SelectList(list, "Slot_type", "Slot_type");
 
             return View();
         }
@@ -81,13 +84,19 @@ namespace EstateFin.Controllers
             //app.PropertyId = id;
             if (ModelState.IsValid) 
             {
-                if (db.appointment.Any(a => a.AppointmentDate == app.AppointmentDate && a.slot == app.slot && a.PropertyId == app.PropertyId))
+                if (db.appointment.Any(a => a.AppointmentDate == app.AppointmentDate && a.slot == app.slot && a.PropertyId == app.PropertyId && a.Status == "pending"))
                 {
                     ViewBag.msg = "Slot is already Booked";
+                    var list = db.slot.Where(x => x.Status.Equals("Active")).ToList();
+                    
+                    ViewBag.slot = new SelectList(list, "Slot_type", "Slot_type");
+
                     return View();   
                 }
                 else
                 {
+                    HttpContext.Session.SetString("propId", app.PropertyId.ToString()!);
+
                     db.appointment.Add(app);
                     db.SaveChanges();
                     return RedirectToAction("index");
@@ -110,7 +119,9 @@ namespace EstateFin.Controllers
             {
                 db.slot.Add(slots);
                 db.SaveChanges();
-                
+                ViewBag.slotadded = "slot added";
+
+
             }
             return View();
         }

@@ -30,3 +30,22 @@
         toastr.warning('@TempData["upd"]')
     </script>
 }
+
+
+@if (ViewBag.msg != null)
+{
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
+    <script>
+        toastr.warning('@ViewBag.msg')
+    </script>
+}
+
+@if (ViewBag.slotadded != null)
+{
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
+    <script>
+        toastr.warning('@ViewBag.slotadded')
+    </script>
+}
