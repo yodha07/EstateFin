@@ -6,9 +6,13 @@ using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Google;
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
+using Microsoft.AspNetCore.Mvc.Routing;
+using System.Collections.Concurrent;
+using EstateFin.Filters;
 
 namespace EstateFin.Controllers
 {
+    [GlobalException]
     public class AccountController : Controller
     {
         private readonly IUserRepo repo;
@@ -33,7 +37,7 @@ namespace EstateFin.Controllers
         {
             if (ModelState.IsValid)
             {
-                var userExists = db.Users.Any(u => u.Email == user.Email);
+                var userExists = repo.EmailExists(user.Email!);
                 if (userExists)
                 {
                     ModelState.AddModelError("", "Email already registered.");
@@ -47,6 +51,65 @@ namespace EstateFin.Controllers
             }
             return View(user);
         }
+
+        [HttpGet]
+        public IActionResult UpdateProfile()
+        {
+            var userId = int.Parse(HttpContext.Session.GetString("Login")!); 
+            var user = repo.GetUserById(userId);
+
+            if (user == null)
+            {
+                return RedirectToAction("Login");
+            }
+
+            return View(user); 
+        }
+
+
+        [HttpPost]
+        public IActionResult UpdateProfile(User user, IFormFile ProfileImage)
+        {
+            var userExists = repo.GetUserById(user.UserID);
+            if (userExists == null)
+            {
+                ModelState.AddModelError("", "User not found.");
+                return View(user);
+            }
+
+            if (ProfileImage != null && ProfileImage.Length > 0)
+            {
+                var filename = Path.GetFileName(ProfileImage.FileName);
+                var filePath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "Images", filename);
+
+                if (!Directory.Exists(filePath))
+                {
+                    Directory.CreateDirectory(Path.GetDirectoryName(filePath)!);
+                }
+
+                using (var fileStream = new FileStream(filePath, FileMode.Create))
+                {
+                    ProfileImage.CopyTo(fileStream);
+                }
+
+                user.ProfilePicture = "/Images/" + filename;
+            }
+            else
+            {
+                user.ProfilePicture = userExists.ProfilePicture;
+            }
+
+            if (ModelState.IsValid)
+            {
+                repo.UpdateProfile(user); 
+                HttpContext.Session.SetString("UserName", user.FirstName!);
+                TempData["msg"] = "Profile updated successfully.";
+                return RedirectToAction("List", "Account");
+            }
+
+            return View(user);
+        }
+
 
         [HttpGet]
         public IActionResult Login()
@@ -248,7 +311,7 @@ namespace EstateFin.Controllers
                 return View();
             }
 
-            var user = db.Users.FirstOrDefault(u => u.Email == email);
+            var user = repo.GetUserByEmail(email);
 
             if (user == null)
             {
@@ -301,7 +364,7 @@ namespace EstateFin.Controllers
             if (otp == actualOtp)
             {
 
-                var user = db.Users.FirstOrDefault(u => u.Email == email);
+                var user = repo.GetUserByEmail(email);
 
                 if (user == null)
                 {
@@ -335,6 +398,17 @@ namespace EstateFin.Controllers
             }
         }
 
+        public IActionResult ProfileCard(User user)
+        {
+            var userId = int.Parse(HttpContext.Session.GetString("Login")!);
+            var userProfile = repo.GetUserById(userId);
+            if (userProfile == null)
+            {
+                return RedirectToAction("Login");
+            }
+            return View(userProfile);
+        }
+
         public IActionResult AdminDashboard()
         {
             ViewBag.ActiveUsers = db.Users.Count(u => u.Role != "Admin");
@@ -345,8 +419,6 @@ namespace EstateFin.Controllers
 
             return View();
         }
-
-
 
     }
 }

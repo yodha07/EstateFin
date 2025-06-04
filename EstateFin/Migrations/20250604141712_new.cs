@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace EstateFin.Migrations
 {
     /// <inheritdoc />
-    public partial class add : Migration
+    public partial class @new : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -25,6 +25,20 @@ namespace EstateFin.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Property_Types", x => x.MyPropertyId);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "slot",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Slottype = table.Column<string>(name: "Slot_type", type: "nvarchar(max)", nullable: false),
+                    Status = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_slot", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -80,7 +94,7 @@ namespace EstateFin.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Appointment",
+                name: "appointment",
                 columns: table => new
                 {
                     AppointmentId = table.Column<int>(type: "int", nullable: false)
@@ -88,20 +102,20 @@ namespace EstateFin.Migrations
                     PropertyId = table.Column<int>(type: "int", nullable: false),
                     UserID = table.Column<int>(type: "int", nullable: false),
                     AppointmentDate = table.Column<DateTime>(type: "datetime2", nullable: true),
-                    Status = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Status = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     slot = table.Column<string>(type: "nvarchar(max)", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Appointment", x => x.AppointmentId);
+                    table.PrimaryKey("PK_appointment", x => x.AppointmentId);
                     table.ForeignKey(
-                        name: "FK_Appointment_Properties_PropertyId",
+                        name: "FK_appointment_Properties_PropertyId",
                         column: x => x.PropertyId,
                         principalTable: "Properties",
                         principalColumn: "PropertyId",
                         onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
-                        name: "FK_Appointment_Users_UserID",
+                        name: "FK_appointment_Users_UserID",
                         column: x => x.UserID,
                         principalTable: "Users",
                         principalColumn: "UserID",
@@ -278,13 +292,13 @@ namespace EstateFin.Migrations
                 });
 
             migrationBuilder.CreateIndex(
-                name: "IX_Appointment_PropertyId",
-                table: "Appointment",
+                name: "IX_appointment_PropertyId",
+                table: "appointment",
                 column: "PropertyId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Appointment_UserID",
-                table: "Appointment",
+                name: "IX_appointment_UserID",
+                table: "appointment",
                 column: "UserID",
                 unique: true);
 
@@ -365,7 +379,7 @@ namespace EstateFin.Migrations
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
-                name: "Appointment");
+                name: "appointment");
 
             migrationBuilder.DropTable(
                 name: "Property_Types");
@@ -375,6 +389,9 @@ namespace EstateFin.Migrations
 
             migrationBuilder.DropTable(
                 name: "Reviews");
+
+            migrationBuilder.DropTable(
+                name: "slot");
 
             migrationBuilder.DropTable(
                 name: "Transactions");
