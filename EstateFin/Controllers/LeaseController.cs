@@ -3,6 +3,7 @@ using EstateFin.Models;
 using EstateFin.ILeaseRepo;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using EstateFin.Data;
+using Microsoft.EntityFrameworkCore;
 
 namespace EstateFin.ILeaseRepo
 {
@@ -28,6 +29,7 @@ namespace EstateFin.ILeaseRepo
         public IActionResult Create()
 
         {
+            var list = context.Bookings.Include(x=> x.User).Include(x=> x.)
             //int leaseStatusValue = (int)ILeaseRepo.LeaseStatus.Active;
 
             ViewBag.Properties = new SelectList(context.Properties.ToList(), "PropertyId", "Title");
