@@ -35,8 +35,8 @@ namespace EstateFin.ILeaseRepo
 
             //int leaseStatusValue = (int)ILeaseRepo.LeaseStatus.Active;
 
-            ViewBag.Properties = new SelectList(context.Properties.ToList(), "PropertyId", "Title");
-            ViewBag.Tenants = new SelectList(context.Users.ToList(), "UserID", "UserName");
+            //ViewBag.Properties = new SelectList(context.Properties.ToList(), "PropertyId", "Title");
+            //ViewBag.Tenants = new SelectList(context.Users.ToList(), "UserID", "UserName");
             ViewBag.Bookings = new SelectList(context.Bookings.ToList(), "BookingId", "BookingId");
             return View();
         }
@@ -46,13 +46,16 @@ namespace EstateFin.ILeaseRepo
         //[ValidateAntiForgeryToken]
         public IActionResult Create(LeaseAgreement lease)
         {
+            var userId = int.Parse(HttpContext.Session.GetString("Login") ?? "0");
+            lease.TenantId = userId; 
+            var id = context.Bookings.Find(lease.BookingId);
+            lease.PropertyId = id.PropertyId;
             if (ModelState.IsValid)
             {
                 leaseRepo.Add(lease);
                 leaseRepo.Save();
                 return RedirectToAction(nameof(Index));
             }
-
             ViewBag.Properties = new SelectList(context.Properties.ToList(), "PropertyId", "PropertyName", lease.PropertyId);
             ViewBag.Tenants = new SelectList(context.Users.ToList(), "UserID", "UserName", lease.TenantId);
             ViewBag.Bookings = new SelectList(context.Bookings.ToList(), "BookingId", "BookingId", lease.BookingId);

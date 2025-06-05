@@ -182,3 +182,6 @@
 [05-06-2025 20:13:02] This is what caused the exception:  Execution Timeout Expired.  The timeout period elapsed prior to completion of the operation or the server is not responding. 
 [05-06-2025 20:53:01] This is what caused the exception:  Value cannot be null. (Parameter 's') 
 [06-06-2025 01:17:33] This is what caused the exception:  Invalid Property ID. 
+[06-06-2025 01:48:35] This is what caused the exception:  Unable to resolve service for type 'EstateFin.ILeaseRepo.ILeaseRepo' while attempting to activate 'EstateFin.ILeaseRepo.LeaseController'. 
+[06-06-2025 01:49:19] This is what caused the exception:  Unable to resolve service for type 'EstateFin.ILeaseRepo.ILeaseRepo' while attempting to activate 'EstateFin.ILeaseRepo.LeaseController'. 
+[06-06-2025 01:50:50] This is what caused the exception:  An error occurred while saving the entity changes. See the inner exception for details. 
