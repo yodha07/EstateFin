@@ -4,3 +4,164 @@
 [05-06-2025 04:09:41] This is what caused the exception:  A network-related or instance-specific error occurred while establishing a connection to SQL Server. The server was not found or was not accessible. Verify that the instance name is correct and that SQL Server is configured to allow remote connections. (provider: SNI_PN11, error: 26 - Error Locating Server/Instance Specified) 
 [05-06-2025 04:12:01] This is what caused the exception:  A network-related or instance-specific error occurred while establishing a connection to SQL Server. The server was not found or was not accessible. Verify that the instance name is correct and that SQL Server is configured to allow remote connections. (provider: SNI_PN11, error: 26 - Error Locating Server/Instance Specified) 
 [05-06-2025 04:19:04] This is what caused the exception:  Data is Null. This method or property cannot be called on Null values. 
+[05-06-2025 10:13:29] This is what caused the exception:  A network-related or instance-specific error occurred while establishing a connection to SQL Server. The server was not found or was not accessible. Verify that the instance name is correct and that SQL Server is configured to allow remote connections. (provider: SNI_PN11, error: 26 - Error Locating Server/Instance Specified) 
+[05-06-2025 10:35:03] This is what caused the exception:  The LINQ expression 'DbSet<Transaction>()
+    .Join(
+        inner: DbSet<Booking>(), 
+        outerKeySelector: t => EF.Property<int?>(t, "BookingId"), 
+        innerKeySelector: b => EF.Property<int?>(b, "BookingId"), 
+        resultSelector: (o, i) => new TransparentIdentifier<Transaction, Booking>(
+            Outer = o, 
+            Inner = i
+        ))
+    .Join(
+        inner: DbSet<Property>(), 
+        outerKeySelector: t => EF.Property<int?>(t.Inner, "PropertyId"), 
+        innerKeySelector: p => EF.Property<int?>(p, "PropertyId"), 
+        resultSelector: (o, i) => new TransparentIdentifier<TransparentIdentifier<Transaction, Booking>, Property>(
+            Outer = o, 
+            Inner = i
+        ))
+    .Where(t => t.Inner.UserID == __agentId_0)
+    .GroupBy(t => new { 
+        Year = t.Outer.Outer.TransactionDate.Year, 
+        Month = t.Outer.Outer.TransactionDate.Month
+     })
+    .Select(g => new { 
+        Month = string.Format(
+            format: "{0}/{1}", 
+            arg0: (object)g.Key.Month, 
+            arg1: (object)g.Key.Year), 
+        Total = g
+            .AsQueryable()
+            .Sum(e => e.Outer.Outer.Amount)
+     })
+    .OrderBy(e0 => e0.Month)' could not be translated. Additional information: Translation of method 'string.Format' failed. If this method can be mapped to your custom function, see https://go.microsoft.com/fwlink/?linkid=2132413 for more information. Either rewrite the query in a form that can be translated, or switch to client evaluation explicitly by inserting a call to 'AsEnumerable', 'AsAsyncEnumerable', 'ToList', or 'ToListAsync'. See https://go.microsoft.com/fwlink/?linkid=2101038 for more information. 
+[05-06-2025 10:35:04] This is what caused the exception:  The LINQ expression 'DbSet<Transaction>()
+    .Join(
+        inner: DbSet<Booking>(), 
+        outerKeySelector: t => EF.Property<int?>(t, "BookingId"), 
+        innerKeySelector: b => EF.Property<int?>(b, "BookingId"), 
+        resultSelector: (o, i) => new TransparentIdentifier<Transaction, Booking>(
+            Outer = o, 
+            Inner = i
+        ))
+    .Join(
+        inner: DbSet<Property>(), 
+        outerKeySelector: t => EF.Property<int?>(t.Inner, "PropertyId"), 
+        innerKeySelector: p => EF.Property<int?>(p, "PropertyId"), 
+        resultSelector: (o, i) => new TransparentIdentifier<TransparentIdentifier<Transaction, Booking>, Property>(
+            Outer = o, 
+            Inner = i
+        ))
+    .Where(t => t.Inner.UserID == __agentId_0)
+    .GroupBy(t => new { 
+        Year = t.Outer.Outer.TransactionDate.Year, 
+        Month = t.Outer.Outer.TransactionDate.Month
+     })
+    .Select(g => new { 
+        Month = string.Format(
+            format: "{0}/{1}", 
+            arg0: (object)g.Key.Month, 
+            arg1: (object)g.Key.Year), 
+        Total = g
+            .AsQueryable()
+            .Sum(e => e.Outer.Outer.Amount)
+     })
+    .OrderBy(e0 => e0.Month)' could not be translated. Additional information: Translation of method 'string.Format' failed. If this method can be mapped to your custom function, see https://go.microsoft.com/fwlink/?linkid=2132413 for more information. Either rewrite the query in a form that can be translated, or switch to client evaluation explicitly by inserting a call to 'AsEnumerable', 'AsAsyncEnumerable', 'ToList', or 'ToListAsync'. See https://go.microsoft.com/fwlink/?linkid=2101038 for more information. 
+[05-06-2025 10:35:05] This is what caused the exception:  The LINQ expression 'DbSet<Transaction>()
+    .Join(
+        inner: DbSet<Booking>(), 
+        outerKeySelector: t => EF.Property<int?>(t, "BookingId"), 
+        innerKeySelector: b => EF.Property<int?>(b, "BookingId"), 
+        resultSelector: (o, i) => new TransparentIdentifier<Transaction, Booking>(
+            Outer = o, 
+            Inner = i
+        ))
+    .Join(
+        inner: DbSet<Property>(), 
+        outerKeySelector: t => EF.Property<int?>(t.Inner, "PropertyId"), 
+        innerKeySelector: p => EF.Property<int?>(p, "PropertyId"), 
+        resultSelector: (o, i) => new TransparentIdentifier<TransparentIdentifier<Transaction, Booking>, Property>(
+            Outer = o, 
+            Inner = i
+        ))
+    .Where(t => t.Inner.UserID == __agentId_0)
+    .GroupBy(t => new { 
+        Year = t.Outer.Outer.TransactionDate.Year, 
+        Month = t.Outer.Outer.TransactionDate.Month
+     })
+    .Select(g => new { 
+        Month = string.Format(
+            format: "{0}/{1}", 
+            arg0: (object)g.Key.Month, 
+            arg1: (object)g.Key.Year), 
+        Total = g
+            .AsQueryable()
+            .Sum(e => e.Outer.Outer.Amount)
+     })
+    .OrderBy(e0 => e0.Month)' could not be translated. Additional information: Translation of method 'string.Format' failed. If this method can be mapped to your custom function, see https://go.microsoft.com/fwlink/?linkid=2132413 for more information. Either rewrite the query in a form that can be translated, or switch to client evaluation explicitly by inserting a call to 'AsEnumerable', 'AsAsyncEnumerable', 'ToList', or 'ToListAsync'. See https://go.microsoft.com/fwlink/?linkid=2101038 for more information. 
+[05-06-2025 10:35:06] This is what caused the exception:  The LINQ expression 'DbSet<Transaction>()
+    .Join(
+        inner: DbSet<Booking>(), 
+        outerKeySelector: t => EF.Property<int?>(t, "BookingId"), 
+        innerKeySelector: b => EF.Property<int?>(b, "BookingId"), 
+        resultSelector: (o, i) => new TransparentIdentifier<Transaction, Booking>(
+            Outer = o, 
+            Inner = i
+        ))
+    .Join(
+        inner: DbSet<Property>(), 
+        outerKeySelector: t => EF.Property<int?>(t.Inner, "PropertyId"), 
+        innerKeySelector: p => EF.Property<int?>(p, "PropertyId"), 
+        resultSelector: (o, i) => new TransparentIdentifier<TransparentIdentifier<Transaction, Booking>, Property>(
+            Outer = o, 
+            Inner = i
+        ))
+    .Where(t => t.Inner.UserID == __agentId_0)
+    .GroupBy(t => new { 
+        Year = t.Outer.Outer.TransactionDate.Year, 
+        Month = t.Outer.Outer.TransactionDate.Month
+     })
+    .Select(g => new { 
+        Month = string.Format(
+            format: "{0}/{1}", 
+            arg0: (object)g.Key.Month, 
+            arg1: (object)g.Key.Year), 
+        Total = g
+            .AsQueryable()
+            .Sum(e => e.Outer.Outer.Amount)
+     })
+    .OrderBy(e0 => e0.Month)' could not be translated. Additional information: Translation of method 'string.Format' failed. If this method can be mapped to your custom function, see https://go.microsoft.com/fwlink/?linkid=2132413 for more information. Either rewrite the query in a form that can be translated, or switch to client evaluation explicitly by inserting a call to 'AsEnumerable', 'AsAsyncEnumerable', 'ToList', or 'ToListAsync'. See https://go.microsoft.com/fwlink/?linkid=2101038 for more information. 
+[05-06-2025 10:35:40] This is what caused the exception:  The LINQ expression 'DbSet<Transaction>()
+    .Join(
+        inner: DbSet<Booking>(), 
+        outerKeySelector: t => EF.Property<int?>(t, "BookingId"), 
+        innerKeySelector: b => EF.Property<int?>(b, "BookingId"), 
+        resultSelector: (o, i) => new TransparentIdentifier<Transaction, Booking>(
+            Outer = o, 
+            Inner = i
+        ))
+    .Join(
+        inner: DbSet<Property>(), 
+        outerKeySelector: t => EF.Property<int?>(t.Inner, "PropertyId"), 
+        innerKeySelector: p => EF.Property<int?>(p, "PropertyId"), 
+        resultSelector: (o, i) => new TransparentIdentifier<TransparentIdentifier<Transaction, Booking>, Property>(
+            Outer = o, 
+            Inner = i
+        ))
+    .Where(t => t.Inner.UserID == __agentId_0)
+    .GroupBy(t => new { 
+        Year = t.Outer.Outer.TransactionDate.Year, 
+        Month = t.Outer.Outer.TransactionDate.Month
+     })
+    .Select(g => new { 
+        Month = string.Format(
+            format: "{0}/{1}", 
+            arg0: (object)g.Key.Month, 
+            arg1: (object)g.Key.Year), 
+        Total = g
+            .AsQueryable()
+            .Sum(e => e.Outer.Outer.Amount)
+     })
+    .OrderBy(e0 => e0.Month)' could not be translated. Additional information: Translation of method 'string.Format' failed. If this method can be mapped to your custom function, see https://go.microsoft.com/fwlink/?linkid=2132413 for more information. Either rewrite the query in a form that can be translated, or switch to client evaluation explicitly by inserting a call to 'AsEnumerable', 'AsAsyncEnumerable', 'ToList', or 'ToListAsync'. See https://go.microsoft.com/fwlink/?linkid=2101038 for more information. 

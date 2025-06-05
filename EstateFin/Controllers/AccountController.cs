@@ -55,7 +55,7 @@ namespace EstateFin.Controllers
         [HttpGet]
         public IActionResult UpdateProfile()
         {
-            var userId = int.Parse(HttpContext.Session.GetString("Login")!); 
+            var userId = int.Parse(HttpContext.Session.GetString("Login")!);
             var user = repo.GetUserById(userId);
 
             if (user == null)
@@ -63,7 +63,7 @@ namespace EstateFin.Controllers
                 return RedirectToAction("Login");
             }
 
-            return View(user); 
+            return View(user);
         }
 
 
@@ -101,7 +101,7 @@ namespace EstateFin.Controllers
 
             if (ModelState.IsValid)
             {
-                repo.UpdateProfile(user); 
+                repo.UpdateProfile(user);
                 HttpContext.Session.SetString("UserName", user.FirstName!);
                 TempData["msg"] = "Profile updated successfully.";
                 return RedirectToAction("List", "Account");
@@ -109,7 +109,6 @@ namespace EstateFin.Controllers
 
             return View(user);
         }
-
 
         [HttpGet]
         public IActionResult Login()
@@ -147,19 +146,30 @@ namespace EstateFin.Controllers
                 HttpContext.Session.SetString("UserName", user.FirstName!);
                 HttpContext.Session.SetString("Login", user.UserID.ToString()!);
 
+                var claims = new List<Claim>
+                {
+                    new Claim(ClaimTypes.Name, user.FirstName ?? ""),
+                    new Claim(ClaimTypes.Email, user.Email ?? ""),
+                    new Claim(ClaimTypes.Role, user.Role ?? "")
+                };
+
+                var identity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
+                var principal = new ClaimsPrincipal(identity);
+
+                HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, principal);
 
                 switch (user.Role)
                 {
                     case "Admin":
                         return RedirectToAction("AdminDashboard", "Account");
                     case "Agent":
-                        return RedirectToAction("List", "Account");
+                        return RedirectToAction("AgentDashboard", "Account");
                     case "Buyer":
-                        return RedirectToAction("List", "Account");
+                        return RedirectToAction("property_user", "Properties");
                     case "Seller":
                         return RedirectToAction("List", "Account");
                     case "Tenant":
-                        return RedirectToAction("List", "Account");
+                        return RedirectToAction("property_user", "Properties");
                     default:
                         ModelState.AddModelError("", "Invalid user role.");
                         return View();
@@ -260,6 +270,16 @@ namespace EstateFin.Controllers
             HttpContext.Session.SetString("UserName", existingUser.FirstName!);
             HttpContext.Session.SetString("Login", existingUser.UserID.ToString()!);
 
+            var googleClaims = new List<Claim>
+            {
+                new Claim(ClaimTypes.Name, existingUser.FirstName ?? ""),
+                new Claim(ClaimTypes.Email, existingUser.Email ?? ""),
+                new Claim(ClaimTypes.Role, existingUser.Role ?? "")
+            };
+
+            var identity = new ClaimsIdentity(googleClaims, CookieAuthenticationDefaults.AuthenticationScheme);
+            var principal = new ClaimsPrincipal(identity);
+            await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, principal);
 
             return RedirectToAction("List", "Account");
         }
@@ -359,7 +379,7 @@ namespace EstateFin.Controllers
             if (string.IsNullOrEmpty(email) || string.IsNullOrEmpty(actualOtp) || string.IsNullOrEmpty(otp))
             {
                 ModelState.AddModelError("", "Missing OTP or email.");
-                TempData.Keep(); 
+                TempData.Keep();
                 return View();
             }
 
@@ -377,7 +397,7 @@ namespace EstateFin.Controllers
                 HttpContext.Session.SetString("UserName", user.FirstName ?? "User");
                 HttpContext.Session.SetString("UserRole", user.Role ?? "User");
 
-               
+
                 switch (user.Role)
                 {
                     case "Admin":
@@ -395,7 +415,7 @@ namespace EstateFin.Controllers
             else
             {
                 ModelState.AddModelError("", "Invalid OTP. Please try again.");
-                TempData.Keep(); 
+                TempData.Keep();
                 return View();
             }
         }
@@ -419,8 +439,63 @@ namespace EstateFin.Controllers
             ViewBag.TotalTransactions = db.Transactions.Sum(t => t.Amount);
             ViewBag.AgentCount = db.Users.Count(u => u.Role == "Agent");
 
+            var salesData = db.Transactions
+            .GroupBy(t => new { t.TransactionDate.Year, t.TransactionDate.Month })
+            .Select(g => new
+            {
+                g.Key.Year,
+                g.Key.Month,
+                Total = g.Sum(x => x.Amount)
+            })
+            .ToList()
+            .Select(g => new
+            {
+                Month = $"{g.Month}/{g.Year}",
+                Total = g.Total
+            })
+            .OrderBy(g => g.Month)
+            .ToList();
+
+            ViewBag.SalesLabels = salesData.Select(s => s.Month).ToArray();
+            ViewBag.SalesValues = salesData.Select(s => s.Total).ToArray();
+
             return View();
         }
+
+        public IActionResult AgentDashboard()
+        {
+            var agentId = int.Parse(HttpContext.Session.GetString("Login")!);
+
+            ViewBag.MyProperties = db.Properties.Count(p => p.UserID == agentId);
+            ViewBag.MyTransactions = db.Transactions
+                .Where(t => t.Booking.Property.UserID == agentId)
+                .Sum(t => t.Amount);
+            ViewBag.MyReviews = db.Reviews.Count(r => r.Property.UserID == agentId);
+
+            var salesData = db.Transactions
+                .Where(t => t.Booking.Property.UserID == agentId)
+                .GroupBy(t => new { t.TransactionDate.Year, t.TransactionDate.Month })
+                .Select(g => new
+                {
+                    g.Key.Year,
+                    g.Key.Month,
+                    Total = g.Sum(x => x.Amount)
+                })
+                .ToList()
+                .Select(g => new
+                {
+                    Month = $"{g.Month}/{g.Year}",
+                    Total = g.Total
+                })
+                .OrderBy(g => g.Month)
+                .ToList();
+
+            ViewBag.SalesLabels = salesData.Select(s => s.Month).ToArray();
+            ViewBag.SalesValues = salesData.Select(s => s.Total).ToArray();
+
+            return View();
+        }
+
 
     }
 }

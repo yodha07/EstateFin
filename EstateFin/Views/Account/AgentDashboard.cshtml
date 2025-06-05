@@ -1,8 +1,9 @@
 ﻿@{
-    ViewData["Title"] = "Admin Dashboard";
+    ViewData["Title"] = "Agent Dashboard";
     var labels = Json.Serialize(ViewBag.SalesLabels);
     var values = Json.Serialize(ViewBag.SalesValues);
 }
+<h2 class="mb-4">📈 Agent Dashboard</h2>
 
 <style>
     .dashboard-card {
@@ -30,42 +31,28 @@
         }
 </style>
 
-<h2 class="mb-4">📊 Admin Dashboard</h2>
-
 <div class="row g-4">
-    <div class="col-md-4">
+    <div class="col-md-3">
         <div class="dashboard-card">
-            <h3>Active Users</h3>
-            <p>@ViewBag.ActiveUsers</p>
+            <h3>My Properties</h3>
+            <p>@ViewBag.MyProperties</p>
         </div>
     </div>
-    <div class="col-md-4">
+    <div class="col-md-3">
         <div class="dashboard-card">
-            <h3>Total Properties</h3>
-            <p>@ViewBag.TotalProperties</p>
+            <h3>My Reviews</h3>
+            <p>@ViewBag.MyReviews</p>
         </div>
     </div>
-    <div class="col-md-4">
+    <div class="col-md-3">
         <div class="dashboard-card">
-            <h3>Total Bookings</h3>
-            <p>@ViewBag.TotalBookings</p>
-        </div>
-    </div>
-    <div class="col-md-6">
-        <div class="dashboard-card">
-            <h3>Total Transactions</h3>
-            <p>₹@ViewBag.TotalTransactions</p>
-        </div>
-    </div>
-    <div class="col-md-6">
-        <div class="dashboard-card">
-            <h3>Registered Agents</h3>
-            <p>@ViewBag.AgentCount</p>
+            <h3>Total Earnings</h3>
+            <p>₹@ViewBag.MyTransactions</p>
         </div>
     </div>
 </div>
 
-<h4 class="mt-5">💹 Monthly Sales Overview</h4>
+<h4 class="mt-5">📊 Sales Overview</h4>
 <canvas id="salesChart" width="400" height="150"></canvas>
 
 @section Scripts {
@@ -73,28 +60,19 @@
     <script>
         const ctx = document.getElementById('salesChart').getContext('2d');
         const chart = new Chart(ctx, {
-            type: 'bar',
+            type: 'line',
             data: {
                 labels: @Html.Raw(labels),
                 datasets: [{
                     label: 'Sales (₹)',
                     data: @Html.Raw(values),
-                    backgroundColor: '#167df2',
-                    borderRadius: 5
+                    borderColor: '#167df2',
+                    fill: false,
+                    tension: 0.3
                 }]
             },
             options: {
                 responsive: true,
-                scales: {
-                    y: {
-                        beginAtZero: true,
-                        ticks: {
-                            callback: function(value) {
-                                return '₹' + value;
-                            }
-                        }
-                    }
-                },
                 plugins: {
                     legend: { display: true }
                 }

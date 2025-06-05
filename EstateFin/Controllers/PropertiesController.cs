@@ -70,6 +70,7 @@ namespace EstateFin.Controllers
             return View();
         }
 
+        [Authorize(Roles = "Agent, Seller")]
         [HttpPost]
         public IActionResult add_properties(Bind prop)
         {
@@ -104,6 +105,7 @@ namespace EstateFin.Controllers
 
         }
 
+        [Authorize(Roles = "Admin, Agent, Seller")]
         public IActionResult Delete_Properties(int id)
         {
             if (id != null)
@@ -119,6 +121,8 @@ namespace EstateFin.Controllers
             }
 
         }
+
+        [Authorize(Roles = "Agent, Seller")]
         public IActionResult Edit_Properties(int id)
         {
             ViewBag.editproperties = new SelectList(repo.dropdown(), "MyPropertyId", "PropertyType");
@@ -143,6 +147,7 @@ namespace EstateFin.Controllers
 
 
         [HttpPost]
+        [Authorize(Roles = "Agent, Seller")]
         public IActionResult Edit_Properties(Bind e)
         {
             var mpath = repo.propertyfile(e);
@@ -174,7 +179,7 @@ namespace EstateFin.Controllers
 
         }
 
-
+        [Authorize(Roles = "Admin")]
         public IActionResult property_type()
         {
             return View();
@@ -182,6 +187,7 @@ namespace EstateFin.Controllers
         }
 
         [HttpPost]
+        [Authorize(Roles = "Admin")]
         public IActionResult property_type(Property_Type e)
         {
             e.createdat = DateTime.Now;
@@ -205,6 +211,7 @@ namespace EstateFin.Controllers
 
         }
 
+        [Authorize(Roles = "Admin")]
         public IActionResult delete_property_type(int id)
         {
             repo.delete_property_typess(id);
@@ -213,6 +220,7 @@ namespace EstateFin.Controllers
 
         }
 
+        [Authorize(Roles = "Admin")]
         public IActionResult edit_property_type(int id)
         {
             var ids = db.Property_Types.Find(id);
@@ -220,6 +228,7 @@ namespace EstateFin.Controllers
         }
 
         [HttpPost]
+        [Authorize(Roles = "Admin")]
         public IActionResult edit_property_type(Property_Type e)
         {
             e.createdat = DateTime.Now;
@@ -239,15 +248,15 @@ namespace EstateFin.Controllers
 
         }
 
-
+        [Authorize(Roles = "Admin, Buyer, Tenant, Seller, Tenant")]
         public IActionResult property_user()
         {
             var data = db.Properties.Where(x => x.Status.Equals("Available")).ToList();
             return View(data);
         }
 
-        [Authorize(Roles = "Admin, Buyer, Tenant")]
         [HttpPost]
+        [Authorize(Roles = "Admin, Buyer, Tenant, Seller, Tenant")]
         public IActionResult property_user(int id)
         {
             //HttpContext.Session.SetString("UserRole", id.ToString());
