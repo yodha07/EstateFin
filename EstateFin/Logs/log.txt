@@ -176,3 +176,5 @@
 [05-06-2025 14:18:27] This is what caused the exception:  An error occurred while saving the entity changes. See the inner exception for details. 
 [05-06-2025 14:28:02] This is what caused the exception:  An error occurred while saving the entity changes. See the inner exception for details. 
 [05-06-2025 14:32:10] This is what caused the exception:  An error occurred while saving the entity changes. See the inner exception for details. 
+[05-06-2025 15:59:03] This is what caused the exception:  Object reference not set to an instance of an object. 
+[05-06-2025 16:04:42] This is what caused the exception:  An error occurred while saving the entity changes. See the inner exception for details. 

@@ -195,7 +195,8 @@ namespace EstateFin.Controllers
         public IActionResult property_type(Property_Type e)
         {
             e.createdat = DateTime.Now;
-            e.createdby = "session";
+            e.createdby = HttpContext.Session.GetString("UserName");
+            ;
 
             if (ModelState.IsValid)
             {
