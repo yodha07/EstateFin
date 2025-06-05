@@ -11,11 +11,10 @@ namespace EstateFin.Services
         private readonly IWebHostEnvironment env;
 
         public PropertyService(ApplicationDbContext db, IWebHostEnvironment env) { this.db = db; this.env = env; }
-        public List<Property> GetProperties()
+        public List<Property> GetProperties(int id)
         {
-            var list = db.Properties.ToList();
+            var list = db.Properties.Where(p => p.UserID == id).ToList();
             return list;
-
         }
 
         //public List<Property> GetProperties_tenant()

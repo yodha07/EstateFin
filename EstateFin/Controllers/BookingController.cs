@@ -2,6 +2,7 @@
 using EstateFin.Models;
 using Microsoft.AspNetCore.Mvc;
 using EstateFin.Repositories;
+using EstateFin.Data;
 
 namespace EstateFin.Controllers
 {
@@ -9,8 +10,10 @@ namespace EstateFin.Controllers
     {
         private readonly IBookingRepository _bookingService;
         private readonly IUserRepo repo;
-        public BookingController(IBookingRepository bookingService)
+        private readonly ApplicationDbContext db;
+        public BookingController(IBookingRepository bookingService, ApplicationDbContext db)
         {
+            this.db = db;
             _bookingService = bookingService;
         }
 
@@ -78,6 +81,24 @@ namespace EstateFin.Controllers
         }
 
         // POST: Reject booking by admin
+        //[HttpPost]
+        //public IActionResult Reject(int id)
+        //{
+        //    var booking = _bookingService.GetById(id);
+        //    if (booking != null)
+        //    {
+        //        booking.Status = BookingStatus.Rejected;
+        //        _bookingService.Update(booking);
+        //    }
+
+        //    return RedirectToAction("Index");
+        //    //// Admin check
+        //    //if (HttpContext.Session.GetString("UserRole") != "Admin")
+        //    //    return Unauthorized();
+
+
+        //}
+
         [HttpPost]
         public IActionResult Reject(int id)
         {
@@ -86,14 +107,16 @@ namespace EstateFin.Controllers
             {
                 booking.Status = BookingStatus.Rejected;
                 _bookingService.Update(booking);
+
+                var property = db.Properties.Find(booking.PropertyId);
+                if (property != null)
+                {
+                    property.Status = "Available";
+                    db.SaveChanges();
+                }
             }
-
             return RedirectToAction("Index");
-            //// Admin check
-            //if (HttpContext.Session.GetString("UserRole") != "Admin")
-            //    return Unauthorized();
-
-            
         }
+
     }
 }

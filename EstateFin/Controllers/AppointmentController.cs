@@ -26,14 +26,70 @@ namespace EstateFin.Controllers
             return View(e);
         }
 
+        //[Authorize(Roles = "Agent, Seller")]
+        //public IActionResult agent()
+        //{
+        //    int user = int.Parse(HttpContext.Session.GetString("Login"));
+        //    int propertyId = int.Parse(HttpContext.Session.GetString("propId") ?? "0");
+
+        //    var appointments = db.appointment
+        //        .Where(x => x.PropertyId == propertyId && x.Status.Equals("pending"))
+        //        .Include(x => x.Property)
+        //        .Include(x => x.User)
+        //        .ToList();
+
+        //    return View(appointments);
+        //}
+
+
+        //[Authorize(Roles = "Agent, Seller")]
+        //public IActionResult agent()
+        //{
+        //    int user = int.Parse(HttpContext.Session.GetString("Login"));
+
+        //    // Get the property that belongs to the logged-in agent/seller
+        //    var property = db.Properties.FirstOrDefault(p => p.UserID == user);
+        //    if (property == null)
+        //    {
+        //        // Handle the case where no property is found for the user.
+        //        return View(new List<Appointment>());
+        //    }
+
+        //    int propertyId = property.PropertyId;
+
+        //    var appointments = db.appointment
+        //        .Where(x => x.PropertyId == propertyId && x.Status.Equals("pending"))
+        //        .Include(x => x.Property)
+        //        .Include(x => x.User)
+        //        .ToList();
+
+        //    return View(appointments);
+        //}
+
         [Authorize(Roles = "Agent, Seller")]
         public IActionResult agent()
         {
             int user = int.Parse(HttpContext.Session.GetString("Login"));
+            var propertyIds = db.Properties
+                                .Where(p => p.UserID == user)
+                                .Select(p => p.PropertyId)
+                                .ToList();
 
-            var e = db.appointment.Where(x => x.UserID.Equals(user)&& x.Status.Equals("pending")).Include(x => x.Property).Include(x => x.User).ToList();
-            return View(e);
+            if (!propertyIds.Any())
+            {
+                return View(new List<Appointment>());
+            }
+
+            var appointments = db.appointment
+                .Where(x => propertyIds.Contains(x.PropertyId) && x.Status.Equals("pending"))
+                .Include(x => x.Property)
+                .Include(x => x.User)
+                .ToList();
+
+            return View(appointments);
         }
+
+
 
         [Authorize(Roles = "Agent, Seller")]
         public IActionResult confirm(int id)

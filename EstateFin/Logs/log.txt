@@ -178,3 +178,6 @@
 [05-06-2025 14:32:10] This is what caused the exception:  An error occurred while saving the entity changes. See the inner exception for details. 
 [05-06-2025 15:59:03] This is what caused the exception:  Object reference not set to an instance of an object. 
 [05-06-2025 16:04:42] This is what caused the exception:  An error occurred while saving the entity changes. See the inner exception for details. 
+[05-06-2025 19:06:12] This is what caused the exception:  Object reference not set to an instance of an object. 
+[05-06-2025 20:13:02] This is what caused the exception:  Execution Timeout Expired.  The timeout period elapsed prior to completion of the operation or the server is not responding. 
+[05-06-2025 20:53:01] This is what caused the exception:  Value cannot be null. (Parameter 's') 

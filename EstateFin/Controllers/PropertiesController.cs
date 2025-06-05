@@ -20,9 +20,10 @@ namespace EstateFin.Controllers
         private readonly IBookingRepository bookingRepository;
 
         public PropertiesController(ApplicationDbContext db, IWebHostEnvironment env, PropertyRepo repo, IBookingRepository bookingRepository) { this.db = db; this.env = env; this.repo = repo; this.bookingRepository = bookingRepository; }
-        public IActionResult Index()
+        public IActionResult Index(int id)
         {
-            var list = repo.GetProperties();
+            var userID = int.Parse(HttpContext.Session.GetString("Login")!);
+            var list = repo.GetProperties(userID);
 
             return View(list);
         }
@@ -72,38 +73,71 @@ namespace EstateFin.Controllers
         }
 
         //[Authorize(Roles = "Agent, Seller")]
+        //[HttpPost]
+        //public IActionResult add_properties(Bind prop)
+        //{
+        //    prop.properties.UserID = int.Parse(HttpContext.Session.GetString("Login"));
+
+        //    var mpath = repo.propertyfile(prop);
+        //    prop.properties.images = string.Join(",", mpath);
+        //    prop.properties.CreatedAt = DateTime.Now;
+        //    HttpContext.Session.SetInt32("PropertyID", prop.properties.PropertyId);
+
+        //    //foreach (var modelError in ModelState)
+        //    //{
+        //    //    foreach (var error in modelError.Value.Errors)
+        //    //    {
+        //    //        Console.WriteLine($"Field: {modelError.Key} — Error: {error.ErrorMessage}");
+        //    //    }
+        //    //}
+
+        //    if (ModelState.IsValid)
+        //    {
+        //        repo.add_property(prop);
+        //        TempData["msg"] = "data added";
+        //        return RedirectToAction("Index");
+        //    }
+        //    else
+        //    {
+        //        return View();
+        //    }
+        //}
+
         [HttpPost]
         public IActionResult add_properties(Bind prop)
         {
+            
             prop.properties.UserID = int.Parse(HttpContext.Session.GetString("Login"));
 
+            
             var mpath = repo.propertyfile(prop);
             prop.properties.images = string.Join(",", mpath);
             prop.properties.CreatedAt = DateTime.Now;
             HttpContext.Session.SetInt32("PropertyID", prop.properties.PropertyId);
 
-            foreach (var modelError in ModelState)
+            
+            foreach (var key in ModelState.Keys)
             {
-                foreach (var error in modelError.Value.Errors)
+                var errors = ModelState[key].Errors;
+                if (errors.Count > 0)
                 {
-                    Console.WriteLine($"Field: {modelError.Key} — Error: {error.ErrorMessage}");
+                    foreach (var error in errors)
+                    {
+                        Console.WriteLine($"Field: {key} - Error: {error.ErrorMessage}");
+                    }
                 }
             }
 
             if (ModelState.IsValid)
             {
                 repo.add_property(prop);
-                TempData["msg"] = "data added";
+                TempData["msg"] = "Property Added";
                 return RedirectToAction("Index");
-
-
             }
             else
             {
-                return View();
+                return View(prop);
             }
-
-
         }
 
         //[Authorize(Roles = "Admin, Agent, Seller")]

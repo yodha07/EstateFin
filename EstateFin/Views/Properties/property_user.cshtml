@@ -6,18 +6,77 @@
 
 @if (msg != null)
 {
-    <h1>@msg</h1>
+    <div class="alert alert-info text-center fw-bold">@msg</div>
 }
 
-@if(Model != null)
+@if (Model != null)
 {
-    <div class="row row-cols-1 row-cols-md-3 g-4">
+    <style>
+        body{
+            background: linear-gradient(225deg, rgba(255, 94, 164, 1) 0%, rgba(22, 125, 242, 1) 100%);
+        }
+
+        #cards{
+            background: rgba(255, 255, 255, 0.9);
+        }
+
+        .property-card {
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            transition: transform 0.3s ease;
+        }
+
+            .property-card:hover {
+                transform: translateY(-5px);
+            }
+
+        .carousel-inner img {
+            border-top-left-radius: 12px;
+            border-top-right-radius: 12px;
+        }
+
+        .card-body {
+            padding: 1.2rem;
+        }
+
+        .card-title {
+            font-size: 1.25rem;
+            font-weight: 600;
+        }
+
+        .btn-group-custom {
+            display: flex;
+            justify-content: space-between;
+            gap: 0.5rem;
+            margin-top: 1rem;
+        }
+
+        .card-text-small {
+            font-size: 0.9rem;
+            color: #666;
+        }
+
+        .price-label {
+            font-weight: 600;
+            margin-top: 0.75rem;
+            color: #333;
+        }
+
+        .price-value {
+            font-size: 1.1rem;
+            color: #167df2;
+            font-weight: bold;
+        }
+    </style>
+
+    <div id="page" class="row row-cols-1 row-cols-md-3 g-4">
         @foreach (var e in Model)
         {
             var carouselId = "carousel_" + e.PropertyId;
 
             <div class="col">
-                <div class="card h-100 shadow-sm border-0">
+                <div id="cards" class="card h-100 property-card border-0">
+                    <!-- Image Carousel -->
                     <div id="@carouselId" class="carousel slide" data-bs-ride="carousel">
                         <div class="carousel-inner">
                             @{
@@ -27,7 +86,7 @@
                             {
                                 var isActive = index == 0 ? "active" : "";
                                 <div class="carousel-item @isActive">
-                                    <img src="@i" class="d-block w-100" style="height: 250px; object-fit: cover;" />
+                                    <img src="@i" class="d-block w-100" style="height: 230px; object-fit: cover;" />
                                 </div>
                                 index++;
                             }
@@ -42,28 +101,34 @@
                         </button>
                     </div>
 
+                    <!-- Property Details -->
                     <div class="card-body">
                         <h5 class="card-title">@e.Title</h5>
                         <p class="card-text">@e.Description</p>
-                        <p class="card-text"><small class="text-muted">@e.Address, @e.City, @e.State, @e.ZipCode</small></p>
-                        <h5>Status: <span class="text-body fw-bold">@e.Status</span></h5>
-                        <h5> Final Price <p class="card-text text-primary fw-bold">₹@e.OwnerId</p> </h5>
-                        <h5> Booking Price <p class="card-text text-primary fw-bold">₹@e.Price</p> </h5>
+                        <p class="card-text-small">
+                            <i class="bi bi-geo-alt-fill"></i> @e.Address, @e.City, @e.State - @e.ZipCode
+                        </p>
+                        <p class="card-text">
+                            <span class="badge bg-secondary">Status: @e.Status</span>
+                        </p>
+                        <div>
+                            <span class="price-label">Final Price:</span>
+                            <div class="price-value">₹@e.OwnerId</div>
+                        </div>
+                        <div>
+                            <span class="price-label">Booking Price:</span>
+                            <div class="price-value">₹@e.Price</div>
+                        </div>
 
-
-                        <form asp-action="property_user" asp-controller="Properties" method="post">
+                        <!-- Actions -->
+                        <form asp-action="property_user" asp-controller="Properties" method="post" class="btn-group-custom">
                             <input type="hidden" name="id" value="@e.PropertyId" />
-                            <button type="submit" class="btn btn-success">Book</button>
-                            <a asp-action="Add_Appointment" class="btn btn-success" asp-controller="Appointment" asp-route-id="@e.PropertyId">Appointment</a>
+                            <button type="submit" class="btn btn-outline-primary w-50">Book</button>
+                            <a asp-action="Add_Appointment" asp-controller="Appointment" asp-route-id="@e.PropertyId" class="btn btn-outline-success w-50">Appointment</a>
                         </form>
-
-
-
                     </div>
                 </div>
             </div>
         }
     </div>
-
 }
-
