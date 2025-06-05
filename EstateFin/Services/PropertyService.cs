@@ -104,12 +104,39 @@ namespace EstateFin.Services
         }
 
 
+       public  List<Property> search(string txt)
+       {
+            return db.Properties.Where(x => x.Title.Contains(txt) || x.Description.Contains(txt) || x.Price.ToString().Contains(txt) || x.Address.Contains(txt) || x.City.Contains(txt) || x.State.Contains(txt) || x.ZipCode.Contains(txt) || x.PropertyType.Contains(txt) || x.Status.Contains(txt)).ToList();
+       }
 
+       public List<Property> FetchAllProperty()
+       {
+            return db.Properties.ToList();
+       }
+        
+        public List<Property_Type> FetchAllPropertyType()
+        {
+            return db.Property_Types.ToList();
+        }
 
+         public Property_Type Edit_Property_Type(int id)
+        {
+            return db.Property_Types.Find(id);
+        }
+        public List<Property> Property_User_List()
+        {
+            return db.Properties.Where(x => x.Status.Equals("Available")).ToList();
+        }
 
+        public Property property_user_findbyid(int id)
+        {
+            return db.Properties.Find(id);
+        }
 
-
-
+         public List<Property> Property_Tenant_List()
+        {
+            return db.Properties.Where(x => x.Status.Equals("Rented")).ToList();
+        }
     }
 
 

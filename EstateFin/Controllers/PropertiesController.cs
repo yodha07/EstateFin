@@ -34,13 +34,13 @@ namespace EstateFin.Controllers
         {
             if (txt != null)
             {
-                var list = db.Properties.Where(x => x.Title.Contains(txt) || x.Description.Contains(txt) || x.Price.ToString().Contains(txt) || x.Address.Contains(txt) || x.City.Contains(txt) || x.State.Contains(txt) || x.ZipCode.Contains(txt) || x.PropertyType.Contains(txt) || x.Status.Contains(txt)).ToList();
+                var list =repo.search(txt);
 
                 return View(list);
             }
             else
             {
-                var list = db.Properties.ToList();
+                var list =repo.FetchAllProperty();
                 return View(list);
             }
         }
@@ -116,17 +116,17 @@ namespace EstateFin.Controllers
             HttpContext.Session.SetInt32("PropertyID", prop.properties.PropertyId);
 
             
-            foreach (var key in ModelState.Keys)
-            {
-                var errors = ModelState[key].Errors;
-                if (errors.Count > 0)
-                {
-                    foreach (var error in errors)
-                    {
-                        Console.WriteLine($"Field: {key} - Error: {error.ErrorMessage}");
-                    }
-                }
-            }
+            //foreach (var key in ModelState.Keys)
+            //{
+            //    var errors = ModelState[key].Errors;
+            //    if (errors.Count > 0)
+            //    {
+            //        foreach (var error in errors)
+            //        {
+            //            Console.WriteLine($"Field: {key} - Error: {error.ErrorMessage}");
+            //        }
+            //    }
+            //}
 
             if (ModelState.IsValid)
             {
@@ -136,6 +136,7 @@ namespace EstateFin.Controllers
             }
             else
             {
+                ViewBag.myproperties = new SelectList(repo.dropdown(), "MyPropertyId", "PropertyType");
                 return View(prop);
             }
         }
@@ -244,7 +245,7 @@ namespace EstateFin.Controllers
         }
         public IActionResult property_type_list()
         {
-            var e = db.Property_Types.ToList();
+            var e = repo.FetchAllPropertyType();
 
             return View(e);
 
@@ -262,7 +263,7 @@ namespace EstateFin.Controllers
         [Authorize(Roles = "Admin")]
         public IActionResult edit_property_type(int id)
         {
-            var ids = db.Property_Types.Find(id);
+            var ids =repo.Edit_Property_Type(id); 
             return View(ids);
         }
 
@@ -290,7 +291,7 @@ namespace EstateFin.Controllers
         [Authorize(Roles = "Admin, Buyer, Tenant, Seller, Tenant")]
         public IActionResult property_user()
         {
-            var data = db.Properties.Where(x => x.Status.Equals("Available")).ToList();
+            var data = repo.Property_User_List();
             if(data.Count == 0)
             {
                 TempData["listMsg"] = "No properties listed";
@@ -304,7 +305,7 @@ namespace EstateFin.Controllers
         public IActionResult property_user(int id)
         {
             //HttpContext.Session.SetString("UserRole", id.ToString());
-            var PropertyId = db.Properties.Find(id);
+            var PropertyId = repo.property_user_findbyid(id);
             int userId = int.Parse((HttpContext.Session.GetString("Login") ?? "0"));
             Booking booking = new Booking
             {
@@ -322,7 +323,7 @@ namespace EstateFin.Controllers
 
         public IActionResult property_user_tenant()
         {
-            var data = db.Properties.Where(x => x.Status.Equals("Rented")).ToList();
+            var data = repo.Property_Tenant_List();
             return View(data);
         }
 
@@ -330,7 +331,7 @@ namespace EstateFin.Controllers
         public IActionResult property_user_tenant(int id)
         {
             //HttpContext.Session.SetString("UserRole", id.ToString());
-            var PropertyId = db.Properties.Find(id);
+            var PropertyId =repo.property_user_findbyid(id);
             int userId = int.Parse((HttpContext.Session.GetString("Login") ?? "0"));
             Booking booking = new Booking
             {
@@ -349,7 +350,7 @@ namespace EstateFin.Controllers
         {
             int userId = int.Parse((HttpContext.Session.GetString("Login") ?? "0"));
 
-            var list = db.Properties.Where(x=> x.UserID.Equals(userId)).ToList();
+            var list = repo.GetProperties(userId);
 
             return View(list);
         }
@@ -360,13 +361,13 @@ namespace EstateFin.Controllers
         {
             if (txt != null)
             {
-                var list = db.Properties.Where(x => x.Title.Contains(txt) || x.Description.Contains(txt) || x.Price.ToString().Contains(txt) || x.Address.Contains(txt) || x.City.Contains(txt) || x.State.Contains(txt) || x.ZipCode.Contains(txt) || x.PropertyType.Contains(txt) || x.Status.Contains(txt)).ToList();
+                var list = repo.search(txt);
 
                 return View(list);
             }
             else
             {
-                var list = db.Properties.ToList();
+                var list = repo.FetchAllProperty();
                 return View(list);
             }
         }
@@ -375,7 +376,7 @@ namespace EstateFin.Controllers
         [Authorize(Roles = "Buyer, Tenant")]
         public IActionResult property_user_review()
         {
-            var data = db.Properties.ToList();
+            var data = repo.FetchAllProperty();
             if (data.Count == 0)
             {
                 TempData["listMsg"] = "No properties listed";

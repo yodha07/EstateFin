@@ -19,5 +19,13 @@ namespace EstateFin.Repositories
 
         void edit_property_typess(Property_Type e);
 
+        List<Property> search(string txt);
+        List<Property> FetchAllProperty();
+        List<Property_Type> FetchAllPropertyType();
+        Property_Type Edit_Property_Type(int id);
+        List<Property> Property_User_List();
+        Property property_user_findbyid(int id);
+        List<Property> Property_Tenant_List();
+
     }
 }

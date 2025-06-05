@@ -2,6 +2,7 @@
 using System.Reflection.Metadata.Ecma335;
 using EstateFin.Data;
 using EstateFin.Models;
+using EstateFin.Repositories;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
@@ -13,7 +14,12 @@ namespace EstateFin.Controllers
     public class AppointmentController : Controller
     {
         ApplicationDbContext db;
-        public AppointmentController(ApplicationDbContext db) { this.db = db; }
+        private readonly IAppointmentRepo repo;
+        public AppointmentController(ApplicationDbContext db, IAppointmentRepo repo) 
+        {
+            this.db = db;
+            this.repo = repo;
+        }
         
 
         public IActionResult Index()
@@ -70,10 +76,7 @@ namespace EstateFin.Controllers
         public IActionResult agent()
         {
             int user = int.Parse(HttpContext.Session.GetString("Login"));
-            var propertyIds = db.Properties
-                                .Where(p => p.UserID == user)
-                                .Select(p => p.PropertyId)
-                                .ToList();
+            var propertyIds = repo.PropertyIdNull(user);
 
             if (!propertyIds.Any())
             {
@@ -94,9 +97,9 @@ namespace EstateFin.Controllers
         [Authorize(Roles = "Agent, Seller")]
         public IActionResult confirm(int id)
         {
-            var user = db.appointment.Find(id);
+            var user = repo.GetAppointment(id);
             user.Status = "confirmed";
-            db.SaveChanges();
+            repo.SaveChanges();
 
             return RedirectToAction("index");
         }
@@ -105,16 +108,16 @@ namespace EstateFin.Controllers
         public IActionResult reject(int id)
         {
 
-            var user = db.appointment.Find(id);
-            db.appointment.Remove(user);
-            db.SaveChanges();
+            var user = repo.GetAppointment(id);
+            repo.DeleteChanges(user);
+            repo.SaveChanges();
             return RedirectToAction("index");
         }
 
         [Authorize(Roles = "Buyer, Tenant")]
         public IActionResult Add_Appointment()
         {
-            var list = db.slot.Where(x => x.Status.Equals("Active")).ToList();
+            var list = repo.GetSlots();
 
             ViewBag.slot = new SelectList(list, "Slot_type", "Slot_type");
 
@@ -127,7 +130,7 @@ namespace EstateFin.Controllers
         {
             int user = int.Parse(HttpContext.Session.GetString("Login"));
 
-            var e = db.Users.Where(x => x.UserID.Equals(user)).ToList();
+            var e = repo.GetUser(id);
             app.UserID = user;
             app.Status = "pending";
             app.PropertyId = id;

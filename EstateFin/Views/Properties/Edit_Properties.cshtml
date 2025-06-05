@@ -53,12 +53,20 @@
 <div id="cards" class="form-section">
     <h2>📋 Update Property</h2>
 
+<<<<<<< Updated upstream
     <form method="post" enctype="multipart/form-data">
         <div class="form-group mb-3">
             <label asp-for="properties.Title"></label>
             <input asp-for="properties.Title" class="form-control" />
             <span asp-validation-for="properties.Title" class="text-danger"></span>
         </div>
+=======
+	<div class="form-group mb-3">
+		<label>Final Amount</label>
+		<input asp-for="properties.OwnerId" class="form-control" />
+		<span asp-validation-for="properties.OwnerId" class="text-danger"></span>
+	</div>
+>>>>>>> Stashed changes
 
         <div class="form-group mb-3">
             <label asp-for="properties.Description"></label>
