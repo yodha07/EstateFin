@@ -82,7 +82,7 @@
                 <a asp-controller="Home" asp-action="Index">🏠 Home</a>
                 <a asp-controller="properties" asp-action="property_user">🏘 Properties</a>
                 <a asp-controller="Booking" asp-action="MyBookings">📅 My Bookings</a>
-                <a asp-controller="Review" asp-action="MyReviews">⭐ My Reviews</a>
+                <a asp-controller="Review" asp-action="Submit">⭐ My Reviews</a>
                 @if (!string.IsNullOrEmpty(role))
                 {
                     <a asp-controller="Account" asp-action="Logout" class="text-danger mt-4">🚪 Logout</a>
@@ -121,7 +121,7 @@
 
                 <a asp-controller="Home" asp-action="Index">🏠 Home</a>
                 <a asp-controller="Account" asp-action="AgentDashboard">📋 Dashboard</a>
-
+                <a asp-controller="Booking" asp-action="Index">📅 View Bookings</a>
                 <!-- 🏘 Properties Dropdown -->
                 <div class="dropdown px-3 py-1">
                     <a class="dropdown-toggle text-white d-block" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
@@ -189,7 +189,7 @@
 
                 <!-- 📦 My Bookings -->
                 <a asp-controller="Booking" asp-action="MyBookings">📦 My Bookings</a>
-
+                <a asp-controller="Booking" asp-action="Index">📅 View Bookings</a>
                 <!-- ⭐ My Reviews -->
                 <a asp-controller="Review" asp-action="MyReviews">⭐ My Reviews</a>
 

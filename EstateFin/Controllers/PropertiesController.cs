@@ -274,6 +274,31 @@ namespace EstateFin.Controllers
             bookingRepository.Add(booking);
             return RedirectToAction("MyBookings", "Booking");
         }
+
+        public IActionResult property_user_tenant()
+        {
+            var data = db.Properties.Where(x => x.Status.Equals("Rented")).ToList();
+            return View(data);
+        }
+
+        [HttpPost]
+        public IActionResult property_user_tenant(int id)
+        {
+            //HttpContext.Session.SetString("UserRole", id.ToString());
+            var PropertyId = db.Properties.Find(id);
+            int userId = int.Parse((HttpContext.Session.GetString("Login") ?? "0"));
+            Booking booking = new Booking
+            {
+                PropertyId = PropertyId.PropertyId,
+                UserID = userId,
+                BookingDate = DateTime.Now,
+                Amount = PropertyId.Price,
+                Status = BookingStatus.Pending
+            };
+
+            bookingRepository.Add(booking);
+            return RedirectToAction("MyBookings", "Booking");
+        }
     }
 
 }

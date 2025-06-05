@@ -46,6 +46,7 @@ builder.Services.AddScoped<IUserRepo, UserRepo>();
 builder.Services.AddScoped<IBookingRepository, BookingService>();
 builder.Services.AddScoped<ITransactionRepository, TransactionService>();
 builder.Services.AddScoped<ReviewRepo, ReviewService>();
+builder.Services.AddScoped<PropertyRepo, PropertyService>();
 
 builder.Services.AddControllersWithViews().AddSessionStateTempDataProvider();
 builder.Services.AddHttpContextAccessor(); //

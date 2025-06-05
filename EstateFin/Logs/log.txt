@@ -165,3 +165,10 @@
             .Sum(e => e.Outer.Outer.Amount)
      })
     .OrderBy(e0 => e0.Month)' could not be translated. Additional information: Translation of method 'string.Format' failed. If this method can be mapped to your custom function, see https://go.microsoft.com/fwlink/?linkid=2132413 for more information. Either rewrite the query in a form that can be translated, or switch to client evaluation explicitly by inserting a call to 'AsEnumerable', 'AsAsyncEnumerable', 'ToList', or 'ToListAsync'. See https://go.microsoft.com/fwlink/?linkid=2101038 for more information. 
+[05-06-2025 13:18:44] This is what caused the exception:  Unable to resolve service for type 'EstateFin.Repositories.PropertyRepo' while attempting to activate 'EstateFin.Controllers.PropertiesController'. 
+[05-06-2025 13:18:52] This is what caused the exception:  Unable to resolve service for type 'EstateFin.Repositories.PropertyRepo' while attempting to activate 'EstateFin.Controllers.PropertiesController'. 
+[05-06-2025 13:20:02] This is what caused the exception:  Unable to resolve service for type 'EstateFin.Repositories.PropertyRepo' while attempting to activate 'EstateFin.Controllers.PropertiesController'. 
+[05-06-2025 13:22:03] This is what caused the exception:  Unable to resolve service for type 'EstateFin.Repositories.PropertyRepo' while attempting to activate 'EstateFin.Controllers.PropertiesController'. 
+[05-06-2025 13:22:10] This is what caused the exception:  Unable to resolve service for type 'EstateFin.Repositories.PropertyRepo' while attempting to activate 'EstateFin.Controllers.PropertiesController'. 
+[05-06-2025 13:28:22] This is what caused the exception:  Unable to resolve service for type 'EstateFin.Repositories.PropertyRepo' while attempting to activate 'EstateFin.Controllers.PropertiesController'. 
+[05-06-2025 13:51:20] This is what caused the exception:  Invalid Property ID. 
