@@ -6,9 +6,13 @@ using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Google;
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
+using Microsoft.AspNetCore.Mvc.Routing;
+using System.Collections.Concurrent;
+using EstateFin.Filters;
 
 namespace EstateFin.Controllers
 {
+    [GlobalException]
     public class AccountController : Controller
     {
         private readonly IUserRepo repo;
@@ -33,7 +37,7 @@ namespace EstateFin.Controllers
         {
             if (ModelState.IsValid)
             {
-                var userExists = db.Users.Any(u => u.Email == user.Email);
+                var userExists = repo.EmailExists(user.Email!);
                 if (userExists)
                 {
                     ModelState.AddModelError("", "Email already registered.");
@@ -45,6 +49,64 @@ namespace EstateFin.Controllers
                 TempData["msg"] = "Registration Successful. Please login to continue.";
                 return RedirectToAction("Login");
             }
+            return View(user);
+        }
+
+        [HttpGet]
+        public IActionResult UpdateProfile()
+        {
+            var userId = int.Parse(HttpContext.Session.GetString("Login")!);
+            var user = repo.GetUserById(userId);
+
+            if (user == null)
+            {
+                return RedirectToAction("Login");
+            }
+
+            return View(user);
+        }
+
+
+        [HttpPost]
+        public IActionResult UpdateProfile(User user, IFormFile ProfileImage)
+        {
+            var userExists = repo.GetUserById(user.UserID);
+            if (userExists == null)
+            {
+                ModelState.AddModelError("", "User not found.");
+                return View(user);
+            }
+
+            if (ProfileImage != null && ProfileImage.Length > 0)
+            {
+                var filename = Path.GetFileName(ProfileImage.FileName);
+                var filePath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "Images", filename);
+
+                if (!Directory.Exists(filePath))
+                {
+                    Directory.CreateDirectory(Path.GetDirectoryName(filePath)!);
+                }
+
+                using (var fileStream = new FileStream(filePath, FileMode.Create))
+                {
+                    ProfileImage.CopyTo(fileStream);
+                }
+
+                user.ProfilePicture = "/Images/" + filename;
+            }
+            else
+            {
+                user.ProfilePicture = userExists.ProfilePicture;
+            }
+
+            if (ModelState.IsValid)
+            {
+                repo.UpdateProfile(user);
+                HttpContext.Session.SetString("UserName", user.FirstName!);
+                TempData["msg"] = "Profile updated successfully.";
+                return RedirectToAction("List", "Account");
+            }
+
             return View(user);
         }
 
@@ -84,19 +146,30 @@ namespace EstateFin.Controllers
                 HttpContext.Session.SetString("UserName", user.FirstName!);
                 HttpContext.Session.SetString("Login", user.UserID.ToString()!);
 
+                var claims = new List<Claim>
+                {
+                    new Claim(ClaimTypes.Name, user.FirstName ?? ""),
+                    new Claim(ClaimTypes.Email, user.Email ?? ""),
+                    new Claim(ClaimTypes.Role, user.Role ?? "")
+                };
+
+                var identity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
+                var principal = new ClaimsPrincipal(identity);
+
+                HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, principal);
 
                 switch (user.Role)
                 {
                     case "Admin":
                         return RedirectToAction("AdminDashboard", "Account");
                     case "Agent":
-                        return RedirectToAction("List", "Account");
+                        return RedirectToAction("AgentDashboard", "Account");
                     case "Buyer":
-                        return RedirectToAction("List", "Account");
+                        return RedirectToAction("property_user", "Properties");
                     case "Seller":
                         return RedirectToAction("List", "Account");
                     case "Tenant":
-                        return RedirectToAction("List", "Account");
+                        return RedirectToAction("property_user", "Properties");
                     default:
                         ModelState.AddModelError("", "Invalid user role.");
                         return View();
@@ -182,6 +255,8 @@ namespace EstateFin.Controllers
                     LastName = lastName,
                     Email = email!,
                     Role = "Buyer",
+                    PasswordHash = "default123",
+                    PhoneNumber = "0000000000",
                     isGoogleUser = true,
                     CreatedAt = DateTime.Now
                 };
@@ -195,6 +270,16 @@ namespace EstateFin.Controllers
             HttpContext.Session.SetString("UserName", existingUser.FirstName!);
             HttpContext.Session.SetString("Login", existingUser.UserID.ToString()!);
 
+            var googleClaims = new List<Claim>
+            {
+                new Claim(ClaimTypes.Name, existingUser.FirstName ?? ""),
+                new Claim(ClaimTypes.Email, existingUser.Email ?? ""),
+                new Claim(ClaimTypes.Role, existingUser.Role ?? "")
+            };
+
+            var identity = new ClaimsIdentity(googleClaims, CookieAuthenticationDefaults.AuthenticationScheme);
+            var principal = new ClaimsPrincipal(identity);
+            await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, principal);
 
             return RedirectToAction("List", "Account");
         }
@@ -248,7 +333,7 @@ namespace EstateFin.Controllers
                 return View();
             }
 
-            var user = db.Users.FirstOrDefault(u => u.Email == email);
+            var user = repo.GetUserByEmail(email);
 
             if (user == null)
             {
@@ -294,14 +379,14 @@ namespace EstateFin.Controllers
             if (string.IsNullOrEmpty(email) || string.IsNullOrEmpty(actualOtp) || string.IsNullOrEmpty(otp))
             {
                 ModelState.AddModelError("", "Missing OTP or email.");
-                TempData.Keep(); 
+                TempData.Keep();
                 return View();
             }
 
             if (otp == actualOtp)
             {
 
-                var user = db.Users.FirstOrDefault(u => u.Email == email);
+                var user = repo.GetUserByEmail(email);
 
                 if (user == null)
                 {
@@ -312,7 +397,7 @@ namespace EstateFin.Controllers
                 HttpContext.Session.SetString("UserName", user.FirstName ?? "User");
                 HttpContext.Session.SetString("UserRole", user.Role ?? "User");
 
-               
+
                 switch (user.Role)
                 {
                     case "Admin":
@@ -330,9 +415,20 @@ namespace EstateFin.Controllers
             else
             {
                 ModelState.AddModelError("", "Invalid OTP. Please try again.");
-                TempData.Keep(); 
+                TempData.Keep();
                 return View();
             }
+        }
+
+        public IActionResult ProfileCard(User user)
+        {
+            var userId = int.Parse(HttpContext.Session.GetString("Login")!);
+            var userProfile = repo.GetUserById(userId);
+            if (userProfile == null)
+            {
+                return RedirectToAction("Login");
+            }
+            return View(userProfile);
         }
 
         public IActionResult AdminDashboard()
@@ -343,9 +439,62 @@ namespace EstateFin.Controllers
             ViewBag.TotalTransactions = db.Transactions.Sum(t => t.Amount);
             ViewBag.AgentCount = db.Users.Count(u => u.Role == "Agent");
 
+            var salesData = db.Transactions
+            .GroupBy(t => new { t.TransactionDate.Year, t.TransactionDate.Month })
+            .Select(g => new
+            {
+                g.Key.Year,
+                g.Key.Month,
+                Total = g.Sum(x => x.Amount)
+            })
+            .ToList()
+            .Select(g => new
+            {
+                Month = $"{g.Month}/{g.Year}",
+                Total = g.Total
+            })
+            .OrderBy(g => g.Month)
+            .ToList();
+
+            ViewBag.SalesLabels = salesData.Select(s => s.Month).ToArray();
+            ViewBag.SalesValues = salesData.Select(s => s.Total).ToArray();
+
             return View();
         }
 
+        public IActionResult AgentDashboard()
+        {
+            var agentId = int.Parse(HttpContext.Session.GetString("Login")!);
+
+            ViewBag.MyProperties = db.Properties.Count(p => p.UserID == agentId);
+            ViewBag.MyTransactions = db.Transactions
+                .Where(t => t.Booking.Property.UserID == agentId)
+                .Sum(t => t.Amount);
+            ViewBag.MyReviews = db.Reviews.Count(r => r.Property.UserID == agentId);
+
+            var salesData = db.Transactions
+                .Where(t => t.Booking.Property.UserID == agentId)
+                .GroupBy(t => new { t.TransactionDate.Year, t.TransactionDate.Month })
+                .Select(g => new
+                {
+                    g.Key.Year,
+                    g.Key.Month,
+                    Total = g.Sum(x => x.Amount)
+                })
+                .ToList()
+                .Select(g => new
+                {
+                    Month = $"{g.Month}/{g.Year}",
+                    Total = g.Total
+                })
+                .OrderBy(g => g.Month)
+                .ToList();
+
+            ViewBag.SalesLabels = salesData.Select(s => s.Month).ToArray();
+            ViewBag.SalesValues = salesData.Select(s => s.Total).ToArray();
+
+            return View();
+        }
 
 
     }

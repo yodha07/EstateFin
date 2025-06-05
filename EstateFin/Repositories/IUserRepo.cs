@@ -9,5 +9,9 @@ namespace EstateFin.Repositories
         Task<User?> LoginWithGoogle(string email);
         Task<bool> SendEmailAsync(string toEmail, string subject, string body);
         int GenerateOtp();
+        bool EmailExists(string email);
+        User? GetUserByEmail(string email);
+        User? GetUserById(int userId);
+        void UpdateProfile(User user);
     }
 }

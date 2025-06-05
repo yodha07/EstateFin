@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace EstateFin.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20250603224709_adds")]
-    partial class adds
+    [Migration("20250604141712_new")]
+    partial class @new
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
