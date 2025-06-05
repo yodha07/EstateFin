@@ -1,80 +1,134 @@
 ﻿@model Bind
 
-<form method="post" enctype="multipart/form-data">
-	<input type="hidden" asp-for="properties.PropertyId" />
+<style>
+    body {
+        background: linear-gradient(225deg, rgba(255, 94, 164, 1) 0%, rgba(22, 125, 242, 1) 100%);
+    }
 
-	<div class="form-group">
-		<label asp-for="properties.Title"></label>
-		<input asp-for="properties.Title" class="form-control" />
-		<span asp-validation-for="properties.Title" class="text-danger"></span>
-	</div>
+    #cards {
+        background: rgba(255, 255, 255, 0.9);
+    }
 
-	<div class="form-group">
-		<label asp-for="properties.Description"></label>
-		<textarea asp-for="properties.Description" class="form-control" rows="3"></textarea>
-		<span asp-validation-for="properties.Description" class="text-danger"></span>
-	</div>
+    .form-section {
+        max-width: 800px;
+        margin: 30px auto;
+        background: #fff;
+        padding: 25px 35px;
+        border-radius: 12px;
+        box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+    }
 
-	<div class="form-group">
-		<label asp-for="properties.Price"></label>
-		<input asp-for="properties.Price" class="form-control" />
-		<span asp-validation-for="properties.Price" class="text-danger"></span>
-	</div>
+        .form-section h2 {
+            text-align: center;
+            margin-bottom: 25px;
+            font-weight: 600;
+        }
 
-	<div class="form-group">
-		<label asp-for="properties.Address"></label>
-		<input asp-for="properties.Address" class="form-control" />
-		<span asp-validation-for="properties.Address" class="text-danger"></span>
-	</div>
+    .form-group label {
+        font-weight: 500;
+    }
 
-	<div class="form-group">
-		<label asp-for="properties.City"></label>
-		<input asp-for="properties.City" class="form-control" />
-		<span asp-validation-for="properties.City" class="text-danger"></span>
-	</div>
+    .form-control {
+        border-radius: 6px;
+        box-shadow: none;
+    }
 
-	<div class="form-group">
-		<label asp-for="properties.State"></label>
-		<input asp-for="properties.State" class="form-control" />
-		<span asp-validation-for="properties.State" class="text-danger"></span>
-	</div>
+    .btn-primary {
+        background: linear-gradient(225deg, rgba(255, 94, 164, 1) 0%, rgba(22, 125, 242, 1) 100%);
+        border: none;
+        font-weight: 500;
+        padding: 10px 25px;
+        border-radius: 8px;
+    }
 
-	<div class="form-group">
-		<label asp-for="properties.ZipCode"></label>
-		<input asp-for="properties.ZipCode" class="form-control" />
-		<span asp-validation-for="properties.ZipCode" class="text-danger"></span>
-	</div>
+        .btn-primary:hover {
+            background: linear-gradient(225deg, rgba(22, 125, 242, 1) 0%, rgba(255, 94, 164, 1) 100%);
+        }
 
-	<div class="form-group">
-		<label asp-for="properties.PropertyType"></label>
-		<select asp-for="properties.PropertyType" asp-items=" ViewBag.editproperties" class="form-control">
-			<option value="">-- Select Property Type --</option>
-		</select>
-		<span asp-validation-for="properties.PropertyType" class="text-danger"></span>
-	</div>
+    .text-danger {
+        font-size: 0.9rem;
+    }
+</style>
 
-	<div class="form-group">
-		<label asp-for="properties.Status"></label>
-		<select asp-for="properties.Status" class="form-control">
-			<option value="">-- Select Status --</option>
-			<option value="Available">Available</option>
-			<option value="Sold">Sold</option>
-			<option value="Rented">Rented</option>
-		</select>
-		<span asp-validation-for="properties.Status" class="text-danger"></span>
-	</div>
+<div id="cards" class="form-section">
+    <h2>📋 Add New Property</h2>
 
-	<div class="form-group">
-		<label asp-for="properties.OwnerId"></label>
-		<input asp-for="properties.OwnerId" class="form-control" />
-		<span asp-validation-for="properties.OwnerId" class="text-danger"></span>
-	</div>
+    <form method="post" enctype="multipart/form-data">
+        <div class="form-group mb-3">
+            <label asp-for="properties.Title"></label>
+            <input asp-for="properties.Title" class="form-control" />
+            <span asp-validation-for="properties.Title" class="text-danger"></span>
+        </div>
 
-	<div class="form-group">
-		<label asp-for="image.images"></label>
-		<input type="file" asp-for="image.images" multiple class="form-control" />
-		<span asp-validation-for="image.images" class="text-danger"></span>
-	</div>
+        <div class="form-group mb-3">
+            <label asp-for="properties.Description"></label>
+            <textarea asp-for="properties.Description" class="form-control" rows="3"></textarea>
+            <span asp-validation-for="properties.Description" class="text-danger"></span>
+        </div>
 
-	<button type="submit" class="btn btn-primary">Submit</button>
-</form>
+        <div class="form-group mb-3">
+            <label asp-for="properties.Price"></label>
+            <input asp-for="properties.Price" class="form-control" />
+            <span asp-validation-for="properties.Price" class="text-danger"></span>
+        </div>
+
+        <div class="form-group mb-3">
+            <label asp-for="properties.Address"></label>
+            <input asp-for="properties.Address" class="form-control" />
+            <span asp-validation-for="properties.Address" class="text-danger"></span>
+        </div>
+
+        <div class="form-group mb-3">
+            <label asp-for="properties.City"></label>
+            <input asp-for="properties.City" class="form-control" />
+            <span asp-validation-for="properties.City" class="text-danger"></span>
+        </div>
+
+        <div class="form-group mb-3">
+            <label asp-for="properties.State"></label>
+            <input asp-for="properties.State" class="form-control" />
+            <span asp-validation-for="properties.State" class="text-danger"></span>
+        </div>
+
+        <div class="form-group mb-3">
+            <label asp-for="properties.ZipCode"></label>
+            <input asp-for="properties.ZipCode" class="form-control" />
+            <span asp-validation-for="properties.ZipCode" class="text-danger"></span>
+        </div>
+
+        <div class="form-group mb-3">
+            <label asp-for="properties.PropertyType"></label>
+            <select asp-for="properties.PropertyType" asp-items="@ViewBag.myproperties" class="form-control">
+                <option value="">-- Select Property Type --</option>
+            </select>
+            <span asp-validation-for="properties.PropertyType" class="text-danger"></span>
+        </div>
+
+        <div class="form-group mb-3">
+            <label asp-for="properties.Status"></label>
+            <select asp-for="properties.Status" class="form-control">
+                <option value="">-- Select Status --</option>
+                <option value="Available">Available</option>
+                <option value="Sold">Sold</option>
+                <option value="Rented">Rented</option>
+            </select>
+            <span asp-validation-for="properties.Status" class="text-danger"></span>
+        </div>
+
+        <div class="form-group mb-3">
+            <label>Final Amount</label>
+            <input asp-for="properties.OwnerId" class="form-control" />
+            <span asp-validation-for="properties.OwnerId" class="text-danger"></span>
+        </div>
+
+        <div class="form-group mb-4">
+            <label asp-for="image.images">Upload Images</label>
+            <input type="file" asp-for="image.images" multiple class="form-control" />
+            <span asp-validation-for="image.images" class="text-danger"></span>
+        </div>
+
+        <div class="text-center">
+            <button type="submit" class="btn btn-primary">Submit Property</button>
+        </div>
+    </form>
+</div>

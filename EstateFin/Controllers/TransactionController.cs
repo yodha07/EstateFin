@@ -2,8 +2,14 @@
 using EstateFin.Models;
 using EstateFin.Models.Enum.StatusEnums;
 using EstateFin.Repositories;
+using iText.Kernel.Pdf;
+using iText.Layout;
+using iText.Layout.Element;
+using iText.Layout.Properties;
 using Microsoft.AspNetCore.Mvc;
 using Rotativa.AspNetCore;
+using System.IO;
+using System.Reflection.Metadata;
 
 namespace EstateFin.Controllers
 {
@@ -48,7 +54,7 @@ namespace EstateFin.Controllers
 
 
         [HttpPost]
-        public IActionResult PaymentSuccess(string razorpay_payment_id, string razorpay_order_id, string razorpay_signature, double amount, int bookingId)
+        public async Task<IActionResult> PaymentSuccess(string razorpay_payment_id, string razorpay_order_id, string razorpay_signature, double amount, int bookingId)
         {
             Transaction txn = new Transaction
             {
@@ -73,17 +79,49 @@ namespace EstateFin.Controllers
             var email = booking.User.Email;
             var confirm = db.Properties.Find(id);
             confirm.Status = "Sold";
-            db.SaveChanges();
-            //add pdf gen and sendmail here
-            repo.SendEmailAsync(email,
+            await repo.SendEmailAsync(email,
                 "Payment successful",
                 $"Your payment for property: {pname} is successful\n" +
-                $"Your payment id : {razorpay_payment_id}\n" +
+                $"Your payment id: {razorpay_payment_id}\n" +
                 $"Your payment amount: {amount}\n" +
-                $"Transaction Date: {DateTime.Now}").Wait();
-            return RedirectToAction("DownloadReceipt");
+                $"Transaction Date: {DateTime.Now}");
+            db.SaveChanges();
 
+            //var pdfResult = new ViewAsPdf("PdfReciept", txn)
+            //{
+            //    FileName = "Receipt.pdf",
+            //    PageSize = Rotativa.AspNetCore.Options.Size.A4,
+            //    PageOrientation = Rotativa.AspNetCore.Options.Orientation.Portrait
+            //};
+            //byte[] pdfBytes = GenerateReceiptPdf(txn);
+            //add pdf gen and sendmail here
+
+            return RedirectToAction("DownloadReceipt");
         }
+
+        private byte[] GenerateReceiptPdf(Transaction txn)
+        {
+            // Use a MemoryStream without touching its timeout properties
+            var ms = new MemoryStream();
+            var writer = new PdfWriter(ms);
+            var pdf = new PdfDocument(writer);
+            var document = new iText.Layout.Document(pdf);
+
+            document.Add(new Paragraph("Payment Receipt").SetTextAlignment(TextAlignment.CENTER));
+            document.Add(new Paragraph($"Payment ID: {txn.PaymentId}"));
+            document.Add(new Paragraph($"Booking ID: {txn.BookingId}"));
+            document.Add(new Paragraph($"Amount: {txn.Amount:C}"));
+            document.Add(new Paragraph($"Payment Method: {txn.PaymentMethod}"));
+            document.Add(new Paragraph($"Transaction Date: {txn.TransactionDate}"));
+
+            // Close the document to flush all data into the stream
+            document.Close();
+
+            return ms.ToArray();
+        }
+
+
+
         public IActionResult MakePayment(int id)
         {
             var ids = db.Bookings.Find(id);
