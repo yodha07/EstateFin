@@ -9,11 +9,12 @@ namespace EstateFin.Controllers
 {
     public class ReviewController : Controller
     {
-
+        ApplicationDbContext db;
         ReviewRepo repo;
 
-        public ReviewController(ReviewRepo repo)
+        public ReviewController(ReviewRepo repo, ApplicationDbContext db)
         {
+            this.db = db;
             this.repo = repo;
         }
 
@@ -43,12 +44,13 @@ namespace EstateFin.Controllers
         }
 
         [HttpPost]
-        public IActionResult Submit(Review review)
+        public IActionResult Submit(Review review, int id)
         {
             //review.UserID = 1;         // hardcoded user
-            //review.PropertyId = 1;     // hardcoded property
+            //review.UserID = int.Parse(HttpContext.Session.GetString("Login") ?? "0");
+            review.PropertyId = id;     // hardcoded property
             //review.DatePosted = DateTime.Now;
-
+            review.Id = 0;            
             //if (ModelState.IsValid)
             //{
             //    db.Reviews.Add(review);

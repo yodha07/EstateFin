@@ -59,6 +59,7 @@ namespace EstateFin.Controllers
         {
             int userId = int.Parse(HttpContext.Session.GetString("Login") ?? "0");
             var bookings = _bookingService.GetByUserId(userId);
+            
             return View(bookings);
         }
 

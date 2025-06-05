@@ -82,7 +82,7 @@
                 <a asp-controller="Home" asp-action="Index">🏠 Home</a>
                 <a asp-controller="properties" asp-action="property_user">🏘 Properties</a>
                 <a asp-controller="Booking" asp-action="MyBookings">📅 My Bookings</a>
-                <a asp-controller="Review" asp-action="Submit">⭐ My Reviews</a>
+                <a asp-controller="properties" asp-action="property_user_review">⭐ My Reviews</a>
                 <a asp-controller="Account" asp-action="ProfileCard">⭐ Profile card</a>
                 @if (!string.IsNullOrEmpty(role))
                 {
@@ -108,6 +108,7 @@
                         <li><a class="dropdown-item text-dark" asp-controller="properties" asp-action="index">View Properties</a></li>
                     </ul>
                 </div>
+                <a asp-controller="Account" asp-action="ProfileCard">⭐ Profile card</a>
 
                 @if (!string.IsNullOrEmpty(role))
                 {
@@ -151,7 +152,7 @@
 
                 <!-- 💳 Transactions -->
                 <a asp-controller="Transactions" asp-action="Index">💳 Transactions</a>
-
+                <a asp-controller="Account" asp-action="ProfileCard">⭐ Profile card</a>
                 <!-- 🚪 Logout -->
                 @if (!string.IsNullOrEmpty(role))
                 {
@@ -194,7 +195,7 @@
                 <a asp-controller="Booking" asp-action="Index">📅 View Bookings</a>
                 <!-- ⭐ My Reviews -->
                 <a asp-controller="Review" asp-action="MyReviews">⭐ My Reviews</a>
-
+                <a asp-controller="Account" asp-action="ProfileCard">⭐ Profile card</a>
                 <!-- 🚪 Logout -->
                 @if (!string.IsNullOrEmpty(role))
                 {

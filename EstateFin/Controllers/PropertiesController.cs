@@ -314,9 +314,7 @@ namespace EstateFin.Controllers
                 Amount = PropertyId.Price,
                 Status = BookingStatus.Pending
             };
-            var confirm = db.Properties.Find(id);
-            confirm.Status = "sold";
-            db.SaveChanges();
+            
 
             bookingRepository.Add(booking);
             return RedirectToAction("MyBookings", "Booking");
@@ -371,6 +369,19 @@ namespace EstateFin.Controllers
                 var list = db.Properties.ToList();
                 return View(list);
             }
+        }
+
+
+        [Authorize(Roles = "Buyer, Tenant")]
+        public IActionResult property_user_review()
+        {
+            var data = db.Properties.ToList();
+            if (data.Count == 0)
+            {
+                TempData["listMsg"] = "No properties listed";
+                return View();
+            }
+            return View(data);
         }
 
     }

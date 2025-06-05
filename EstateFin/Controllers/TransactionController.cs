@@ -66,7 +66,10 @@ namespace EstateFin.Controllers
                 booking.Status = EstateFin.Models.Enum.StatusEnums.BookingStatus.Confirmed;
                 _bookingService.Update(booking);
             }
-
+            int id = booking.PropertyId;
+            var confirm = db.Properties.Find(id);
+            confirm.Status = "Sold";
+            db.SaveChanges();
             return RedirectToAction("DownloadReceipt");
             
         }
