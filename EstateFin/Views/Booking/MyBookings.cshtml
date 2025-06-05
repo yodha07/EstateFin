@@ -1,34 +1,108 @@
 ﻿@model IEnumerable<EstateFin.Models.Booking>
 @using EstateFin.Models.Enum.StatusEnums
+
 @{
     ViewBag.Title = "My Bookings";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<h2>My Bookings</h2>
+<style>
+    body {
+        background: linear-gradient(225deg, rgba(255, 94, 164, 1) 0%, rgba(22, 125, 242, 1) 100%);
+    }
 
-<table class="table table-bordered">
-    <thead>
+    h2 {
+        margin: 30px 0 20px;
+        font-weight: 600;
+    }
+
+    .badge {
+        font-size: 0.85rem;
+        padding: 5px 12px;
+        border-radius: 10px;
+    }
+
+    .badge-approved {
+        background-color: #198754;
+        color: #fff;
+    }
+
+    .badge-pending {
+        background-color: #ffc107;
+        color: #212529;
+    }
+
+    .badge-rejected {
+        background-color: #dc3545;
+        color: #fff;
+    }
+
+    .pay-now-link {
+        background-color: #167df2;
+        color: white;
+        padding: 6px 14px;
+        border-radius: 8px;
+        text-decoration: none;
+        font-weight: 500;
+        transition: 0.2s ease;
+    }
+
+        .pay-now-link:hover {
+            background-color: #0d6efd;
+            text-decoration: none;
+        }
+
+    .table {
+        background-color: white;
+    }
+</style>
+
+<h2>💼 My Bookings</h2>
+
+<table class="table table-bordered table-striped shadow-sm">
+    <thead class="table-dark">
         <tr>
-            <th>Property</th>
-            <th>Amount</th>
-            <th>Status</th>
-            <th>Booked On</th>
-            <th>Action</th>
+            <th>🏠 Property</th>
+            <th>💰 Amount</th>
+            <th>📌 Status</th>
+            <th>🕓 Booked On</th>
+            <th>⚙️ Action</th>
         </tr>
     </thead>
     <tbody>
         @foreach (var booking in Model)
         {
             <tr>
-                <td>@booking.Property.Title</td>
-                <td>₹@booking.Amount</td>
-                <td>@booking.Status</td>
-                <td>@booking.BookingDate.ToShortDateString()</td>
+                <td>@booking.Property?.Title</td>
+                <td><strong>₹@booking.Amount</strong></td>
+                <td>
+                    @switch (booking.Status)
+                    {
+                        case BookingStatus.Confirmed:
+                            <span class="badge badge-approved">Confirmed</span>
+                            break;
+                        case BookingStatus.Pending:
+                            <span class="badge badge-pending">Pending</span>
+                            break;
+                        case BookingStatus.Cancelled:
+                            <span class="badge badge-rejected">Cancelled</span>
+                            break;
+                        default:
+                            <span class="badge bg-secondary">Unknown</span>
+                            break;
+                    }
+                </td>
+                <td>@booking.BookingDate.ToString("dd MMM yyyy")</td>
                 <td>
                     @if (booking.Status == BookingStatus.Approved)
                     {
-                        <a asp-controller="Transaction" asp-action="MakePayment" asp-route-id="@booking.BookingId">Pay Now</a>
+                        <a asp-controller="Transaction" asp-action="MakePayment" asp-route-id="@booking.BookingId" class="pay-now-link">
+                            💳 Pay Now
+                        </a>
+                    }
+                    else
+                    {
+                        <span class="text-muted">-</span>
                     }
                 </td>
             </tr>

@@ -46,7 +46,7 @@ namespace EstateFin.Data
                 .HasOne(a => a.Property)
                 .WithMany(p => p.Appointments)
                 .HasForeignKey(a => a.PropertyId)
-                .OnDelete(DeleteBehavior.Restrict);
+                .OnDelete(DeleteBehavior.Cascade);
 
             //    modelBuilder.Entity<Appointment>()
             //.HasOne(a => a.User)
