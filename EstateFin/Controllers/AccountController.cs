@@ -167,7 +167,7 @@ namespace EstateFin.Controllers
                     case "Buyer":
                         return RedirectToAction("property_user", "Properties");
                     case "Seller":
-                        return RedirectToAction("List", "Account");
+                        return RedirectToAction("property_user", "Properties");
                     case "Tenant":
                         return RedirectToAction("property_user", "Properties");
                     default:

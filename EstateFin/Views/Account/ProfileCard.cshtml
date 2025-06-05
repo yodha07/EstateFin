@@ -5,41 +5,50 @@
 
 <style>
     .profile-card {
-        max-width: 400px;
-        margin: 40px auto;
-        background: white;
-        border-radius: 12px;
-        box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
-        padding: 30px;
-        text-align: center;
+    max-width: 400px;
+    margin: 40px auto;
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+    padding: 30px;
+    text-align: center;
     }
 
-        .profile-card img {
-            width: 120px;
-            height: 120px;
-            object-fit: cover;
-            border-radius: 50%;
-            margin-bottom: 20px;
-            border: 3px solid #167df2;
-        }
+    .profile-card img {
+    width: 120px;
+    height: 120px;
+    object-fit: cover;
+    border-radius: 50%;
+    margin-bottom: 20px;
+    border: 3px solid #167df2;
+    }
 
-        .profile-card h2 {
-            margin-bottom: 5px;
-            color: #333;
-        }
+    .profile-card h2 {
+    margin-bottom: 5px;
+    color: #333;
+    }
 
-        .profile-card p {
-            margin: 2px 0;
-            color: #555;
-        }
+    .profile-card p {
+    margin: 2px 0;
+    color: #555;
+    }
 
-        .profile-card .btn {
-            margin-top: 20px;
-        }
+    .profile-card .btn {
+    margin-top: 20px;
+    }
 </style>
 
 <div class="profile-card">
-    <img src="@Model.ProfilePicture" alt="Profile Picture" onerror="this.src='/images/default.png'" />
+    @if (!string.IsNullOrEmpty(Model.ProfilePicture))
+    {
+        <img src="@Model.ProfilePicture"
+             alt="Profile Picture"
+             class="rounded-circle" />
+    }
+    else
+    {
+        <h3>No Profile Picture</h3>
+    }
     <h2>@Model.FirstName @Model.LastName</h2>
     <p><strong>Email:</strong> @Model.Email</p>
     <p><strong>Phone:</strong> @Model.PhoneNumber</p>

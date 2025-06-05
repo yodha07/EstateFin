@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using Razorpay.Api;
+using System.Linq;
 
 namespace EstateFin.Controllers
 {
@@ -70,7 +71,7 @@ namespace EstateFin.Controllers
             return View();
         }
 
-        [Authorize(Roles = "Agent, Seller")]
+        //[Authorize(Roles = "Agent, Seller")]
         [HttpPost]
         public IActionResult add_properties(Bind prop)
         {
@@ -105,7 +106,7 @@ namespace EstateFin.Controllers
 
         }
 
-        [Authorize(Roles = "Admin, Agent, Seller")]
+        //[Authorize(Roles = "Admin, Agent, Seller")]
         public IActionResult Delete_Properties(int id)
         {
             if (id != null)
@@ -122,9 +123,10 @@ namespace EstateFin.Controllers
 
         }
 
-        [Authorize(Roles = "Agent, Seller")]
+        //[Authorize(Roles = "Agent, Seller")]
         public IActionResult Edit_Properties(int id)
         {
+
             ViewBag.editproperties = new SelectList(repo.dropdown(), "MyPropertyId", "PropertyType");
 
             //var my_propertiess = db.Property_Types.Where(x => x.status.Equals("Active")).Select(x => new SelectListItem
@@ -147,9 +149,11 @@ namespace EstateFin.Controllers
 
 
         [HttpPost]
-        [Authorize(Roles = "Agent, Seller")]
+        //[Authorize(Roles = "Agent, Seller")]
         public IActionResult Edit_Properties(Bind e)
         {
+            e.properties.UserID = int.Parse(HttpContext.Session.GetString("Login"));
+
             var mpath = repo.propertyfile(e);
 
             e.properties.images = string.Join(",", mpath);
@@ -252,6 +256,11 @@ namespace EstateFin.Controllers
         public IActionResult property_user()
         {
             var data = db.Properties.Where(x => x.Status.Equals("Available")).ToList();
+            if(data.Count == 0)
+            {
+                TempData["listMsg"] = "No properties listed";
+                return View();
+            }
             return View(data);
         }
 
@@ -270,6 +279,9 @@ namespace EstateFin.Controllers
                 Amount = PropertyId.Price,
                 Status = BookingStatus.Pending
             };
+            var confirm = db.Properties.Find(id);
+            confirm.Status = "sold";
+            db.SaveChanges();
 
             bookingRepository.Add(booking);
             return RedirectToAction("MyBookings", "Booking");
@@ -299,6 +311,33 @@ namespace EstateFin.Controllers
             bookingRepository.Add(booking);
             return RedirectToAction("MyBookings", "Booking");
         }
+
+        public IActionResult Index_tenant()
+        {
+            int userId = int.Parse((HttpContext.Session.GetString("Login") ?? "0"));
+
+            var list = db.Properties.Where(x=> x.UserID.Equals(userId)).ToList();
+
+            return View(list);
+        }
+
+
+        [HttpPost]
+        public IActionResult Index_tenant(string txt)
+        {
+            if (txt != null)
+            {
+                var list = db.Properties.Where(x => x.Title.Contains(txt) || x.Description.Contains(txt) || x.Price.ToString().Contains(txt) || x.Address.Contains(txt) || x.City.Contains(txt) || x.State.Contains(txt) || x.ZipCode.Contains(txt) || x.PropertyType.Contains(txt) || x.Status.Contains(txt)).ToList();
+
+                return View(list);
+            }
+            else
+            {
+                var list = db.Properties.ToList();
+                return View(list);
+            }
+        }
+
     }
 
 }

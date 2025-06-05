@@ -83,6 +83,7 @@
                 <a asp-controller="properties" asp-action="property_user">🏘 Properties</a>
                 <a asp-controller="Booking" asp-action="MyBookings">📅 My Bookings</a>
                 <a asp-controller="Review" asp-action="Submit">⭐ My Reviews</a>
+                <a asp-controller="Account" asp-action="ProfileCard">⭐ Profile card</a>
                 @if (!string.IsNullOrEmpty(role))
                 {
                     <a asp-controller="Account" asp-action="Logout" class="text-danger mt-4">🚪 Logout</a>
@@ -104,7 +105,7 @@
                     <ul class="dropdown-menu">
                         <li><a class="dropdown-item text-dark" asp-controller="properties" asp-action="property_type">Add Property Type</a></li>
                         <li><a class="dropdown-item text-dark" asp-controller="properties" asp-action="add_properties">Add Properties</a></li>
-                        <li><a class="dropdown-item text-dark" asp-controller="properties" asp-action="property_user">View Properties</a></li>
+                        <li><a class="dropdown-item text-dark" asp-controller="properties" asp-action="index">View Properties</a></li>
                     </ul>
                 </div>
 
@@ -172,7 +173,8 @@
                     </a>
                     <ul class="dropdown-menu">
                         <li><a class="dropdown-item text-dark" asp-controller="properties" asp-action="add_properties">Add Properties</a></li>
-                        <li><a class="dropdown-item text-dark" asp-controller="properties" asp-action="property_user">View Properties</a></li>
+                        <li><a class="dropdown-item text-dark" asp-controller="properties" asp-action="index_tenant">View Properties</a></li>
+                        <li><a class="dropdown-item text-dark" asp-controller="properties" asp-action="Index">My Properties</a></li>
                     </ul>
                 </div>
 

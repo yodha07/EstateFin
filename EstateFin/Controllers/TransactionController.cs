@@ -21,7 +21,8 @@ namespace EstateFin.Controllers
 
             public IActionResult Index()
             {
-                var transactions = transactionService.GetAll();
+                var userID = int.Parse(HttpContext.Session.GetString("Login") ?? "0");
+            var transactions = transactionService.GetAll(userID);
                 return View(transactions);
             }
 
@@ -81,6 +82,8 @@ namespace EstateFin.Controllers
         {
            string id = TempData["razorpay_order"].ToString();
            var list = db.Transactions.Where(x=> x.PaymentId.Equals(id)).ToList();
+
+            
            return View(list); 
         }
 

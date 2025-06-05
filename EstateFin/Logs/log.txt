@@ -172,3 +172,7 @@
 [05-06-2025 13:22:10] This is what caused the exception:  Unable to resolve service for type 'EstateFin.Repositories.PropertyRepo' while attempting to activate 'EstateFin.Controllers.PropertiesController'. 
 [05-06-2025 13:28:22] This is what caused the exception:  Unable to resolve service for type 'EstateFin.Repositories.PropertyRepo' while attempting to activate 'EstateFin.Controllers.PropertiesController'. 
 [05-06-2025 13:51:20] This is what caused the exception:  Invalid Property ID. 
+[05-06-2025 14:14:28] This is what caused the exception:  An error occurred while saving the entity changes. See the inner exception for details. 
+[05-06-2025 14:18:27] This is what caused the exception:  An error occurred while saving the entity changes. See the inner exception for details. 
+[05-06-2025 14:28:02] This is what caused the exception:  An error occurred while saving the entity changes. See the inner exception for details. 
+[05-06-2025 14:32:10] This is what caused the exception:  An error occurred while saving the entity changes. See the inner exception for details. 

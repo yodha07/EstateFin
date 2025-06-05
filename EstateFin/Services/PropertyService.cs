@@ -17,6 +17,13 @@ namespace EstateFin.Services
             return list;
 
         }
+
+        //public List<Property> GetProperties_tenant()
+        //{
+        //    var list = 
+        //    return list;
+
+        //}
         public List<Property_Type> dropdown()
         {
             var list = db.Property_Types.Where(x => x.status.Equals("Active")).ToList();
@@ -40,9 +47,10 @@ namespace EstateFin.Services
         }
         protected void Fileupload(IFormFile file, string path)
         {
-            FileStream stream = new FileStream(path, FileMode.Create);
-            file.CopyTo(stream);
-
+            using (FileStream stream = new FileStream(path, FileMode.Create, FileAccess.Write, FileShare.None))
+            {
+                file.CopyTo(stream);
+            }
         }
 
         public void add_property(Bind prop)
@@ -72,6 +80,7 @@ namespace EstateFin.Services
         public void edit_property_post(Bind e)
 
         {
+
             var update = db.Properties.Update(e.properties);
             db.SaveChanges();
         }
