@@ -29,7 +29,7 @@ namespace EstateFin.ILeaseRepo
         public IActionResult Create()
 
         {
-            var list = context.Bookings.Include(x=> x.User).Include(x=> x.)
+            var list = context.Bookings.Include(x => x.User).Include(x => x.Property);
             //int leaseStatusValue = (int)ILeaseRepo.LeaseStatus.Active;
 
             ViewBag.Properties = new SelectList(context.Properties.ToList(), "PropertyId", "Title");

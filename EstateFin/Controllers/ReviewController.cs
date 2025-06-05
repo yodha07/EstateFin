@@ -3,6 +3,7 @@ using EstateFin.Models;
 using EstateFin.Repositories;
 using EstateFin.Services;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore.Metadata.Internal;
 
 namespace EstateFin.Controllers
 {
@@ -16,9 +17,14 @@ namespace EstateFin.Controllers
             this.repo = repo;
         }
 
-        public IActionResult Index()
+        public IActionResult Index(int propertyId)
         {
-            return View();
+            var review = new Review
+            {
+                PropertyId = propertyId
+            };
+
+            return View(review);
         }
 
         //public IActionResult Submit(int propertyId)

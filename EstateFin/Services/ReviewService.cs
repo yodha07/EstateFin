@@ -8,31 +8,36 @@ namespace EstateFin.Services
     public class ReviewService : ReviewRepo
     {
         ApplicationDbContext db;
+        private readonly IHttpContextAccessor co;
 
-        public ReviewService(ApplicationDbContext db)
+        public ReviewService(ApplicationDbContext db, IHttpContextAccessor co)
         {
             this.db = db;
+            this.co = co;
         }
 
         public void Submit(Review review)
         {
-            //var userIdString = HttpContext.Session.GetString("Login");
-            //if (string.IsNullOrEmpty(userIdString))
-            //{
-            //    // User is not logged in - handle this scenario
-            //    throw new Exception("User is not logged in.");
-            //}
+            var userIdString = co.HttpContext?.Session?.GetString("Login");
 
-            //int userId = int.Parse(userIdString);
+            if (string.IsNullOrEmpty(userIdString) || !int.TryParse(userIdString, out int userId))
+            {
+                throw new Exception("User is not logged in or session is invalid.");
+            }
 
-            //review.UserID = userId;
-            review.UserID = 1;         // hardcoded user
-            review.PropertyId = 1;     // hardcoded property
+            // Set values
+            review.UserID = userId;
+
+            if (review.PropertyId <= 0)
+            {
+                throw new Exception("Invalid Property ID.");
+            }
+
             review.DatePosted = DateTime.Now;
 
             db.Reviews.Add(review);
             db.SaveChanges();
-  
+
         }
 
         public List<Review> GetReviewsByPropertyId(int propertyId)

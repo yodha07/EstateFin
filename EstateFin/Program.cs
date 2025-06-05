@@ -37,8 +37,11 @@ builder.Services.AddScoped<IUserRepo, UserRepo>();
 
 builder.Services.AddScoped<IBookingRepository, BookingService>();
 builder.Services.AddScoped<ITransactionRepository, TransactionService>();
+builder.Services.AddScoped<ReviewRepo, ReviewService>();
 
 builder.Services.AddControllersWithViews().AddSessionStateTempDataProvider();
+builder.Services.AddHttpContextAccessor(); //
+
 builder.Services.AddSession();
 
 var app = builder.Build();
