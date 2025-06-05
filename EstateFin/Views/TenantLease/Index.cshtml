@@ -1,0 +1,62 @@
+﻿@using EstateFin.Models.Enum.StatusEnums
+@model List<LeaseAgreement>
+<partial name="Notification"></partial>
+
+<h2 class="mb-4 text-primary">My Lease Agreements</h2>
+
+<div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
+    @foreach (var lease in Model)
+    {
+        <div class="col">
+            <div class="card shadow-sm h-100 border-start border-5
+            @(lease.LeaseStatus == LeaseStatus.Pending ? "border-warning" :
+              lease.LeaseStatus == LeaseStatus.Accepted ? "border-success" : "border-danger")">
+
+                <div class="card-body">
+                    <h5 class="card-title text-dark mb-2">
+                        <i class="bi bi-house-door-fill text-primary me-1"></i>
+                        @lease.Booking.Property.Title
+                    </h5>
+                    <p class="mb-1">
+                        <i class="bi bi-calendar-event text-secondary me-1"></i>
+                        <strong>Start:</strong> @lease.LeaseStartDate.ToShortDateString()
+                    </p>
+                    <p class="mb-3">
+                        <i class="bi bi-calendar-check text-secondary me-1"></i>
+                        <strong>End:</strong> @lease.LeaseEndDate.ToShortDateString()
+                    </p>
+
+                    <span class="badge
+                    @(lease.LeaseStatus == LeaseStatus.Pending ? "bg-warning text-dark" :
+                      lease.LeaseStatus == LeaseStatus.Accepted ? "bg-success" : "bg-danger")">
+                        @lease.LeaseStatus.ToString()
+                    </span>
+                </div>
+
+                <div class="card-footer bg-transparent border-top-0 d-flex justify-content-between">
+                    <a asp-action="LeaseDetails" asp-route-id="@lease.LeaseId" class="btn btn-outline-primary btn-sm">
+                        <i class="bi bi-eye-fill me-1"></i>View Details
+                    </a>
+
+                    @if (lease.LeaseStatus == LeaseStatus.Pending)
+                    {
+                        <div>
+                            <form asp-action="AcceptAgreement" method="post" class="d-inline">
+                                <input type="hidden" name="id" value="@lease.LeaseId" />
+                                <button type="submit" class="btn btn-success btn-sm me-1">
+                                    <i class="bi bi-check-circle-fill"></i> Accept
+                                </button>
+                            </form>
+                            <form asp-action="RejectAgreement" method="post" class="d-inline">
+                                <input type="hidden" name="id" value="@lease.LeaseId" />
+                                <button type="submit" class="btn btn-danger btn-sm">
+                                    <i class="bi bi-x-circle-fill"></i> Reject
+                                </button>
+                            </form>
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+    }
+</div>

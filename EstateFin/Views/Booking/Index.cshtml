@@ -1,0 +1,45 @@
+﻿@using EstateFin.Models.Enum.StatusEnums
+@model IEnumerable<Booking>
+
+@{
+    ViewBag.Title = "All Bookings (Admin)";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>All Bookings</h2>
+
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>Property</th>
+            <th>User</th>
+            <th>Amount</th>
+            <th>Status</th>
+            <th>Booked On</th>
+            <th>Action</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var booking in Model)
+        {
+            <tr>
+                <td>@booking.Property?.Title</td>
+                <td>@booking.User?.FirstName @booking.User?.LastName</td>
+                <td>₹@booking.Amount</td>
+                <td>@booking.Status</td>
+                <td>@booking.BookingDate.ToShortDateString()</td>
+                <td>
+                     <form asp-action="Approve" asp-controller="Booking" method="post" style="display:inline;">
+                            <input type="hidden" name="id" value="@booking.BookingId" />
+                            <button type="submit" class="btn btn-success btn-sm">Approve</button>
+                     </form>
+                     <form asp-action="Reject" asp-controller="Booking" method="post" style="display:inline;">
+                            <input type="hidden" name="id" value="@booking.BookingId" />
+                            <button type="submit" class="btn btn-danger btn-sm">Reject</button>
+                     </form> 
+                  
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

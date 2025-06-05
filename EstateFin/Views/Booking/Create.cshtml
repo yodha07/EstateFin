@@ -1,0 +1,19 @@
+﻿<form asp-action="Create" method="post">
+    <div class="form-group">
+        <label>Property</label>
+        <input name="PropertyId" class="form-control" value="@TempData["shivani"]" />
+    </div>
+
+    @{
+        DateTime date = DateTime.Parse(TempData["Date"].ToString()).Date;
+        TempData.Keep("date");
+        TempData.Keep("shivani");
+    }
+
+    <div class="form-group">
+        <label>Booking Date</label>
+        <input name="BookingDate" type="date" class="form-control" value="@date.ToString("yyyy-MM-dd")" readonly />
+    </div>
+
+    <button type="submit" class="btn btn-primary">Submit</button>
+</form>

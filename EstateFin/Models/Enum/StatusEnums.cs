@@ -13,6 +13,37 @@
         Approved,
         Confirmed,
         Rejected,
-        Cancelled
+        Cancelled,
     }
+
+    public enum LeaseStatus
+    {
+        Pending,
+        Active,
+        Terminated,
+        Accepted,
+        Rejected
+    }
+
+    public enum RentStatus
+    {
+        Pending,
+        Paid,
+        Overdue
+    }
+
+    public enum AppointmentStatus
+    {
+        Pending,
+        Accepted,
+        Rejected
+    }
+
+
 }
+
+
+
+
+
+

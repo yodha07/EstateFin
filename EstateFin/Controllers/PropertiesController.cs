@@ -1,7 +1,12 @@
 ﻿using EstateFin.Data;
 using EstateFin.Models;
+using EstateFin.Models.Enum.StatusEnums;
+using EstateFin.Repositories;
+using EstateFin.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.EntityFrameworkCore.Metadata.Internal;
+using Razorpay.Api;
 
 namespace EstateFin.Controllers
 {
@@ -9,11 +14,14 @@ namespace EstateFin.Controllers
     {
         ApplicationDbContext db;
         private readonly IWebHostEnvironment env;
+        private readonly PropertyRepo repo;
+        private readonly IBookingRepository bookingRepository;
 
-        public PropertiesController(ApplicationDbContext db, IWebHostEnvironment env) { this.db = db; this.env = env; }
+        public PropertiesController(ApplicationDbContext db, IWebHostEnvironment env, PropertyRepo repo, IBookingRepository bookingRepository) { this.db = db; this.env = env; this.repo = repo; this.bookingRepository = bookingRepository; }
         public IActionResult Index()
         {
-            var list = db.Properties.ToList();
+            var list = repo.GetProperties();
+
             return View(list);
         }
 
@@ -57,25 +65,16 @@ namespace EstateFin.Controllers
 
             //    dropdowns = dropdown
             //};
-            ViewBag.myproperties = new SelectList(db.Property_Types.Where(x => x.status.Equals("Active")).ToList(), "MyPropertyId", "PropertyType");
+            ViewBag.myproperties = new SelectList(repo.dropdown(), "MyPropertyId", "PropertyType");
             return View();
         }
 
         [HttpPost]
         public IActionResult add_properties(Bind prop)
         {
-            prop.properties.userid = int.Parse(HttpContext.Session.GetString("Login"));
+            prop.properties.UserID = int.Parse(HttpContext.Session.GetString("Login"));
 
-            var mpath = new List<string>();
-            foreach (var item in prop.image.images)
-            {
-                string path = env.WebRootPath;
-                string filepath = "Content/Images/" + item.FileName;
-                string fullpath = Path.Combine(path, filepath);
-                Fileupload(item, fullpath);
-                mpath.Add("/" + filepath);
-
-            }
+            var mpath = repo.propertyfile(prop);
             prop.properties.images = string.Join(",", mpath);
             prop.properties.CreatedAt = DateTime.Now;
             HttpContext.Session.SetInt32("PropertyID", prop.properties.PropertyId);
@@ -90,12 +89,7 @@ namespace EstateFin.Controllers
 
             if (ModelState.IsValid)
             {
-
-
-
-
-                db.Properties.Add(prop.properties);
-                db.SaveChanges();
+                repo.add_property(prop);
                 TempData["msg"] = "data added";
                 return RedirectToAction("Index");
 
@@ -108,12 +102,7 @@ namespace EstateFin.Controllers
 
 
         }
-        protected void Fileupload(IFormFile file, string path)
-        {
-            FileStream stream = new FileStream(path, FileMode.Create);
-            file.CopyTo(stream);
 
-        }
 
 
 
@@ -122,9 +111,7 @@ namespace EstateFin.Controllers
         {
             if (id != null)
             {
-                var ids = db.Properties.Find(id);
-                var list = db.Properties.Remove(ids);
-                db.SaveChanges();
+                repo.delete_properties(id);
                 TempData["del"] = "deleted";
                 return RedirectToAction("Index");
 
@@ -137,8 +124,7 @@ namespace EstateFin.Controllers
         }
         public IActionResult Edit_Properties(int id)
         {
-            var data = db.Properties.Find(id);
-            ViewBag.editproperties = new SelectList(db.Property_Types.Where(x => x.status.Equals("Active")).ToList(), "MyPropertyId", "PropertyType");
+            ViewBag.editproperties = new SelectList(repo.dropdown(), "MyPropertyId", "PropertyType");
 
             //var my_propertiess = db.Property_Types.Where(x => x.status.Equals("Active")).Select(x => new SelectListItem
             //{
@@ -151,28 +137,19 @@ namespace EstateFin.Controllers
 
             //};
             //var propertiess = new properties() { } ;
-            var bind = new Bind
-            {
-                properties = data,
 
-            };
+            var bind = repo.edit_property(id);
+
 
             return View(bind);
         }
 
+
         [HttpPost]
         public IActionResult Edit_Properties(Bind e)
         {
-            var mpath = new List<string>();
-            foreach (var item in e.image.images)
-            {
-                string path = env.WebRootPath;
-                string filepath = "Content/Images/" + item.FileName;
-                string fullpath = Path.Combine(path, filepath);
-                Fileupload(item, fullpath);
-                mpath.Add(filepath);
+            var mpath = repo.propertyfile(e);
 
-            }
             e.properties.images = string.Join(",", mpath);
             e.properties.CreatedAt = DateTime.Now;
             //foreach (var modelError in ModelState)
@@ -185,17 +162,9 @@ namespace EstateFin.Controllers
 
             if (ModelState.IsValid)
             {
-
-
-
-
-                var update = db.Properties.Update(e.properties);
-                db.SaveChanges();
+                repo.edit_property_post(e);
                 TempData["updt"] = "updated successfully";
                 return RedirectToAction("Index");
-
-
-
             }
             else
             {
@@ -223,8 +192,7 @@ namespace EstateFin.Controllers
 
             if (ModelState.IsValid)
             {
-                db.Property_Types.Add(e);
-                db.SaveChanges();
+                repo.property_typess(e);
                 return RedirectToAction("property_type_list");
             }
             else
@@ -242,9 +210,7 @@ namespace EstateFin.Controllers
 
         public IActionResult delete_property_type(int id)
         {
-            var ids = db.Property_Types.Find(id);
-            db.Property_Types.Remove(ids);
-            db.SaveChanges();
+            repo.delete_property_typess(id);
 
             return RedirectToAction("property_type_list");
 
@@ -263,8 +229,7 @@ namespace EstateFin.Controllers
             e.createdby = "Session";
             if (ModelState.IsValid)
             {
-                db.Property_Types.Update(e);
-                db.SaveChanges();
+                repo.edit_property_typess(e);
                 return RedirectToAction("property_type_list");
 
             }
@@ -277,13 +242,30 @@ namespace EstateFin.Controllers
 
         }
 
+
         public IActionResult property_user()
         {
             var data = db.Properties.Where(x => x.Status.Equals("Available")).ToList();
             return View(data);
+        }
 
+        [HttpPost]
+        public IActionResult property_user(int id)
+        {
+            //HttpContext.Session.SetString("UserRole", id.ToString());
+            var PropertyId = db.Properties.Find(id);
+            int userId = int.Parse((HttpContext.Session.GetString("Login") ?? "0"));
+            Booking booking = new Booking
+            {
+                PropertyId = PropertyId.PropertyId,
+                UserID = userId,
+                BookingDate = DateTime.Now,
+                Amount = PropertyId.Price,
+                Status = BookingStatus.Pending
+            };
 
-
+            bookingRepository.Add(booking);
+            return RedirectToAction("MyBookings", "Booking");
         }
     }
 

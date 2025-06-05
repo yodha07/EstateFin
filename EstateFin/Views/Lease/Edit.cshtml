@@ -1,0 +1,54 @@
+﻿@model EstateFin.Models.LeaseAgreement
+
+@{
+    ViewBag.Title = "Edit Lease";
+}
+
+<h2>Edit Lease</h2>
+
+<form asp-action="Edit" method="post">
+    <input type="hidden" asp-for="LeaseId" />
+
+    @* <div class="form-group"> *@
+    @*     <label>Property</label> *@
+    @*     <select asp-for="PropertyId" class="form-control" asp-items="ViewBag.Properties"></select> *@
+    @* </div> *@
+
+    @* <div class="form-group"> *@
+    @*     <label>Tenant</label> *@
+    @*     <select asp-for="TenantId" class="form-control" asp-items="ViewBag.Tenants"></select> *@
+    @* </div> *@
+
+    <div class="form-group">
+        <label>Property</label>
+        <input type="text" class="form-control" value="@ViewBag.Properties" disabled />
+    </div>
+
+    <div class="form-group">
+        <label>Tenant Name</label>
+        <input type="text" class="form-control" value="@ViewBag.Tenant" disabled />
+    </div>
+
+    <div class="form-group">
+        <label>Booking</label>
+        <select asp-for="BookingId" class="form-control" asp-items="ViewBag.Bookings"></select>
+    </div>
+
+    <div class="form-group">
+        <label>Start Date</label>
+        <input type="date" asp-for="LeaseStartDate" class="form-control" />
+    </div>
+
+    <div class="form-group">
+        <label>End Date</label>
+        <input type="date" asp-for="LeaseEndDate" class="form-control" />
+    </div>
+
+    <div class="form-group">
+        <label>Rent</label>
+        <input type="number" asp-for="RentAmount" class="form-control" />
+    </div>
+
+    <button type="submit" class="btn btn-primary">Update</button>
+    <a asp-action="Index" class="btn btn-secondary">Cancel</a>
+</form>

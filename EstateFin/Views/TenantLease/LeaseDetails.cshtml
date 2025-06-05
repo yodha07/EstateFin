@@ -1,0 +1,74 @@
+﻿@using EstateFin.Models.Enum.StatusEnums
+@model LeaseAgreement
+<partial name="Notification" />
+
+<div class="container mt-4">
+    <div class="card shadow-lg border-0">
+        <div class="card-header bg-primary text-white">
+            <h4 class="mb-0">
+                <i class="bi bi-file-earmark-text-fill me-2"></i> Lease Agreement Details
+            </h4>
+        </div>
+
+        <div class="card-body">
+            <div class="row mb-3">
+                <div class="col-md-6">
+                    <p><strong>Property:</strong> @Model.Property.Title</p>
+                    <p><strong>Start Date:</strong> @Model.LeaseStartDate.ToString("dd MMM yyyy")</p>
+                    <p><strong>End Date:</strong> @Model.LeaseEndDate.ToString("dd MMM yyyy")</p>
+                </div>
+                <div class="col-md-6">
+                    <p><strong>Rent Amount:</strong> ₹@Model.RentAmount</p>
+                    <p><strong>Security Deposit:</strong> ₹@Model.SecurityDeposit</p>
+                    <p>
+                        <strong>Status:</strong>
+                        <span class="badge
+                            @(Model.LeaseStatus == LeaseStatus.Pending ? "bg-warning text-dark" :
+                              Model.LeaseStatus == LeaseStatus.Accepted ? "bg-success" : "bg-danger")">
+                            @Model.LeaseStatus
+                        </span>
+                    </p>
+                </div>
+            </div>
+
+            <hr />
+
+            <div class="d-flex flex-wrap gap-2">
+                @if (Model.LeaseStatus == LeaseStatus.Pending)
+                {
+                    <form asp-action="AcceptAgreement" method="post">
+                        <input type="hidden" name="id" value="@Model.LeaseId" />
+                        <button type="submit" class="btn btn-success">
+                            <i class="bi bi-check-circle-fill me-1"></i> Accept
+                        </button>
+                    </form>
+                    <form asp-action="RejectAgreement" method="post">
+                        <input type="hidden" name="id" value="@Model.LeaseId" />
+                        <button type="submit" class="btn btn-danger">
+                            <i class="bi bi-x-circle-fill me-1"></i> Reject
+                        </button>
+                    </form>
+                }
+                else if (Model.LeaseStatus == LeaseStatus.Accepted && !Model.IsDepositPaid)
+                {
+                    <form asp-action="PayDeposit" method="post">
+                        <input type="hidden" name="id" value="@Model.LeaseId" />
+                        <button type="submit" class="btn btn-warning text-dark">
+                            <i class="bi bi-cash-coin me-1"></i> Pay Security Deposit
+                        </button>
+                    </form>
+                }
+                else if (Model.LeaseStatus == LeaseStatus.Accepted && Model.IsDepositPaid)
+                {
+                    <a asp-action="RentList" asp-route-leaseId="@Model.LeaseId" class="btn btn-primary">
+                        <i class="bi bi-list-ul me-1"></i> View Rent Schedule
+                    </a>
+                }
+
+                <a asp-action="Index" class="btn btn-secondary ms-auto">
+                    <i class="bi bi-arrow-left me-1"></i> Back
+                </a>
+            </div>
+        </div>
+    </div>
+</div>

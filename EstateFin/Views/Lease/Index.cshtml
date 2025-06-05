@@ -1,0 +1,44 @@
+﻿@model List<EstateFin.Models.LeaseAgreement>
+
+@{
+    ViewBag.Title = "Lease Agreements";
+}
+
+<h2>Lease Agreements</h2>
+
+<p>
+    <a class="btn btn-primary" asp-action="Create">Create New Lease</a>
+</p>
+
+<table class="table table-bordered table-striped">
+    <thead>
+        <tr>
+            <th>Lease ID</th>
+            <th>Property</th>
+            <th>Tenant</th>
+            <th>Booking</th>
+            <th>Start Date</th>
+            <th>End Date</th>
+            <th>Rent</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>@item.LeaseId</td>
+                <td>@item.Property?.PropertyId</td>
+                <td>@item.Tenant?.UserID</td>
+                <td>@item.Booking?.BookingId</td>
+                <td>@item.LeaseStartDate.ToShortDateString()</td>
+                <td>@item.LeaseEndDate.ToShortDateString()</td>
+                <td>@item.RentAmount</td>
+                <td>
+                    <a class="btn btn-info btn-sm" asp-action="Edit" asp-route-id="@item.LeaseId">Edit</a>
+                    <a class="btn btn-danger btn-sm" asp-action="Delete" asp-route-id="@item.LeaseId">Delete</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

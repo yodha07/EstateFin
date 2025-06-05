@@ -1,7 +1,32 @@
-﻿@if(TempData["msg"] != null){
+﻿@* @if(TempData["msg"] != null){ *@
+@*     <script src="~/lib/jquery/dist/jquery.min.js"></script> *@
+@*     <script src="//cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script> *@
+@*     <script> *@
+@*         toastr.success('@TempData["msg"]') *@
+@*     </script> *@
+@* } *@
+
+@if (TempData["msg"] != null)
+{
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="//cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
     <script>
         toastr.success('@TempData["msg"]')
+    </script>
+}
+@if (TempData["danger"] != null)
+{
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
+    <script>
+        toastr.error('@TempData["danger"]')
+    </script>
+}
+@if (TempData["upd"] != null)
+{
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
+    <script>
+        toastr.warning('@TempData["upd"]')
     </script>
 }

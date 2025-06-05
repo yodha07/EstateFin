@@ -1,0 +1,37 @@
+﻿@model IEnumerable<EstateFin.Models.Transaction>
+
+@{
+    ViewData["Title"] = "Transactions";
+}
+
+<h2>Transaction History</h2>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>Transaction ID</th>
+            <th>Booking ID</th>
+            <th>Amount</th>
+            <th>Method</th>
+            <th>Status</th>
+            <th>Date</th>
+            <th>Action</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var txn in Model)
+        {
+            <tr>
+                <td>@txn.TransactionId</td>
+                <td>@txn.BookingId</td>
+                <td>₹@txn.Amount</td>
+                <td>@txn.PaymentMethod</td>
+                <td>@txn.PaymentStatus</td>
+                <td>@txn.TransactionDate.ToString("dd-MM-yyyy hh:mm tt")</td>
+                <td>
+                    <a asp-action="Delete" asp-route-id="@txn.TransactionId" class="btn btn-danger btn-sm">Delete</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

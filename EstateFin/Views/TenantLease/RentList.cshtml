@@ -1,0 +1,61 @@
+﻿@model List<Rent>
+@{
+    ViewBag.Title = "Rent Schedule";
+    var leaseId = ViewBag.LeaseId;
+}
+<partial name="Notification" />
+
+<div class="container mt-4">
+    <div class="card shadow border-0">
+        <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center">
+            <h4 class="mb-0"><i class="bi bi-calendar-check-fill me-2"></i> Rent Schedule</h4>
+            <a asp-action="LeaseDetails" asp-route-id="@leaseId" class="btn btn-light btn-sm">
+                <i class="bi bi-arrow-left"></i> Back to Lease
+            </a>
+        </div>
+
+        <div class="card-body p-0">
+            <div class="table-responsive">
+                <table class="table table-hover mb-0 align-middle">
+                    <thead class="table-light">
+                        <tr>
+                            <th>Due Date</th>
+                            <th>Amount</th>
+                            <th>Status</th>
+                            <th>Paid Date</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var rent in Model)
+                        {
+                            <tr>
+                                <td>@rent.DueDate.ToString("dd MMM yyyy")</td>
+                                <td>₹@rent.Amount</td>
+                                <td>
+                                    <span class="badge @(rent.IsPaid ? "bg-success" : "bg-warning text-dark")">
+                                        @(rent.IsPaid ? "Paid" : "Pending")
+                                    </span>
+                                </td>
+                                <td>@(rent.PaidDate?.ToString("dd MMM yyyy") ?? "-")</td>
+                                <td>
+                                    @if (!rent.IsPaid)
+                                    {
+                                        <a asp-action="PayRent" asp-route-id="@rent.RentId" class="btn btn-sm btn-outline-success">
+                                            <i class="bi bi-currency-rupee"></i> Pay
+                                        </a>
+                                    }
+                                    else
+                                    {
+                                        <span class="text-muted">-</span>
+                                    }
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+

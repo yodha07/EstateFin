@@ -193,6 +193,8 @@ namespace EstateFin.Controllers
 
             HttpContext.Session.SetString("UserRole", existingUser.Role!);
             HttpContext.Session.SetString("UserName", existingUser.FirstName!);
+            HttpContext.Session.SetString("Login", existingUser.UserID.ToString()!);
+
 
             return RedirectToAction("List", "Account");
         }

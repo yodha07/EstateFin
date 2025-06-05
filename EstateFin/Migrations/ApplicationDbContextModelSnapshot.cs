@@ -22,6 +22,40 @@ namespace EstateFin.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
+            modelBuilder.Entity("EstateFin.Models.Appointment", b =>
+                {
+                    b.Property<int>("AppointmentId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("AppointmentId"));
+
+                    b.Property<DateTime?>("AppointmentDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("PropertyId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Status")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("UserID")
+                        .HasColumnType("int");
+
+                    b.Property<string>("slot")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("AppointmentId");
+
+                    b.HasIndex("PropertyId");
+
+                    b.HasIndex("UserID")
+                        .IsUnique();
+
+                    b.ToTable("appointment");
+                });
+
             modelBuilder.Entity("EstateFin.Models.Booking", b =>
                 {
                     b.Property<int>("BookingId")
@@ -48,6 +82,9 @@ namespace EstateFin.Migrations
                     b.Property<int?>("UserID1")
                         .HasColumnType("int");
 
+                    b.Property<int?>("UserID2")
+                        .HasColumnType("int");
+
                     b.HasKey("BookingId");
 
                     b.HasIndex("PropertyId");
@@ -56,7 +93,62 @@ namespace EstateFin.Migrations
 
                     b.HasIndex("UserID1");
 
+                    b.HasIndex("UserID2");
+
                     b.ToTable("Bookings");
+                });
+
+            modelBuilder.Entity("EstateFin.Models.LeaseAgreement", b =>
+                {
+                    b.Property<int>("LeaseId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("LeaseId"));
+
+                    b.Property<int>("BookingId")
+                        .HasColumnType("int");
+
+                    b.Property<bool>("IsDepositPaid")
+                        .HasColumnType("bit");
+
+                    b.Property<DateTime>("LeaseEndDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime>("LeaseStartDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("LeaseStatus")
+                        .HasColumnType("int");
+
+                    b.Property<int>("PropertyId")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("PropertyId1")
+                        .HasColumnType("int");
+
+                    b.Property<decimal?>("RentAmount")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<decimal?>("SecurityDeposit")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<int>("TenantId")
+                        .HasColumnType("int");
+
+                    b.HasKey("LeaseId");
+
+                    b.HasIndex("BookingId");
+
+                    b.HasIndex("PropertyId");
+
+                    b.HasIndex("PropertyId1")
+                        .IsUnique()
+                        .HasFilter("[PropertyId1] IS NOT NULL");
+
+                    b.HasIndex("TenantId");
+
+                    b.ToTable("LeaseAgreements");
                 });
 
             modelBuilder.Entity("EstateFin.Models.Property", b =>
@@ -89,7 +181,6 @@ namespace EstateFin.Migrations
                         .HasColumnType("decimal(18,2)");
 
                     b.Property<string>("PropertyType")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("State")
@@ -104,6 +195,9 @@ namespace EstateFin.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<int>("UserID")
+                        .HasColumnType("int");
+
                     b.Property<string>("ZipCode")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -111,12 +205,9 @@ namespace EstateFin.Migrations
                     b.Property<string>("images")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("userid")
-                        .HasColumnType("int");
-
                     b.HasKey("PropertyId");
 
-                    b.HasIndex("userid");
+                    b.HasIndex("UserID");
 
                     b.ToTable("Properties");
                 });
@@ -146,6 +237,39 @@ namespace EstateFin.Migrations
                     b.HasKey("MyPropertyId");
 
                     b.ToTable("Property_Types");
+                });
+
+            modelBuilder.Entity("EstateFin.Models.Rent", b =>
+                {
+                    b.Property<int>("RentId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("RentId"));
+
+                    b.Property<decimal?>("Amount")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<DateTime>("DueDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<bool>("IsPaid")
+                        .HasColumnType("bit");
+
+                    b.Property<int>("LeaseId")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime?>("PaidDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("RentStatus")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("RentId");
+
+                    b.HasIndex("LeaseId");
+
+                    b.ToTable("Rents");
                 });
 
             modelBuilder.Entity("EstateFin.Models.Review", b =>
@@ -179,6 +303,27 @@ namespace EstateFin.Migrations
                     b.HasIndex("UserID");
 
                     b.ToTable("Reviews");
+                });
+
+            modelBuilder.Entity("EstateFin.Models.Slot", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Slot_type")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Status")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("slot");
                 });
 
             modelBuilder.Entity("EstateFin.Models.Transaction", b =>
@@ -261,6 +406,25 @@ namespace EstateFin.Migrations
                     b.ToTable("Users");
                 });
 
+            modelBuilder.Entity("EstateFin.Models.Appointment", b =>
+                {
+                    b.HasOne("EstateFin.Models.Property", "Property")
+                        .WithMany("Appointments")
+                        .HasForeignKey("PropertyId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("EstateFin.Models.User", "User")
+                        .WithOne("Appointment")
+                        .HasForeignKey("EstateFin.Models.Appointment", "UserID")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Property");
+
+                    b.Navigation("User");
+                });
+
             modelBuilder.Entity("EstateFin.Models.Booking", b =>
                 {
                     b.HasOne("EstateFin.Models.Property", "Property")
@@ -276,23 +440,69 @@ namespace EstateFin.Migrations
                         .IsRequired();
 
                     b.HasOne("EstateFin.Models.User", null)
-                        .WithMany("Bookings")
+                        .WithMany("Booking")
                         .HasForeignKey("UserID1");
+
+                    b.HasOne("EstateFin.Models.User", null)
+                        .WithMany("Bookings")
+                        .HasForeignKey("UserID2");
 
                     b.Navigation("Property");
 
                     b.Navigation("User");
                 });
 
+            modelBuilder.Entity("EstateFin.Models.LeaseAgreement", b =>
+                {
+                    b.HasOne("EstateFin.Models.Booking", "Booking")
+                        .WithMany()
+                        .HasForeignKey("BookingId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("EstateFin.Models.Property", "Property")
+                        .WithMany()
+                        .HasForeignKey("PropertyId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("EstateFin.Models.Property", null)
+                        .WithOne("lease")
+                        .HasForeignKey("EstateFin.Models.LeaseAgreement", "PropertyId1");
+
+                    b.HasOne("EstateFin.Models.User", "Tenant")
+                        .WithMany()
+                        .HasForeignKey("TenantId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("Booking");
+
+                    b.Navigation("Property");
+
+                    b.Navigation("Tenant");
+                });
+
             modelBuilder.Entity("EstateFin.Models.Property", b =>
                 {
                     b.HasOne("EstateFin.Models.User", "User")
                         .WithMany("Properties")
-                        .HasForeignKey("userid")
+                        .HasForeignKey("UserID")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.Navigation("User");
+                });
+
+            modelBuilder.Entity("EstateFin.Models.Rent", b =>
+                {
+                    b.HasOne("EstateFin.Models.LeaseAgreement", "LeaseAgreement")
+                        .WithMany()
+                        .HasForeignKey("LeaseId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("LeaseAgreement");
                 });
 
             modelBuilder.Entity("EstateFin.Models.Review", b =>
@@ -331,11 +541,19 @@ namespace EstateFin.Migrations
 
             modelBuilder.Entity("EstateFin.Models.Property", b =>
                 {
+                    b.Navigation("Appointments");
+
                     b.Navigation("Reviews");
+
+                    b.Navigation("lease");
                 });
 
             modelBuilder.Entity("EstateFin.Models.User", b =>
                 {
+                    b.Navigation("Appointment");
+
+                    b.Navigation("Booking");
+
                     b.Navigation("Bookings");
 
                     b.Navigation("Properties");

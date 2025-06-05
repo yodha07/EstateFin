@@ -1,0 +1,48 @@
+﻿@{
+    ViewBag.Title = "Make Payment";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    decimal amount = ViewBag.Amount;
+    int bookingId = ViewBag.BookingId;
+    double amountDouble = (double)amount;
+}
+
+<h2>Processing Payment</h2>
+
+<script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+
+<script>
+    var options = {
+        "key": "rzp_test_Kl7588Yie2yJTV",
+        "amount": @((int)(amountDouble * 100)), // in paise
+        "currency": "INR",
+        "name": "Masstech Business Solutions Pvt.Ltd",
+        "description": "Checkout Payment",
+        "order_id": "@ViewBag.OrderId", // optional if created
+        "handler": function (response) {
+            // On success, POST to server
+            var form = document.createElement("form");
+            form.method = "POST";
+            form.action = "/Transaction/PaymentSuccess";
+
+            form.innerHTML += '<input type="hidden" name="razorpay_payment_id" value="' + response.razorpay_payment_id + '">';
+            form.innerHTML += '<input type="hidden" name="razorpay_order_id" value="' + response.razorpay_order_id + '">';
+            form.innerHTML += '<input type="hidden" name="razorpay_signature" value="' + response.razorpay_signature + '">';
+            form.innerHTML += '<input type="hidden" name="amount" value="@amountDouble">';
+            form.innerHTML += '<input type="hidden" name="bookingId" value="@bookingId">';
+
+            document.body.appendChild(form);
+            form.submit();
+        },
+        "prefill": {
+            "name": "Krish Kheloji",
+            "email": "khelojikrish@gmail.com",
+            "contact": "7208921898"
+        },
+        "theme": {
+            "color": "#F37254"
+        }
+    };
+
+    var rzp1 = new Razorpay(options);
+    rzp1.open();
+</script>
