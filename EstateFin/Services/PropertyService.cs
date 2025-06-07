@@ -137,6 +137,19 @@ namespace EstateFin.Services
         {
             return db.Properties.Where(x => x.Status.Equals("Rented")).ToList();
         }
+
+        public double get_emi(double loan_amount ,  double interest , int year) 
+        {
+            double Loan_amount = loan_amount;
+            double monthly_interest = interest / (12 * 100);
+            int year_in_month = year * 12;
+
+            double Emis = (Loan_amount * monthly_interest * Math.Pow(1 + monthly_interest, year_in_month))
+                 / (Math.Pow(1 + monthly_interest, year_in_month) - 1);
+
+            double Final_Emi = Math.Round(Emis, 2);
+            return Final_Emi;
+        }
     }
 
 

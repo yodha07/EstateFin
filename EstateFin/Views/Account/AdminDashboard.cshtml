@@ -1,104 +1,168 @@
-﻿@{
-    ViewData["Title"] = "Admin Dashboard";
-    var labels = Json.Serialize(ViewBag.SalesLabels);
-    var values = Json.Serialize(ViewBag.SalesValues);
+﻿@model LOAN_EMI
+
+@{
+	ViewData["Title"] = "Admin Dashboard";
+	var labels = Json.Serialize(ViewBag.SalesLabels);
+	var values = Json.Serialize(ViewBag.SalesValues);
 }
 
 <style>
-    .dashboard-card {
-        background-color: #ffffff;
-        border-radius: 10px;
-        padding: 20px;
-        box-shadow: 0 0 10px rgba(0,0,0,0.1);
-        text-align: center;
-        transition: 0.3s;
-    }
+	.dashboard-card {
+		background-color: #ffffff;
+		border-radius: 10px;
+		padding: 20px;
+		box-shadow: 0 0 10px rgba(0,0,0,0.1);
+		text-align: center;
+		transition: 0.3s;
+	}
 
-        .dashboard-card:hover {
-            transform: translateY(-5px);
-        }
+		.dashboard-card:hover {
+			transform: translateY(-5px);
+		}
 
-        .dashboard-card h3 {
-            font-size: 1.5rem;
-            color: #333;
-        }
+		.dashboard-card h3 {
+			font-size: 1.5rem;
+			color: #333;
+		}
 
-        .dashboard-card p {
-            font-size: 2rem;
-            font-weight: bold;
-            color: #167df2;
-        }
+		.dashboard-card p {
+			font-size: 2rem;
+			font-weight: bold;
+			color: #167df2;
+		}
 </style>
 
 <h2 class="mb-4">📊 Admin Dashboard</h2>
 
 <div class="row g-4">
-    <div class="col-md-4">
-        <div class="dashboard-card">
-            <h3>Active Users</h3>
-            <p>@ViewBag.ActiveUsers</p>
-        </div>
-    </div>
-    <div class="col-md-4">
-        <div class="dashboard-card">
-            <h3>Total Properties</h3>
-            <p>@ViewBag.TotalProperties</p>
-        </div>
-    </div>
-    <div class="col-md-4">
-        <div class="dashboard-card">
-            <h3>Total Bookings</h3>
-            <p>@ViewBag.TotalBookings</p>
-        </div>
-    </div>
-    <div class="col-md-6">
-        <div class="dashboard-card">
-            <h3>Total Transactions</h3>
-            <p>₹@ViewBag.TotalTransactions</p>
-        </div>
-    </div>
-    <div class="col-md-6">
-        <div class="dashboard-card">
-            <h3>Registered Agents</h3>
-            <p>@ViewBag.AgentCount</p>
-        </div>
-    </div>
+	<div class="col-md-4">
+		<div class="dashboard-card">
+			<h3>Active Users</h3>
+			<p>@ViewBag.ActiveUsers</p>
+		</div>
+	</div>
+	<div class="col-md-4">
+		<div class="dashboard-card">
+			<h3>Total Properties</h3>
+			<p>@ViewBag.TotalProperties</p>
+		</div>
+	</div>
+	<div class="col-md-4">
+		<div class="dashboard-card">
+			<h3>Total Bookings</h3>
+			<p>@ViewBag.TotalBookings</p>
+		</div>
+	</div>
+	<div class="col-md-6">
+		<div class="dashboard-card">
+			<h3>Total Transactions</h3>
+			<p>₹@ViewBag.TotalTransactions</p>
+		</div>
+	</div>
+	<div class="col-md-6">
+		<div class="dashboard-card">
+			<h3>Registered Agents</h3>
+			<p>@ViewBag.AgentCount</p>
+		</div>
+	</div>
 </div>
 
 <h4 class="mt-5">💹 Monthly Sales Overview</h4>
 <canvas id="salesChart" width="400" height="150"></canvas>
 
 @section Scripts {
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <script>
-        const ctx = document.getElementById('salesChart').getContext('2d');
-        const chart = new Chart(ctx, {
-            type: 'bar',
-            data: {
-                labels: @Html.Raw(labels),
-                datasets: [{
-                    label: 'Sales (₹)',
-                    data: @Html.Raw(values),
-                    backgroundColor: '#167df2',
-                    borderRadius: 5
-                }]
-            },
-            options: {
-                responsive: true,
-                scales: {
-                    y: {
-                        beginAtZero: true,
-                        ticks: {
-                            callback: function(value) {
-                                return '₹' + value;
-                            }
-                        }
-                    }
-                },
-                plugins: {
-                    legend: { display: true }
-                }
-            }
-        });
-    </script>
+	<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+	<script>
+		const ctx = document.getElementById('salesChart').getContext('2d');
+		const chart = new Chart(ctx, {
+			type: 'bar',
+			data: {
+				labels: @Html.Raw(labels),
+				datasets: [{
+					label: 'Sales (₹)',
+					data: @Html.Raw(values),
+					backgroundColor: '#167df2',
+					borderRadius: 5
+				}]
+			},
+			options: {
+				responsive: true,
+				scales: {
+					y: {
+						beginAtZero: true,
+						ticks: {
+							callback: function(value) {
+								return '₹' + value;
+							}
+						}
+					}
+				},
+				plugins: {
+					legend: { display: true }
+				}
+			}
+		});
+	</script>
 }
+
+<form method="post">
+	@* <div class="form-group"> *@
+	@* 	<label for="exampleInputEmail1">Loan Amount</label> *@
+	@* 	<input type="number" class="form-control" asp-for="principal" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Enter Loan Amount"> *@
+
+	@* </div> *@
+	@* <div class="form-group"> *@
+	@* 	<label for="exampleInputPassword1">Rate Of Interest</label> *@
+	@* 	<input type="number" asp-for="interest" class="form-control" id="exampleInputPassword1" placeholder="Rate of Interest"> *@
+	@* </div> *@
+
+	@* <div class="form-group"> *@
+	@* 	<label for="exampleInputPassword1">Number Of Years</label> *@
+	@* 	<input type="number" asp-for="year" class="form-control" id="exampleInputPassword1" placeholder="Number of years"> *@
+	@* </div> *@
+
+	@* <button type="submit" class="btn btn-primary">Submit</button> *@
+
+	<h4 class="mt-5">🏦 Loan EMI Calculator</h4>
+
+	<div class="row g-4 mt-3">
+		<div class="col-md-4">
+			<div class="dashboard-card">
+				<label class="form-label">💰 Loan Amount</label>
+				<input type="number" class="form-control" asp-for="principal" placeholder="Enter Loan Amount">
+			</div>
+		</div>
+		<div class="col-md-4">
+			<div class="dashboard-card">
+				<label class="form-label">📈 Interest Rate (%)</label>
+				<input type="number" class="form-control" asp-for="interest" placeholder="e.g. 7.5">
+			</div>
+		</div>
+		<div class="col-md-4">
+			<div class="dashboard-card">
+				<label class="form-label">📅 Tenure (Years)</label>
+				<input type="number" class="form-control" asp-for="year" placeholder="e.g. 10">
+			</div>
+		</div>
+	</div>
+
+	<div class="text-end mt-3">
+		<button type="submit" class="btn btn-primary px-4 py-2">Calculate EMI</button>
+	</div>
+
+
+
+</form>
+@if (ViewBag.Emi != null)
+{
+	<div class="row mt-4">
+		<div class="col-md-6">
+			<div class="dashboard-card bg-light">
+				<h4 class="text-success">🧾 Your Monthly EMI</h4>
+				<input class="form-control fs-4 text-center border-success" type="text" value="@ViewBag.Emi" readonly>
+			</div>
+		</div>
+	</div>
+}
+@* <label for="exampleInputPassword1">Your Monthly Emi Is</label> *@
+@* <input class="form-control" type="text" value="@ViewBag.Emi" placeholder="Readonly input here…" readonly> *@

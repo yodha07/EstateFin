@@ -9,6 +9,7 @@ using System.Security.Claims;
 using Microsoft.AspNetCore.Mvc.Routing;
 using System.Collections.Concurrent;
 using EstateFin.Filters;
+using EstateFin.Services;
 
 namespace EstateFin.Controllers
 {
@@ -18,12 +19,14 @@ namespace EstateFin.Controllers
         private readonly IUserRepo repo;
         private readonly MailSettings mail;
         private readonly ApplicationDbContext db;
+        private readonly PropertyRepo service;
 
-        public AccountController(IUserRepo repo, ApplicationDbContext db, MailSettings mail)
+        public AccountController(IUserRepo repo, ApplicationDbContext db, MailSettings mail , PropertyRepo service)
         {
             this.repo = repo;
             this.db = db;
             this.mail = mail;
+            this.service = service;
         }
 
         [HttpGet]
@@ -456,8 +459,46 @@ namespace EstateFin.Controllers
             .OrderBy(g => g.Month)
             .ToList();
 
+           
+
             ViewBag.SalesLabels = salesData.Select(s => s.Month).ToArray();
             ViewBag.SalesValues = salesData.Select(s => s.Total).ToArray();
+
+            return View();
+        }
+
+        [HttpPost]
+        public IActionResult AdminDashboard(LOAN_EMI emi)
+        {
+            //ViewBag.ActiveUsers = db.Users.Count(u => u.Role != "Admin");
+            //ViewBag.TotalProperties = db.Properties.Count();
+            //ViewBag.TotalBookings = db.Bookings.Count();
+            //ViewBag.TotalTransactions = db.Transactions.Sum(t => t.Amount);
+            //ViewBag.AgentCount = db.Users.Count(u => u.Role == "Agent");
+
+            //var salesData = db.Transactions
+            //.GroupBy(t => new { t.TransactionDate.Year, t.TransactionDate.Month })
+            //.Select(g => new
+            //{
+            //    g.Key.Year,
+            //    g.Key.Month,
+            //    Total = g.Sum(x => x.Amount)
+            //})
+            //.ToList()
+            //.Select(g => new
+            //{
+            //    Month = $"{g.Month}/{g.Year}",
+            //    Total = g.Total
+            //})
+            //.OrderBy(g => g.Month)
+            //.ToList();
+
+
+
+            //ViewBag.SalesLabels = salesData.Select(s => s.Month).ToArray();
+            //ViewBag.SalesValues = salesData.Select(s => s.Total).ToArray();
+            double final_emi = service.get_emi(emi.principal, emi.interest, emi.year);
+            ViewBag.Emi = final_emi;
 
             return View();
         }
