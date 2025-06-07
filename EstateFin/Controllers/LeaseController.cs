@@ -33,6 +33,7 @@ namespace EstateFin.ILeaseRepo
 
         {
 
+
             int login = Convert.ToInt32(HttpContext.Session.GetString("UserID"));
 
             //var list = context.Bookings.Where(x => x.UserID.Equals(login) && x.Status.Equals(1)).Include(x => x.User).Include(x => x.Property).ToList();
@@ -50,6 +51,13 @@ namespace EstateFin.ILeaseRepo
             //var list = context.Bookings.Include(x=> x.User).Include(x=> x.)
 
             //int leaseStatusValue = (int)ILeaseRepo.LeaseStatus.Active;
+
+
+            var list = context.Bookings.Include(x => x.User).Include(x => x.Property);
+            //var list = context.Bookings.Include(x=> x.User).Include(x=> x.)
+
+            //int leaseStatusValue = (int)ILeaseRepo.LeaseStatus.Active;
+
 
             //ViewBag.Properties = new SelectList(context.Properties.ToList(), "PropertyId", "Title");
             //ViewBag.Tenants = new SelectList(context.Users.ToList(), "UserID", "UserName");
@@ -72,6 +80,7 @@ namespace EstateFin.ILeaseRepo
         //[ValidateAntiForgeryToken]
         public IActionResult Create(LeaseAgreement lease)
         {
+
 
             int id = lease.BookingId;
             var list = context.Bookings.Find(id);

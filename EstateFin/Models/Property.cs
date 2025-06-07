@@ -59,7 +59,6 @@ namespace EstateFin.Models
         public LeaseAgreement? lease { get; set; }
 
 
-
         // Custom validation to ensure OwnerId is greater than Price.
         public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
         {
