@@ -4,7 +4,7 @@ using EstateFin.ILeaseRepo;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using EstateFin.Data;
 using Microsoft.EntityFrameworkCore;
-using EstateFin.Migrations;
+
 
 namespace EstateFin.ILeaseRepo
 {
@@ -47,13 +47,13 @@ namespace EstateFin.ILeaseRepo
             ViewBag.Bookings = new SelectList(list, "BookingId", "BookingId");
 
 
-            var list = context.Bookings.Include(x => x.User).Include(x => x.Property);
+            var list2 = context.Bookings.Include(x => x.User).Include(x => x.Property);
             //var list = context.Bookings.Include(x=> x.User).Include(x=> x.)
 
             //int leaseStatusValue = (int)ILeaseRepo.LeaseStatus.Active;
 
 
-            var list = context.Bookings.Include(x => x.User).Include(x => x.Property);
+            //var list = context.Bookings.Include(x => x.User).Include(x => x.Property);
             //var list = context.Bookings.Include(x=> x.User).Include(x=> x.)
 
             //int leaseStatusValue = (int)ILeaseRepo.LeaseStatus.Active;
@@ -92,8 +92,8 @@ namespace EstateFin.ILeaseRepo
 
             var userId = int.Parse(HttpContext.Session.GetString("Login") ?? "0");
             lease.TenantId = userId; 
-            var id = context.Bookings.Find(lease.BookingId);
-            lease.PropertyId = id.PropertyId;
+            var id1 = context.Bookings.Find(lease.BookingId);
+            lease.PropertyId = id1.PropertyId;
 
             if (ModelState.IsValid)
             {

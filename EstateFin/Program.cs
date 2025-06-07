@@ -49,6 +49,7 @@ builder.Services.AddScoped<ReviewRepo, ReviewService>();
 builder.Services.AddScoped<PropertyRepo, PropertyService>();
 builder.Services.AddScoped<ILeaseRepo, LeaseServices>();
 builder.Services.AddScoped<IAppointmentRepo, AppointmentService>();
+builder.Services.AddScoped<ILeaseTenantRepo,LeaseTenantService>();
 
 builder.Services.AddControllersWithViews().AddSessionStateTempDataProvider();
 builder.Services.AddHttpContextAccessor(); //

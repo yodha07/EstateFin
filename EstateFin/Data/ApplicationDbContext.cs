@@ -34,19 +34,26 @@ namespace EstateFin.Data
             //.OnDelete(DeleteBehavior.Restrict);
 
             // User ↔ Appointment (one-to-one)
-    //        modelBuilder.Entity<Appointment>()
-    //.HasOne(a => a.User)
-    //.WithMany(u => u.Appointment)
-    //.HasForeignKey(a => a.UserID)
-    //.OnDelete(DeleteBehavior.Cascade);
+            //        modelBuilder.Entity<Appointment>()
+            //.HasOne(a => a.User)
+            //.WithMany(u => u.Appointment)
+            //.HasForeignKey(a => a.UserID)
+            //.OnDelete(DeleteBehavior.Cascade);
             // or Restrict
 
             // Property → Appointment (one-to-many is okay)
             modelBuilder.Entity<Appointment>()
-                .HasOne(a => a.Property)
-                .WithMany(p => p.Appointments)
-                .HasForeignKey(a => a.PropertyId)
-                .OnDelete(DeleteBehavior.Cascade);
+         .HasOne(a => a.Property)
+         .WithMany(p => p.Appointments)
+         .HasForeignKey(a => a.PropertyId)
+         .OnDelete(DeleteBehavior.Cascade);
+
+            // Fix for Appointment and User (optional but safe)
+            modelBuilder.Entity<Appointment>()
+                .HasOne(a => a.User)
+                .WithMany()
+                .HasForeignKey(a => a.UserID)
+                .OnDelete(DeleteBehavior.Restrict);
 
             //    modelBuilder.Entity<Appointment>()
             //.HasOne(a => a.User)

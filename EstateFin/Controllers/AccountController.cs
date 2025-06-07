@@ -13,7 +13,7 @@ using EstateFin.Services;
 
 namespace EstateFin.Controllers
 {
-    [GlobalException]
+    //[GlobalException]
     public class AccountController : Controller
     {
         private readonly IUserRepo repo;
