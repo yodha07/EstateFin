@@ -39,7 +39,7 @@ namespace EstateFin.ILeaseRepo
             //var list = context.Bookings.Where(x => x.UserID.Equals(login) && x.Status.Equals(1)).Include(x => x.User).Include(x => x.Property).ToList();
             //int leaseStatusValue = (int)ILeaseRepo.LeaseStatus.Active;
 
-            var list = context.Bookings.Include(x => x.Property).Include(x => x.User).ToList();
+            var list = context.Bookings .Where(x=>x.Status.Equals("Rented")).Include(x => x.Property).Include(x => x.User).ToList();
 
 
             //ViewBag.Properties = new SelectList(list, "PropertyId", "PropertyName");
@@ -99,6 +99,7 @@ namespace EstateFin.ILeaseRepo
             {
                 leaseRepo.Add(lease);
                 leaseRepo.Save();
+
                 return RedirectToAction(nameof(Index));
             }
 
