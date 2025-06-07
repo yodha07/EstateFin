@@ -1,4 +1,5 @@
 ﻿using EstateFin.Data;
+using EstateFin.Filters;
 using EstateFin.ILeaseRepo;
 using EstateFin.Models;
 using EstateFin.Repositories;
@@ -6,11 +7,18 @@ using EstateFin.Services;
 using EstatePro.Services;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication.Google;
+using Microsoft.AspNetCore.Mvc.Filters;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
 using Rotativa.AspNetCore;
 
 var builder = WebApplication.CreateBuilder(args);
+
+builder.Services.AddControllersWithViews(options =>
+{
+    options.Filters.Add <GlobalException>();
+});
+
 
 builder.Services.AddAuthentication(options =>
 {
@@ -33,17 +41,18 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("dbconn")));
 
 builder.Services.AddScoped<IUserRepo, UserRepo>();
-builder.Services.AddScoped<PropertyRepo, PropertyService>();
-
-builder.Services.AddScoped<ILeaseRepo, LeaseServices>();
-builder.Services.AddScoped<ILeaseTenantRepo,LeaseTenantService>();
-
 
 
 builder.Services.AddScoped<IBookingRepository, BookingService>();
 builder.Services.AddScoped<ITransactionRepository, TransactionService>();
+builder.Services.AddScoped<ReviewRepo, ReviewService>();
+builder.Services.AddScoped<PropertyRepo, PropertyService>();
+builder.Services.AddScoped<ILeaseRepo, LeaseServices>();
+builder.Services.AddScoped<IAppointmentRepo, AppointmentService>();
 
 builder.Services.AddControllersWithViews().AddSessionStateTempDataProvider();
+builder.Services.AddHttpContextAccessor(); //
+
 builder.Services.AddSession();
 
 var app = builder.Build();

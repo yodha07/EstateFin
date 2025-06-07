@@ -1,0 +1,134 @@
+﻿@{
+    var msg = TempData["listMsg"];
+}
+
+@model List<Property>
+
+@if (msg != null)
+{
+    <div class="alert alert-info text-center fw-bold">@msg</div>
+}
+
+@if (Model != null)
+{
+    <style>
+        body {
+            background: linear-gradient(225deg, rgba(255, 94, 164, 1) 0%, rgba(22, 125, 242, 1) 100%);
+        }
+
+        #cards {
+            background: rgba(255, 255, 255, 0.9);
+        }
+
+        .property-card {
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            transition: transform 0.3s ease;
+        }
+
+            .property-card:hover {
+                transform: translateY(-5px);
+            }
+
+        .carousel-inner img {
+            border-top-left-radius: 12px;
+            border-top-right-radius: 12px;
+        }
+
+        .card-body {
+            padding: 1.2rem;
+        }
+
+        .card-title {
+            font-size: 1.25rem;
+            font-weight: 600;
+        }
+
+        .btn-group-custom {
+            display: flex;
+            justify-content: space-between;
+            gap: 0.5rem;
+            margin-top: 1rem;
+        }
+
+        .card-text-small {
+            font-size: 0.9rem;
+            color: #666;
+        }
+
+        .price-label {
+            font-weight: 600;
+            margin-top: 0.75rem;
+            color: #333;
+        }
+
+        .price-value {
+            font-size: 1.1rem;
+            color: #167df2;
+            font-weight: bold;
+        }
+    </style>
+
+    <div id="page" class="row row-cols-1 row-cols-md-3 g-4">
+        @foreach (var e in Model)
+        {
+            var carouselId = "carousel_" + e.PropertyId;
+
+            <div class="col">
+                <div id="cards" class="card h-100 property-card border-0">
+                    <!-- Image Carousel -->
+                    <div id="@carouselId" class="carousel slide" data-bs-ride="carousel">
+                        <div class="carousel-inner">
+                            @{
+                                int index = 0;
+                            }
+                            @foreach (var i in e.images.Split(","))
+                            {
+                                var isActive = index == 0 ? "active" : "";
+                                <div class="carousel-item @isActive">
+                                    <img src="@i" class="d-block w-100" style="height: 230px; object-fit: cover;" />
+                                </div>
+                                index++;
+                            }
+                        </div>
+                        <button class="carousel-control-prev" type="button" data-bs-target="#@carouselId" data-bs-slide="prev">
+                            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                            <span class="visually-hidden">Previous</span>
+                        </button>
+                        <button class="carousel-control-next" type="button" data-bs-target="#@carouselId" data-bs-slide="next">
+                            <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                            <span class="visually-hidden">Next</span>
+                        </button>
+                    </div>
+
+                    <!-- Property Details -->
+                    <div class="card-body">
+                        <h5 class="card-title">@e.Title</h5>
+                        <p class="card-text">@e.Description</p>
+                        <p class="card-text-small">
+                            <i class="bi bi-geo-alt-fill"></i> @e.Address, @e.City, @e.State - @e.ZipCode
+                        </p>
+                        <p class="card-text">
+                            <span class="badge bg-secondary">Status: @e.Status</span>
+                        </p>
+                        <div>
+                            <span class="price-label">Final Price:</span>
+                            <div class="price-value">₹@e.OwnerId</div>
+                        </div>
+                        <div>
+                            <span class="price-label">Booking Price:</span>
+                            <div class="price-value">₹@e.Price</div>
+                        </div>
+
+                        <!-- Actions -->
+                        <form asp-action="property_user_tenant" asp-controller="Properties" method="post" class="btn-group-custom">
+                            <input type="hidden" name="id" value="@e.PropertyId" />
+                            <button type="submit" class="btn btn-outline-primary w-50">Book</button>
+                            <a asp-action="Add_Appointment" asp-controller="Appointment" asp-route-id="@e.PropertyId" class="btn btn-outline-success w-50">Appointment</a>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+}

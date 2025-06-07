@@ -11,7 +11,10 @@ namespace EstateFin.ILeaseRepo
             void Update(LeaseAgreement lease);
             void Delete(int id);
             void Save();
-        
+
+        int getId(int id);
+        void Del(int id);
+
 
     }
 }

@@ -58,5 +58,21 @@ namespace EstateFin.ILeaseRepo
         {
             context.SaveChanges();
         }
+
+        public int getId(int id)
+        {
+            var lease = context.LeaseAgreements.Find(id);
+            return lease?.LeaseId ?? 0;
+        }
+
+        public void Del(int id)
+        {
+            var item = context.LeaseAgreements.Find(id);
+            if (item != null)
+            {
+                context.LeaseAgreements.Remove(item); // use the entity set, not just context.Remove
+                context.SaveChanges(); // ✅ Save changes to the DB
+            }
+        }
     }
 }

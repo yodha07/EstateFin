@@ -67,7 +67,41 @@ namespace EstateFin.Services
         public int GenerateOtp()
         {
             Random random = new Random();
-            return random.Next(100000, 999999); 
+            return random.Next(100000, 999999);
         }
+
+        public void UpdateProfile(User user)
+        {
+            var existingUser = db.Users.Find(user.UserID);
+            if (existingUser != null)
+            {
+                existingUser.FirstName = user.FirstName;
+                existingUser.LastName = user.LastName;
+                existingUser.PhoneNumber = user.PhoneNumber;
+                existingUser.ProfilePicture = user.ProfilePicture;
+                existingUser.Role = user.Role;
+                db.SaveChanges();
+            }
+            else
+            {
+                throw new Exception("User not found");
+            }
+        }
+
+        public bool EmailExists(string email)
+        {
+            return db.Users.Any(u => u.Email == email);
+        }
+
+        public User? GetUserByEmail(string email)
+        {
+            return db.Users.FirstOrDefault(u => u.Email == email);
+        }
+
+        public User? GetUserById(int userId)
+        {
+            return db.Users.FirstOrDefault(u => u.UserID == userId);
+        }
+
     }
 }

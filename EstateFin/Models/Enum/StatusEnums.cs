@@ -9,7 +9,7 @@
 
     public enum BookingStatus
     {
-        Pending,
+        Pending ,
         Approved,
         Confirmed,
         Rejected,

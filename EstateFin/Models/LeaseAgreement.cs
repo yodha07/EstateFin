@@ -33,5 +33,10 @@ namespace EstateFin.Models
         public bool IsDepositPaid { get; set; } = false;
 
         public LeaseStatus LeaseStatus { get; set; }
+
+
+
+        
+
     }
 }

@@ -25,9 +25,11 @@ namespace EstateFin.Services
                      .FirstOrDefault();
         }
 
-        public IEnumerable<Transaction> GetAll()
+        public IEnumerable<Transaction> GetAll(int id)
         {
-            return db.Transactions.ToList();
+            return db.Transactions
+                     .Where(t => t.BookingId == id)
+                     .ToList();
         }
 
         public void Update(Transaction transaction)

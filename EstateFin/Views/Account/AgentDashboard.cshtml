@@ -1,0 +1,82 @@
+﻿@{
+    ViewData["Title"] = "Agent Dashboard";
+    var labels = Json.Serialize(ViewBag.SalesLabels);
+    var values = Json.Serialize(ViewBag.SalesValues);
+}
+<h2 class="mb-4">📈 Agent Dashboard</h2>
+
+<style>
+    .dashboard-card {
+        background-color: #ffffff;
+        border-radius: 10px;
+        padding: 20px;
+        box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        text-align: center;
+        transition: 0.3s;
+    }
+
+        .dashboard-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .dashboard-card h3 {
+            font-size: 1.5rem;
+            color: #333;
+        }
+
+        .dashboard-card p {
+            font-size: 2rem;
+            font-weight: bold;
+            color: #167df2;
+        }
+</style>
+
+<div class="row g-4">
+    <div class="col-md-3">
+        <div class="dashboard-card">
+            <h3>My Properties</h3>
+            <p>@ViewBag.MyProperties</p>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="dashboard-card">
+            <h3>My Reviews</h3>
+            <p>@ViewBag.MyReviews</p>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="dashboard-card">
+            <h3>Total Earnings</h3>
+            <p>₹@ViewBag.MyTransactions</p>
+        </div>
+    </div>
+</div>
+
+<h4 class="mt-5">📊 Sales Overview</h4>
+<canvas id="salesChart" width="400" height="150"></canvas>
+
+@section Scripts {
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+        const ctx = document.getElementById('salesChart').getContext('2d');
+        const chart = new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: @Html.Raw(labels),
+                datasets: [{
+                    label: 'Sales (₹)',
+                    data: @Html.Raw(values),
+                    borderColor: '#167df2',
+                    fill: false,
+                    tension: 0.3
+                }]
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    legend: { display: true }
+                }
+            }
+        });
+    </script>
+}

@@ -1,0 +1,48 @@
+﻿<style>
+    .card-small {
+        transform: scale(0.75);
+        transform-origin: top center;
+    }
+
+    .rating-dashboard {
+        margin-top: 2rem;
+    }
+</style>
+
+<div class="container rating-dashboard">
+    <h2 class="mb-4 text-center">Ratings Overview</h2>
+
+    <div class="row justify-content-center">
+        <!-- Total Reviews -->
+        <div class="col-md-4 mb-4 d-flex justify-content-center">
+            <div class="card text-white bg-primary shadow card-small">
+                <div class="card-body text-center">
+                    <h5 class="card-title">Total Reviews</h5>
+                    <p class="display-4">@ViewBag.TotalReviews</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Average Rating -->
+        <div class="col-md-4 mb-4 d-flex justify-content-center">
+            <div class="card text-white bg-success shadow card-small">
+                <div class="card-body text-center">
+                    <h5 class="card-title">Average Rating</h5>
+                    <p class="display-4">
+                        @String.Format("{0:0.0}", ViewBag.AvgRating) ⭐
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="container mt-3">
+    <div class="row justify-content-center">
+        <div class="col-auto text-center px-3 py-2 bg-light rounded shadow-sm" style="font-size: 0.9rem;">
+            <span class="me-3"><strong>Reviews:</strong> @ViewBag.TotalReviews</span>
+            <span><strong>Avg Rating:</strong> @String.Format("{0:0.0}", ViewBag.AvgRating) ⭐</span>
+        </div>
+    </div>
+</div>
+

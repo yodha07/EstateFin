@@ -21,8 +21,6 @@ namespace EstateFin.Models
 
         public decimal Amount { get; set; }
 
-
-        
         public User User { get; set; }           // Navigation property
 
         public Property Property { get; set; } 

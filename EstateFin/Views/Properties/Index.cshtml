@@ -1,57 +1,108 @@
 ﻿@model List<Property>
-<partial name="Notification"></partial>
-<form method="post">
+<partial name="Notification" />
 
-	<input type="text" placeholder="Search" name="txt" />
-	<input type="submit" value="submit" class="btn btn-primary" />
+<style>
+    body {
+        background: linear-gradient(225deg, rgba(255, 94, 164, 1) 0%, rgba(22, 125, 242, 1) 100%);
+    }
+
+    #tbl{
+        background: rgba(255, 255, 255, 0.9);
+        border: 5px black;
+        border-radius: 24px;
+    }
+
+    .property-table img {
+        border-radius: 12px;
+        object-fit: cover;
+        margin: 2px;
+        transition: 0.2s ease-in-out;
+    }
+
+    .property-table img:hover {
+        transform: scale(1.05);
+        box-shadow: 0 0 10px rgba(0,0,0,0.15);
+    }
+
+    .search-bar {
+        display: flex;
+        gap: 10px;
+        margin: 20px 0;
+    }
+
+    .search-bar input[type="text"] {
+        flex-grow: 1;
+        padding: 8px 12px;
+        border-radius: 6px;
+        border: 1px solid #ccc;
+    }
+
+    .search-bar input[type="submit"] {
+        padding: 8px 20px;
+        border-radius: 6px;
+    }
+
+    .action-buttons a {
+        margin: 2px;
+    }
+</style>
+
+<form method="post" class="search-bar">
+    <input type="text" placeholder="Search by title, city, or type..." name="txt" class="form-control" />
+    <input type="submit" value="Search" class="btn btn-primary" />
 </form>
 
-<table class="table">
-	<thead>
-		<tr>
-			<th scope="col">Title</th>
-			<th scope="col">Description</th>
-			<th scope="col">Price</th>
-			<th scope="col">Address</th>
-			<th scope="col">City</th>
-			<th scope="col">State</th>
-			<th scope="col">ZipCode</th>
-			<th scope="col">PropertyType</th>
-			<th scope="col">Status</th>
-			<th scope="col">img</th>
-			<th scope="col">Create/Modify DateTime</th>
-
-		</tr>
-	</thead>
-	<tbody>
-		@foreach (var e in Model)
-		{
-			<tr>
-				<th scope="row">@e.Title</th>
-				<td>@e.Description</td>
-				<td>@e.Price</td>
-				<td>@e.Address</td>
-				<td>@e.City</td>
-				<td>@e.State</td>
-				<td>@e.ZipCode</td>
-				<td>@e.PropertyType</td>
-				<td>@e.Status</td>
-				<td>
-					@if (!string.IsNullOrEmpty(e.images))
-					{
-						@foreach (var im in e.images.Split(","))
-						{
-							<a href="@im"><img src="@im" height="100" width="100" /></a>
-						}
-					}
-				</td>
-
-				<td><a asp-controller="Properties" asp-action="Delete_Properties" asp-route-id="@e.PropertyId" class="btn btn-primary">Delete</a></td>
-				<td><a asp-controller="Properties" asp-action="Edit_Properties" asp-route-id="@e.PropertyId" class="btn btn-primary">Edit</a></td>
-			</tr>
-		}
-
-	</tbody>
-
-
+<table id="tbl" class="table table-bordered table-striped table-hover property-table">
+    <thead class="table-dark">
+        <tr>
+            <th>Title</th>
+            <th>Description</th>
+            <th>Price</th>
+            <th>Address</th>
+            <th>City</th>
+            <th>State</th>
+            <th>ZipCode</th>
+            <th>Type</th>
+            <th>Status</th>
+            <th>Images</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var e in Model)
+        {
+            <tr>
+                <td>@e.Title</td>
+                <td>@e.Description</td>
+                <td>₹@e.Price</td>
+                <td>@e.Address</td>
+                <td>@e.City</td>
+                <td>@e.State</td>
+                <td>@e.ZipCode</td>
+                <td>@e.PropertyType</td>
+                <td>
+                    <span class="badge bg-@(e.Status == "Available" ? "success" : e.Status == "Rented" ? "warning text-dark" : "danger")">
+                        @e.Status
+                    </span>
+                </td>
+                <td>
+                    @if (!string.IsNullOrEmpty(e.images))
+                    {
+                        <div class="d-flex flex-wrap">
+                            @foreach (var im in e.images.Split(","))
+                            {
+                                <a href="@im" target="_blank">
+                                    <img src="@im" width="80" height="80" />
+                                </a>
+                            }
+                        </div>
+                    }
+                </td>
+                <td class="action-buttons">
+                    <a asp-controller="Properties" asp-action="Edit_Properties" asp-route-id="@e.PropertyId" class="btn btn-sm btn-outline-primary">Edit</a>
+                    <a asp-controller="Properties" asp-action="Delete_Properties" asp-route-id="@e.PropertyId" class="btn btn-sm btn-outline-danger">Delete</a>
+                </td>
+            </tr>
+        }
+    </tbody>
 </table>

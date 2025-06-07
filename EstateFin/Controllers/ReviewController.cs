@@ -1,33 +1,31 @@
 ﻿using EstateFin.Data;
 using EstateFin.Models;
+using EstateFin.Repositories;
+using EstateFin.Services;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore.Metadata.Internal;
 
 namespace EstateFin.Controllers
 {
     public class ReviewController : Controller
     {
-        private readonly ApplicationDbContext db;
+        ApplicationDbContext db;
+        ReviewRepo repo;
 
-        public ReviewController(ApplicationDbContext db)
+        public ReviewController(ReviewRepo repo, ApplicationDbContext db)
         {
             this.db = db;
+            this.repo = repo;
         }
 
-        public IActionResult Index()
+        public IActionResult Index(int propertyId)
         {
-            //var review = new Review
-            //{
-            //    UserId = 1,
-            //    PropertyId = 99,
-            //    Rating = 5,
-            //    Comment = "Test insert",
-            //    DatePosted = DateTime.Now
-            //};
-            //db.Reviews.Add(review);
-            //db.SaveChanges();
-            //return Content("Inserted!");
+            var review = new Review
+            {
+                PropertyId = propertyId
+            };
 
-            return View();
+            return View(review);
         }
 
         //public IActionResult Submit(int propertyId)
@@ -40,53 +38,48 @@ namespace EstateFin.Controllers
         //    return View(model);
         //}
 
-        //[HttpPost]
-        //public IActionResult Submit(Review review)
-        //{
-        //    if (ModelState.IsValid)
-        //    {
-        //        review.UserID = 1;  //hard coded
-        //        review.DatePosted = DateTime.Now;
-        //        db.Reviews.Add(review);
-        //        db.SaveChanges();
-        //        return RedirectToAction("ViewPropertyReviews", new { id = review.PropertyId });
-        //    }
-
-        //    return View(review);
-
-        //}
-
-
-        // GET action - optional; agar sirf form dikhana hai, toh propertyId set karna zaroori nahi
         public IActionResult Submit()
         {
             return View();
         }
 
         [HttpPost]
-        public IActionResult Submit(Review review)
+        public IActionResult Submit(Review review, int id)
         {
-            review.UserID = 1;         // hardcoded user
-            review.PropertyId = 1;     // hardcoded property
-            review.DatePosted = DateTime.Now;
+            //review.UserID = 1;         // hardcoded user
+            //review.UserID = int.Parse(HttpContext.Session.GetString("Login") ?? "0");
+            review.PropertyId = id;     // hardcoded property
+            //review.DatePosted = DateTime.Now;
+            review.Id = 0;            
+            //if (ModelState.IsValid)
+            //{
+            //    db.Reviews.Add(review);
+            //    db.SaveChanges();
 
-            if (ModelState.IsValid)
-            {
-                db.Reviews.Add(review);
-                db.SaveChanges();
-
-                return RedirectToAction("ViewPropertyReviews", new { id = review.PropertyId });
-            }
-
-            return View(review);
+            //    return RedirectToAction("ViewPropertyReviews", new { id = review.PropertyId });
+            //}
+            repo.Submit(review);
+            return RedirectToAction("ViewPropertyReviews", new { id = review.PropertyId });
         }
 
-
+        //public IActionResult ViewPropertyReviews(int id)
+        //{
+        //    var reviews = db.Reviews.Where(r => r.PropertyId == id).ToList();
+        //    return View(reviews);
+        //}
 
         public IActionResult ViewPropertyReviews(int id)
         {
-            var reviews = db.Reviews.Where(r => r.PropertyId == id).ToList();
+            var reviews = repo.GetReviewsByPropertyId(id);
             return View(reviews);
+        }
+
+        public IActionResult Dashboard()
+        {
+            ViewBag.TotalReviews = repo.GetTotalReviews();
+            ViewBag.AvgRating = repo.GetAverageRating();
+
+            return View();
         }
     }
 }

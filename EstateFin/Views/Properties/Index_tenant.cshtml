@@ -1,0 +1,57 @@
+﻿@model List<Property>
+<partial name="Notification"></partial>
+<form method="post">
+
+	<input type="text" placeholder="Search" name="txt" />
+	<input type="submit" value="submit" class="btn btn-primary" />
+</form>
+
+<table class="table">
+	<thead>
+		<tr>
+			<th scope="col">Title</th>
+			<th scope="col">Description</th>
+			<th scope="col">Price</th>
+			<th scope="col">Address</th>
+			<th scope="col">City</th>
+			<th scope="col">State</th>
+			<th scope="col">ZipCode</th>
+			<th scope="col">PropertyType</th>
+			<th scope="col">Status</th>
+			<th scope="col">img</th>
+			<th scope="col">Create/Modify DateTime</th>
+
+		</tr>
+	</thead>
+	<tbody>
+		@foreach (var e in Model)
+		{
+			<tr>
+				<th scope="row">@e.Title</th>
+				<td>@e.Description</td>
+				<td>@e.Price</td>
+				<td>@e.Address</td>
+				<td>@e.City</td>
+				<td>@e.State</td>
+				<td>@e.ZipCode</td>
+				<td>@e.PropertyType</td>
+				<td>@e.Status</td>
+				<td>
+					@if (!string.IsNullOrEmpty(e.images))
+					{
+						@foreach (var im in e.images.Split(","))
+						{
+							<a href="@im"><img src="@im" height="100" width="100" /></a>
+						}
+					}
+				</td>
+
+				<td><a asp-controller="Properties" asp-action="Delete_Properties" asp-route-id="@e.PropertyId" class="btn btn-primary">Delete</a></td>
+				<td><a asp-controller="Properties" asp-action="Edit_Properties" asp-route-id="@e.PropertyId" class="btn btn-primary">Edit</a></td>
+			</tr>
+		}
+
+	</tbody>
+
+
+</table>

@@ -3,10 +3,12 @@ using EstateFin.Models;
 using EstateFin.Models.Enum.StatusEnums;
 using EstateFin.Repositories;
 using EstateFin.Services;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using Razorpay.Api;
+using System.Linq;
 
 namespace EstateFin.Controllers
 {
@@ -18,9 +20,10 @@ namespace EstateFin.Controllers
         private readonly IBookingRepository bookingRepository;
 
         public PropertiesController(ApplicationDbContext db, IWebHostEnvironment env, PropertyRepo repo, IBookingRepository bookingRepository) { this.db = db; this.env = env; this.repo = repo; this.bookingRepository = bookingRepository; }
-        public IActionResult Index()
+        public IActionResult Index(int id)
         {
-            var list = repo.GetProperties();
+            var userID = int.Parse(HttpContext.Session.GetString("Login")!);
+            var list = repo.GetProperties(userID);
 
             return View(list);
         }
@@ -31,13 +34,13 @@ namespace EstateFin.Controllers
         {
             if (txt != null)
             {
-                var list = db.Properties.Where(x => x.Title.Contains(txt) || x.Description.Contains(txt) || x.Price.ToString().Contains(txt) || x.Address.Contains(txt) || x.City.Contains(txt) || x.State.Contains(txt) || x.ZipCode.Contains(txt) || x.PropertyType.Contains(txt) || x.Status.Contains(txt)).ToList();
+                var list =repo.search(txt);
 
                 return View(list);
             }
             else
             {
-                var list = db.Properties.ToList();
+                var list =repo.FetchAllProperty();
                 return View(list);
             }
         }
@@ -69,44 +72,76 @@ namespace EstateFin.Controllers
             return View();
         }
 
+        //[Authorize(Roles = "Agent, Seller")]
+        //[HttpPost]
+        //public IActionResult add_properties(Bind prop)
+        //{
+        //    prop.properties.UserID = int.Parse(HttpContext.Session.GetString("Login"));
+
+        //    var mpath = repo.propertyfile(prop);
+        //    prop.properties.images = string.Join(",", mpath);
+        //    prop.properties.CreatedAt = DateTime.Now;
+        //    HttpContext.Session.SetInt32("PropertyID", prop.properties.PropertyId);
+
+        //    //foreach (var modelError in ModelState)
+        //    //{
+        //    //    foreach (var error in modelError.Value.Errors)
+        //    //    {
+        //    //        Console.WriteLine($"Field: {modelError.Key} — Error: {error.ErrorMessage}");
+        //    //    }
+        //    //}
+
+        //    if (ModelState.IsValid)
+        //    {
+        //        repo.add_property(prop);
+        //        TempData["msg"] = "data added";
+        //        return RedirectToAction("Index");
+        //    }
+        //    else
+        //    {
+        //        return View();
+        //    }
+        //}
+
         [HttpPost]
         public IActionResult add_properties(Bind prop)
         {
+            
             prop.properties.UserID = int.Parse(HttpContext.Session.GetString("Login"));
 
+            
             var mpath = repo.propertyfile(prop);
             prop.properties.images = string.Join(",", mpath);
             prop.properties.CreatedAt = DateTime.Now;
             HttpContext.Session.SetInt32("PropertyID", prop.properties.PropertyId);
 
-            foreach (var modelError in ModelState)
-            {
-                foreach (var error in modelError.Value.Errors)
-                {
-                    Console.WriteLine($"Field: {modelError.Key} — Error: {error.ErrorMessage}");
-                }
-            }
+            
+            //foreach (var key in ModelState.Keys)
+            //{
+            //    var errors = ModelState[key].Errors;
+            //    if (errors.Count > 0)
+            //    {
+            //        foreach (var error in errors)
+            //        {
+            //            Console.WriteLine($"Field: {key} - Error: {error.ErrorMessage}");
+            //        }
+            //    }
+            //}
 
             if (ModelState.IsValid)
             {
                 repo.add_property(prop);
-                TempData["msg"] = "data added";
+                TempData["msg"] = "Property Added";
                 return RedirectToAction("Index");
-
-
             }
             else
             {
-                return View();
+                ViewBag.myproperties = new SelectList(repo.dropdown(), "MyPropertyId", "PropertyType");
+                return View(prop);
             }
-
-
         }
 
-
-
-
-
+        //[Authorize(Roles = "Admin, Agent, Seller")]
         public IActionResult Delete_Properties(int id)
         {
             if (id != null)
@@ -122,8 +157,11 @@ namespace EstateFin.Controllers
             }
 
         }
+
+        //[Authorize(Roles = "Agent, Seller")]
         public IActionResult Edit_Properties(int id)
         {
+
             ViewBag.editproperties = new SelectList(repo.dropdown(), "MyPropertyId", "PropertyType");
 
             //var my_propertiess = db.Property_Types.Where(x => x.status.Equals("Active")).Select(x => new SelectListItem
@@ -146,8 +184,11 @@ namespace EstateFin.Controllers
 
 
         [HttpPost]
+        //[Authorize(Roles = "Agent, Seller")]
         public IActionResult Edit_Properties(Bind e)
         {
+            e.properties.UserID = int.Parse(HttpContext.Session.GetString("Login"));
+
             var mpath = repo.propertyfile(e);
 
             e.properties.images = string.Join(",", mpath);
@@ -177,7 +218,7 @@ namespace EstateFin.Controllers
 
         }
 
-
+        [Authorize(Roles = "Admin")]
         public IActionResult property_type()
         {
             return View();
@@ -185,10 +226,12 @@ namespace EstateFin.Controllers
         }
 
         [HttpPost]
+        [Authorize(Roles = "Admin")]
         public IActionResult property_type(Property_Type e)
         {
             e.createdat = DateTime.Now;
-            e.createdby = "session";
+            e.createdby = HttpContext.Session.GetString("UserName");
+            ;
 
             if (ModelState.IsValid)
             {
@@ -202,12 +245,13 @@ namespace EstateFin.Controllers
         }
         public IActionResult property_type_list()
         {
-            var e = db.Property_Types.ToList();
+            var e = repo.FetchAllPropertyType();
 
             return View(e);
 
         }
 
+        [Authorize(Roles = "Admin")]
         public IActionResult delete_property_type(int id)
         {
             repo.delete_property_typess(id);
@@ -216,13 +260,15 @@ namespace EstateFin.Controllers
 
         }
 
+        [Authorize(Roles = "Admin")]
         public IActionResult edit_property_type(int id)
         {
-            var ids = db.Property_Types.Find(id);
+            var ids =repo.Edit_Property_Type(id); 
             return View(ids);
         }
 
         [HttpPost]
+        [Authorize(Roles = "Admin")]
         public IActionResult edit_property_type(Property_Type e)
         {
             e.createdat = DateTime.Now;
@@ -242,18 +288,50 @@ namespace EstateFin.Controllers
 
         }
 
-
+        [Authorize(Roles = "Admin, Buyer, Tenant, Seller, Tenant")]
         public IActionResult property_user()
         {
-            var data = db.Properties.Where(x => x.Status.Equals("Available")).ToList();
+            var data = repo.Property_User_List();
+            if(data.Count == 0)
+            {
+                TempData["listMsg"] = "No properties listed";
+                return View();
+            }
             return View(data);
         }
 
         [HttpPost]
+        [Authorize(Roles = "Admin, Buyer, Tenant, Seller, Tenant")]
         public IActionResult property_user(int id)
         {
             //HttpContext.Session.SetString("UserRole", id.ToString());
-            var PropertyId = db.Properties.Find(id);
+            var PropertyId = repo.property_user_findbyid(id);
+            int userId = int.Parse((HttpContext.Session.GetString("Login") ?? "0"));
+            Booking booking = new Booking
+            {
+                PropertyId = PropertyId.PropertyId,
+                UserID = userId,
+                BookingDate = DateTime.Now,
+                Amount = PropertyId.Price,
+                Status = BookingStatus.Pending
+            };
+            
+
+            bookingRepository.Add(booking);
+            return RedirectToAction("MyBookings", "Booking");
+        }
+
+        public IActionResult property_user_tenant()
+        {
+            var data = repo.Property_Tenant_List();
+            return View(data);
+        }
+
+        [HttpPost]
+        public IActionResult property_user_tenant(int id)
+        {
+            //HttpContext.Session.SetString("UserRole", id.ToString());
+            var PropertyId =repo.property_user_findbyid(id);
             int userId = int.Parse((HttpContext.Session.GetString("Login") ?? "0"));
             Booking booking = new Booking
             {
@@ -267,6 +345,46 @@ namespace EstateFin.Controllers
             bookingRepository.Add(booking);
             return RedirectToAction("MyBookings", "Booking");
         }
+
+        public IActionResult Index_tenant()
+        {
+            int userId = int.Parse((HttpContext.Session.GetString("Login") ?? "0"));
+
+            var list = repo.GetProperties(userId);
+
+            return View(list);
+        }
+
+
+        [HttpPost]
+        public IActionResult Index_tenant(string txt)
+        {
+            if (txt != null)
+            {
+                var list = repo.search(txt);
+
+                return View(list);
+            }
+            else
+            {
+                var list = repo.FetchAllProperty();
+                return View(list);
+            }
+        }
+
+
+        [Authorize(Roles = "Buyer, Tenant")]
+        public IActionResult property_user_review()
+        {
+            var data = repo.FetchAllProperty();
+            if (data.Count == 0)
+            {
+                TempData["listMsg"] = "No properties listed";
+                return View();
+            }
+            return View(data);
+        }
+
     }
 
 }

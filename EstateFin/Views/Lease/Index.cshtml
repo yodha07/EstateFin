@@ -35,8 +35,13 @@
                 <td>@item.LeaseEndDate.ToShortDateString()</td>
                 <td>@item.RentAmount</td>
                 <td>
-                    <a class="btn btn-info btn-sm" asp-action="Edit" asp-route-id="@item.LeaseId">Edit</a>
-                    <a class="btn btn-danger btn-sm" asp-action="Delete" asp-route-id="@item.LeaseId">Delete</a>
+                    <a class="btn btn-outline-info btn-sm" asp-action="Edit" asp-route-id="@item.LeaseId">Edit</a>
+                    <a asp-action="Delete" asp-route-id="@item.LeaseId"
+                       onclick="return confirm('Are you sure you want to delete this item?')"
+                       class="btn btn-outline-danger btn-sm">
+                         Delete
+                    </a>
+
                 </td>
             </tr>
         }

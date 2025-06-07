@@ -15,7 +15,7 @@ namespace EstateFin.Controllers
         }
         public IActionResult Index()
         {
-            int tenantId = 4;
+            int tenantId = 1;
             var leases = ltrepo.GetLeasesByTenantId(tenantId);
             return View(leases);
         }
