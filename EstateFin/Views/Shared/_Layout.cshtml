@@ -74,7 +74,7 @@
 
     @if (!(currentController == "Account" && (currentAction == "Login") || (currentAction == "Register") || (currentAction == "ForgotPassword")))
     {
-        @if (role == "Buyer" || role == "Tenant")
+        @if (role == "Buyer")
         {
             <!-- Sidebar -->
             <div class="sidebar">
@@ -82,6 +82,24 @@
                 <a asp-controller="Home" asp-action="Index">🏠 Home</a>
                 <a asp-controller="properties" asp-action="property_user">🏘 Properties</a>
                 <a asp-controller="Booking" asp-action="MyBookings">📅 My Bookings</a>
+                <a class="dropdown-item text-dark" asp-controller="Appointment" asp-action="index"> 📅View Appointments Status</a>
+                <a asp-controller="properties" asp-action="property_user_review">⭐ My Reviews</a>
+                <a asp-controller="Account" asp-action="ProfileCard">⭐ Profile card</a>
+                @if (!string.IsNullOrEmpty(role))
+                {
+                    <a asp-controller="Account" asp-action="Logout" class="text-danger mt-4">🚪 Logout</a>
+                }
+            </div>
+        }
+        else if (role =="Tenant")
+        {
+            <!-- Sidebar -->
+            <div class="sidebar">
+                <h4 class="text-center mb-4">EstateFin</h4>
+                <a asp-controller="Home" asp-action="Index">🏠 Home</a>
+                <a asp-controller="properties" asp-action="property_user_tenant">🏘 Properties</a>
+                <a asp-controller="Booking" asp-action="MyBookings">📅 My Bookings</a>
+                <a class="dropdown-item text-dark" asp-controller="Appointment" asp-action="index"> 📅View Appointments Status</a>
                 <a asp-controller="properties" asp-action="property_user_review">⭐ My Reviews</a>
                 <a asp-controller="Account" asp-action="ProfileCard">⭐ Profile card</a>
                 @if (!string.IsNullOrEmpty(role))
