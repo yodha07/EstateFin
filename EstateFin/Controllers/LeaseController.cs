@@ -118,11 +118,11 @@ namespace EstateFin.ILeaseRepo
                 return NotFound();
             }
 
-            var e = context.Properties.Where(x => x.PropertyId.Equals(lease.PropertyId)).ToList();
+            //var e = context.Properties.Where(x => x.PropertyId.Equals(lease.PropertyId)).ToList();
 
-            ViewBag.Properties = new SelectList(e, "PropertyId", "PropertyName");
-            ViewBag.Tenants = new SelectList(context.Users.ToList(), "UserID", "UserName", lease.TenantId);
-            ViewBag.Bookings = new SelectList(context.Bookings.ToList(), "BookingId", "BookingId", lease.BookingId);
+            //ViewBag.Properties = new SelectList(e, "PropertyId", "PropertyName");
+            //ViewBag.Tenants = new SelectList(context.Users.ToList(), "UserID", "UserName", lease.TenantId);
+            //ViewBag.Bookings = new SelectList(context.Bookings.ToList(), "BookingId", "BookingId", lease.BookingId);
 
             return View(lease);
         }
@@ -135,11 +135,11 @@ namespace EstateFin.ILeaseRepo
             //Created 
 
 
-            int id = lease.BookingId;
-            var list = context.Bookings.Find(id);
+            //int id = lease.BookingId;
+            //var list = context.Bookings.Find(id);
 
-            lease.PropertyId = list.PropertyId;
-            lease.TenantId = list.UserID;
+            //lease.PropertyId = list.PropertyId;
+            //lease.TenantId = list.UserID;
 
             if (ModelState.IsValid)
             {

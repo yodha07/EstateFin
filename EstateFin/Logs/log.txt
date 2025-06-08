@@ -207,3 +207,5 @@
 [07-06-2025 09:40:21 PM] This is what caused the exception:  Unable to resolve service for type 'EstateFin.Repositories.ILeaseTenantRepo' while attempting to activate 'EstateFin.Controllers.TenantLeaseController'. 
 [07-06-2025 09:42:44 PM] This is what caused the exception:  Unable to resolve service for type 'EstateFin.Repositories.ILeaseTenantRepo' while attempting to activate 'EstateFin.Controllers.TenantLeaseController'. 
 [08-06-2025 17:35:14] This is what caused the exception:  A network-related or instance-specific error occurred while establishing a connection to SQL Server. The server was not found or was not accessible. Verify that the instance name is correct and that SQL Server is configured to allow remote connections. (provider: Named Pipes Provider, error: 40 - Could not open a connection to SQL Server) 
+[08-06-2025 18:04:44] This is what caused the exception:  Object reference not set to an instance of an object. 
+[08-06-2025 18:12:35] This is what caused the exception:  An error occurred while saving the entity changes. See the inner exception for details. 
