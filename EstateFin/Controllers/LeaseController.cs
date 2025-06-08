@@ -39,15 +39,11 @@ namespace EstateFin.ILeaseRepo
             //var list = context.Bookings.Where(x => x.UserID.Equals(login) && x.Status.Equals(1)).Include(x => x.User).Include(x => x.Property).ToList();
             //int leaseStatusValue = (int)ILeaseRepo.LeaseStatus.Active;
 
-            var list = context.Bookings .Where(x=>x.Status.Equals("Rented")).Include(x => x.Property).Include(x => x.User).ToList();
-
-
-            //ViewBag.Properties = new SelectList(list, "PropertyId", "PropertyName");
-            //ViewBag.Tenants = new SelectList(list, "UserID", "UserName");
+            var list = context.Bookings .Where(x=>x.Property.Status.Equals("Sold_Rented")).Include(x => x.Property).Include(x => x.User).ToList();
             ViewBag.Bookings = new SelectList(list, "BookingId", "BookingId");
 
 
-            var list2 = context.Bookings.Include(x => x.User).Include(x => x.Property);
+            //var list2 = context.Bookings.Include(x => x.User).Include(x => x.Property);
             //var list = context.Bookings.Include(x=> x.User).Include(x=> x.)
 
             //int leaseStatusValue = (int)ILeaseRepo.LeaseStatus.Active;
@@ -61,7 +57,7 @@ namespace EstateFin.ILeaseRepo
 
             //ViewBag.Properties = new SelectList(context.Properties.ToList(), "PropertyId", "Title");
             //ViewBag.Tenants = new SelectList(context.Users.ToList(), "UserID", "UserName");
-            ViewBag.Bookings = new SelectList(context.Bookings.ToList(), "BookingId", "BookingId");
+            //ViewBag.Bookings = new SelectList(context.Bookings.ToList(), "BookingId", "BookingId");
 
             return View();
         }
@@ -175,27 +171,7 @@ namespace EstateFin.ILeaseRepo
             //return View(lease);
         }
 
-        // POST: Lease/Delete/5
-
-        //[ValidateAntiForgeryToken]
-        //public IActionResult DeleteConfirmed(int id)
-        //{
-
-        //    leaseRepo.Delete(id);
-        //    leaseRepo.Save();
-        //    return RedirectToAction("Index");
-        //}
-
-        // GET: Lease/Details/5
-        //public IActionResult Details(int id)
-        //{
-        //    var lease = leaseRepo.GetById(id);
-        //    if (lease == null)
-        //    {
-        //        return NotFound();
-        //    }
-        //    return View(lease);
-        //}
+       
     }
 }
 

@@ -78,7 +78,12 @@ namespace EstateFin.Controllers
             var pname = db.Properties.Find(id).Title;
             var email = booking.User.Email;
             var confirm = db.Properties.Find(id);
-            confirm.Status = "Sold";
+
+            if (HttpContext.Session.GetString("UserRole").ToString() == "Buyer")
+            {
+                confirm.Status = "Sold_Purchase";
+            }
+            else if (HttpContext.Session.GetString("UserRole").ToString() == "Tenant") { confirm.Status = "Sold_Rented"; }
             await repo.SendEmailAsync(email,
                 "Payment successful",
                 $"Your payment for property: {pname} is successful\n" +
